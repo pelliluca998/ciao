@@ -1,0 +1,16 @@
+{
+    "name": "Attributo",
+    "alias": "attributo",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 8,
+    "providers": [
+        "Modules\\Attributo\\Providers\\AttributoServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}
