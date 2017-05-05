@@ -159,13 +159,14 @@
       25 => 'Intervention\\Image\\ImageServiceProvider',
       26 => 'Telegram\\Bot\\Laravel\\TelegramServiceProvider',
       27 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
-      28 => 'Nayjest\\Grids\\ServiceProvider',
-      29 => 'Collective\\Html\\HtmlServiceProvider',
-      30 => 'Lavary\\Menu\\ServiceProvider',
-      31 => 'App\\Providers\\AppServiceProvider',
-      32 => 'App\\Providers\\AuthServiceProvider',
-      33 => 'App\\Providers\\EventServiceProvider',
-      34 => 'App\\Providers\\RouteServiceProvider',
+      28 => 'Spatie\\CookieConsent\\CookieConsentServiceProvider',
+      29 => 'Nayjest\\Grids\\ServiceProvider',
+      30 => 'Collective\\Html\\HtmlServiceProvider',
+      31 => 'Lavary\\Menu\\ServiceProvider',
+      32 => 'App\\Providers\\AppServiceProvider',
+      33 => 'App\\Providers\\AuthServiceProvider',
+      34 => 'App\\Providers\\EventServiceProvider',
+      35 => 'App\\Providers\\RouteServiceProvider',
     ),
     'aliases' => 
     array (
@@ -865,6 +866,11 @@
     ),
     'compiled' => '/var/www/segresta_admin/storage/framework/views',
   ),
+  'laravel-cookie-consent' => 
+  array (
+    'enabled' => true,
+    'cookie_name' => 'laravel_cookie_consent',
+  ),
   'user' => 
   array (
     'name' => 'User',
@@ -900,5 +906,13 @@
   'attributo' => 
   array (
     'name' => 'Attributo',
+  ),
+  'contabilita' => 
+  array (
+    'name' => 'Contabilita',
+  ),
+  'elenco' => 
+  array (
+    'name' => 'Elenco',
   ),
 );

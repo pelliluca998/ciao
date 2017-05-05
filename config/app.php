@@ -169,6 +169,7 @@ return [
 	Intervention\Image\ImageServiceProvider::class,
 	Telegram\Bot\Laravel\TelegramServiceProvider::class,
 	Nwidart\Modules\LaravelModulesServiceProvider::class,
+    	Spatie\CookieConsent\CookieConsentServiceProvider::class,
 
 
         /*

@@ -2,4 +2,5 @@ Modules/Sms
 Modules/Email
 Modules/Telegram
 Modules/Contabilita
+public/storage
 .env

@@ -38,6 +38,12 @@ use Nayjest\Grids\ObjectDataRow;
         {{ Session::get('flash_message') }}
     </div>
 @endif
+
+	<div class="row">
+		<h1>Lista utenti</h1>
+		<p class="lead">Questi sono gli utenti raccolti nel tuo elenco. Puoi aggiungerne di altri, eliminare quelli presenti e riempire le colonne corrispondenti.</p>
+		<hr>
+	</div>
     <div class="row">
         <div class="">
 		<div class="panel panel-default">
@@ -97,7 +103,7 @@ use Nayjest\Grids\ObjectDataRow;
 				</table>
 				<br>
 				<input id='contatore' type='hidden' value="{{$index}}" />
-				{!! Form::submit('Salva valori', ['class' => 'btn btn-primary form-control', 'style' => 'width: 33%']) !!} <button onclick="elencovalues_add({{count($colonne)}}, '{{json_encode($keys)}}')" style="font-size: 15px; width: 33%; margin-right: 2%" type='button' class="btn btn-primary btn-sm" ><i class="fa fa-plus" aria-hidden="true"></i>Aggiungi riga</button>
+				{!! Form::submit('Salva valori', ['class' => 'btn btn-primary form-control', 'style' => 'width: 31%']) !!} <button onclick="elencovalues_add({{count($colonne)}}, '{{json_encode($keys)}}')" style="font-size: 15px; width: 31%; margin-right: 2%" type='button' class="btn btn-primary btn-sm" ><i class="fa fa-plus" aria-hidden="true"></i>Aggiungi riga</button> <a href="{{route('elenco.show_riempi', ['id_elenco' => $elenco->id])}}" style="font-size: 15px; width: 31%; margin-right: 2%" type='button' class="btn btn-primary btn-sm" ><i class="fa fa-plus" aria-hidden="true"></i>Riempimento rapido</a>
            	{!! Form::close() !!} 
                    
            </div>

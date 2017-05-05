@@ -91,14 +91,15 @@ use App\Oratorio;
 	    					<div class='panel-heading' style="height: 55px;">
 			    				@if(null!==Session::get('work_event'))
 			    					
-			    						<div style="float:left; margin-right: 5px;">Evento con cui stai lavorando: <b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
+			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
 			    						<?php $buttons=$buttons_1; ?>
 			    				@else			    				
 				    					<div style="float:left; margin-right: 5px;">Non hai specificato nessun evento!</div>
 				    					<?php $buttons=$buttons_2; ?>
 				    				
 			    				@endif
-			    				
+			    				<div style="float:left; margin-right: 5px;"> <i class="fa fa-star" aria-hidden="true"></i>
+ Accesso rapido: </div>
 			    				@foreach ($buttons as $button)
 		    						<div style="float:left; margin-right: 5px;">
 		    						{!! Form::open(['route' => $button['url'], 'method' => 'GET']) !!}

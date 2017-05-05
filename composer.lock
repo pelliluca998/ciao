@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9c796c5e3d1ef9fa3c6fac097bdab90",
+    "content-hash": "64784e478f093de2bd6dfd6e90de2719",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1054,12 +1054,12 @@
             "version": "0.39.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/akalongman/php-telegram-bot.git",
+                "url": "https://github.com/php-telegram-bot/core.git",
                 "reference": "518e9dd861f3dafcf6272856043e941bc59fa6dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akalongman/php-telegram-bot/zipball/518e9dd861f3dafcf6272856043e941bc59fa6dc",
+                "url": "https://api.github.com/repos/php-telegram-bot/core/zipball/518e9dd861f3dafcf6272856043e941bc59fa6dc",
                 "reference": "518e9dd861f3dafcf6272856043e941bc59fa6dc",
                 "shasum": ""
             },
@@ -1976,6 +1976,68 @@
                 "uuid"
             ],
             "time": "2017-03-18T15:38:09+00:00"
+        },
+        {
+            "name": "spatie/laravel-cookie-consent",
+            "version": "1.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-cookie-consent.git",
+                "reference": "82593c91b5851ec444f507482206905677e8599f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/82593c91b5851ec444f507482206905677e8599f",
+                "reference": "82593c91b5851ec444f507482206905677e8599f",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cookie": "~5.1.0|~5.2.0|~5.3.0|~5.4.0",
+                "illuminate/support": "~5.1.0|~5.2.0|~5.3.0|~5.4.0",
+                "illuminate/view": "~5.1.0|~5.2.0|~5.3.0|~5.4.0",
+                "php": "^5.6|^7.0"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "~1.4",
+                "orchestra/database": "~3.1.0|~3.2.0|~3.3.0|~3.4.0@dev",
+                "orchestra/testbench": "~3.1.0|~3.2.0|~3.3.0|~3.4.0@dev",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\CookieConsent\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Willem Van Bockstal",
+                    "email": "willem@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Make your Laravel app comply with the crazy EU cookie law",
+            "homepage": "https://github.com/spatie/laravel-cookie-consent",
+            "keywords": [
+                "comply",
+                "cookie",
+                "eu",
+                "laravel-cookie-consent",
+                "law",
+                "spatie"
+            ],
+            "time": "2017-01-24T21:08:15+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3032,7 +3094,7 @@
                 "permission",
                 "roles"
             ],
-            "time": "2016-12-29 06:25:06"
+            "time": "2016-12-29T06:25:06+00:00"
         }
     ],
     "packages-dev": [

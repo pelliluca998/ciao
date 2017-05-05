@@ -37,6 +37,11 @@ use Nayjest\Grids\ObjectDataRow;
         {{ Session::get('flash_message') }}
     </div>
 @endif
+	<div class="row">
+		<h1>Elenchi</h1>
+		<p class="lead">Gli elenchi sono una lista di utenti, a cui puoi far corrispondere una o più casella. Sono utili ad esempio per la raccolta delle presenze, per gli elenchi dei pullman, ...</p>
+		<hr>
+	</div>
     <div class="row">
         <div class="">
 		<div class="panel panel-default">
@@ -58,7 +63,7 @@ use Nayjest\Grids\ObjectDataRow;
                             "url" => "elenco.edit",
                             "class" => "btn-primary",
                             "icon" => ""],
-                            ["label" => "Riempi elenco",
+                            ["label" => "Riempimento rapido",
                              "desc" => "",
                             "url" => "elenco.show_riempi",
                             "class" => "btn-primary",

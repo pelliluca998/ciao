@@ -1013,12 +1013,12 @@
         "version_normalized": "0.39.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/akalongman/php-telegram-bot.git",
+            "url": "https://github.com/php-telegram-bot/core.git",
             "reference": "518e9dd861f3dafcf6272856043e941bc59fa6dc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/akalongman/php-telegram-bot/zipball/518e9dd861f3dafcf6272856043e941bc59fa6dc",
+            "url": "https://api.github.com/repos/php-telegram-bot/core/zipball/518e9dd861f3dafcf6272856043e941bc59fa6dc",
             "reference": "518e9dd861f3dafcf6272856043e941bc59fa6dc",
             "shasum": ""
         },
@@ -3472,12 +3472,12 @@
         "version_normalized": "0.9.9.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/padraic/mockery.git",
+            "url": "https://github.com/mockery/mockery.git",
             "reference": "6fdb61243844dc924071d3404bb23994ea0b6856"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/padraic/mockery/zipball/6fdb61243844dc924071d3404bb23994ea0b6856",
+            "url": "https://api.github.com/repos/mockery/mockery/zipball/6fdb61243844dc924071d3404bb23994ea0b6856",
             "reference": "6fdb61243844dc924071d3404bb23994ea0b6856",
             "shasum": ""
         },
@@ -4716,6 +4716,70 @@
             "laravel",
             "permission",
             "roles"
+        ]
+    },
+    {
+        "name": "spatie/laravel-cookie-consent",
+        "version": "1.8.0",
+        "version_normalized": "1.8.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/spatie/laravel-cookie-consent.git",
+            "reference": "82593c91b5851ec444f507482206905677e8599f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/spatie/laravel-cookie-consent/zipball/82593c91b5851ec444f507482206905677e8599f",
+            "reference": "82593c91b5851ec444f507482206905677e8599f",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/cookie": "~5.1.0|~5.2.0|~5.3.0|~5.4.0",
+            "illuminate/support": "~5.1.0|~5.2.0|~5.3.0|~5.4.0",
+            "illuminate/view": "~5.1.0|~5.2.0|~5.3.0|~5.4.0",
+            "php": "^5.6|^7.0"
+        },
+        "require-dev": {
+            "fzaninotto/faker": "~1.4",
+            "orchestra/database": "~3.1.0|~3.2.0|~3.3.0|~3.4.0@dev",
+            "orchestra/testbench": "~3.1.0|~3.2.0|~3.3.0|~3.4.0@dev",
+            "phpunit/phpunit": "4.*"
+        },
+        "time": "2017-01-24T21:08:15+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Spatie\\CookieConsent\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Freek Van der Herten",
+                "email": "freek@spatie.be",
+                "homepage": "https://spatie.be",
+                "role": "Developer"
+            },
+            {
+                "name": "Willem Van Bockstal",
+                "email": "willem@spatie.be",
+                "homepage": "https://spatie.be",
+                "role": "Developer"
+            }
+        ],
+        "description": "Make your Laravel app comply with the crazy EU cookie law",
+        "homepage": "https://github.com/spatie/laravel-cookie-consent",
+        "keywords": [
+            "comply",
+            "cookie",
+            "eu",
+            "laravel-cookie-consent",
+            "law",
+            "spatie"
         ]
     }
 ]
