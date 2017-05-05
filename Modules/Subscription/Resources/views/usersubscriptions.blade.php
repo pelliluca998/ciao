@@ -51,7 +51,7 @@ use Nayjest\Grids\ObjectDataRow;
 			$query = (new Subscription)
 			    ->select('subscriptions.id', 'subscriptions.confirmed', 'events.nome', 'events.id as id_event')
 			    ->leftJoin('events', 'events.id', '=', 'subscriptions.id_event')
-			    ->where('subscriptions.id_user', '=', Auth::user()->id)->get();
+			    ->where([['subscriptions.id_user', '=', Auth::user()->id],['events.active', 1]])->get();
 			?>
 			<table class='testgrid'>
 				<thead><tr>

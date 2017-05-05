@@ -29,7 +29,7 @@ use App\Group;
 				<?php
 				//specifiche dell'evento
 				$specs = (new EventSpec)
-					->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione')
+					->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.price')
 					->where([['id_event', $event->id], ['event_specs.general', 1]])
 					->get();
 				?>
@@ -39,7 +39,17 @@ use App\Group;
 						{!! Form::hidden('specs['.$loop->index.']', 0) !!}
 					@else
 						<div class="form-group">
-							{!! Form::label($spec->id, $spec->label) !!} - <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
+							{!! Form::label($spec->id, $spec->label) !!}
+							@if(strlen($spec->descrizione)>0)
+								- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
+							@endif
+							<?php
+								$price = json_decode($spec->price, true);
+							?>
+							{!! Form::hidden('costo['.$loop->index.']', $price[0]) !!}
+							@if(floatval($price[0])>0)
+								(Prezzo: {{number_format(floatval($price[0]), 2, ',', '')}}€)
+							@endif
 							@if($spec->id_type>0)
 								{!! Form::select('specs['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
 							@else

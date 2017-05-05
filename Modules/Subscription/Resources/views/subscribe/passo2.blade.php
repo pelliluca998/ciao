@@ -31,7 +31,7 @@ use App\TypeSelect;
 				@foreach($weeks as $w)
 					<?php
 						$specs = (new EventSpec)
-						->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.valid_for')
+						->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.valid_for', 'event_specs.price')
 						->where([['id_event', $id_event], ['event_specs.general', 0]])
 						->get();
 					?>
@@ -70,7 +70,11 @@ use App\TypeSelect;
 								@endif
 								</td>
 								<td>
-									0,00 €
+									<?php
+										$price = json_decode($spec->price, true);
+									?>
+									{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
+									{!! Form::hidden('costo['.$index.']', $price[$w->id]) !!}
 									{!! Form::hidden('pagato['.$index.']', 0) !!}
 								</td>
 								

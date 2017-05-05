@@ -11,13 +11,17 @@ use App\Attributo;
 
 @section('content')
 
-<div class="container" style="margin-left: 0px; margin-right: 0px; width: 100%;">
+<div class="container" style="">
+	<div class="row">
+		<h1>Report iscrizioni settimanale</h1>
+		<p>Attraverso questa pagina puoi generare il report delle iscrizioni dell'evento corrente. Oltre a quelle settimanali, puoi scegliere quali informazioni generali inserire nel report. Puoi anche settare un filtro su uno o più campi, mettendo una spunta nella colonna "Filtra" e indicando il valore del filtro.</p>
+		<hr>
+	</div>
     <div class="row" style="margin-left: 0px; margin-right: 0px;">
         <div class="">
 		<div class="panel panel-default" style="">
 		<div class="panel-heading">Stampa report iscrizioni</div>
-		<div class="panel-body">
-			Attraverso questa pagina puoi stampare (o esportare in formato Excel) il report delle iscrizioni dell'evento corrente. Oltre a quelle di base, puoi scegliere quali informazioni inserire nel report.<br><br>
+		<div class="panel-body">			
 			{!! Form::open(['route' => 'report.gen_weekspec']) !!}
             <?php
                 $id_event=Session::get('work_event');
@@ -76,6 +80,7 @@ use App\Attributo;
 					@endif
 				@endforeach				
 				</table>
+				<br>
                     <?php                    
                     	$w++;
                 	}

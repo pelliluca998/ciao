@@ -44,12 +44,8 @@ class OratorioServiceProvider extends ServiceProvider
 	   $menuList->get('oratorio')
 	   		->add('Elenchi a scelta', array('route'  => 'type.index'))
 	   		->prepend("<i class='fa fa-bars' aria-hidden='true'></i> ")
-	   		->data('permissions', ['adminmodule', 'all'])->data('order', 12);
-	   		
-	   $menuList->add("Gestione Oratori", array("route" => "oratorio.showall"))
-	   		->prepend("<i class='fa fa-cube' aria-hidden='true'></i> ")
-	   		->data('permissions', ['ownermodule', 'all'])->data('order', 13)
-	   		->nickname('gestioneoratori');
+	   		->data('permissions', ['adminmodule', 'all'])->data('order', 12);	   		
+	   
     }
 
     /**

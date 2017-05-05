@@ -56,6 +56,11 @@ use App\Event;
 						{!! Form::file('image', null, ['class' => 'form-control']) !!}
 				</div>
 				
+				<div class="form-group">
+					{!! Form::label('color', 'Colore') !!}
+					{!! Form::text('color', null, ['class' => 'form-control jscolor {hash:true, required:false}']) !!}
+				</div>
+				
 				<h4>Modulo di iscrizione</h4>
 				<div class="form-group">
 				{!! Form::label('firma', 'Dicitura nel campo Firma del modulo stampato dagli utenti') !!}

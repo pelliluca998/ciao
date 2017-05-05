@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'role:admin', 'license:events'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:events'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
 {
 	Route::resource('events', 'EventController', ['only' => ['index', 'update', 'create', 'store']]);
 	Route::get('events/edit', ['as' => 'events.edit', 'uses' => 'EventController@edit']);
@@ -14,11 +14,11 @@ Route::group(['middleware' => ['web', 'role:admin', 'license:events'], 'prefix' 
 	Route::get('eventspecvalues/{id_sub}', ['as' => 'subscription.show_eventspecvalues', 'uses' => 'EventSpecController@show_eventspecvalues']);
 });
 
-Route::group(['middleware' => ['web', 'role:admin', 'license:events'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:events'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
 {
 	Route::get('eventspecs/show', ['as' => 'eventspecs.show', 'uses' => 'EventSpecController@show']);
 	Route::post('eventspecs/save',['as' => 'eventspecs.save', 'uses' => 'EventSpecController@save']);
-	Route::get('eventspecs/{id_eventspec}/destroy', ['as' => 'eventspecs.destroy', 'uses' => 'EventSpecController@destroy']);
+	Route::post('eventspecs/destroy', ['as' => 'eventspecs.destroy', 'uses' => 'EventSpecController@destroy']);
 });
 
 ?>

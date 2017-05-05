@@ -244,7 +244,6 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 	<input id='contatore_e' type='hidden' value="{{$index}}" />
 	<input id='id_event' type='hidden' value='0' />
 	{!! Form::submit('Salva', ['class' => 'btn btn-primary form-control', 'style' => 'width: 45%']) !!}
-		<i onclick="eventspecvalue_add({{$id_subscription}}, {{$id_event}});" class="btn btn-primary" style="width: 45%"><i class="fa fa-plus" aria-hidden="true"></i> Aggiungi specifica</i>
 		<button style="font-size: 15px; width: 49%;" type='button' class="btn btn-primary btn-sm" data-toggle='modal' data-target='#eventspecsOp' data-name='' data-eventid=''><i class="fa fa-plus" aria-hidden="true"></i> <i>Aggiungi specifica</i></button>
 	{!! Form::close() !!}
 @endif

@@ -13,7 +13,7 @@ use App\Attributo;
 
 <div class="container" style="">
 	<div class="row">
-		<h1>Report iscrizioni</h1>
+		<h1>Report iscrizioni generale</h1>
 		<p>Attraverso questa pagina puoi generare il report delle iscrizioni dell'evento corrente. Oltre a quelle di base, puoi scegliere quali informazioni inserire nel report. Puoi anche settare un filtro a uno o più campi, mettendo una spunta nella colonna "Filtra" e indicando il valore del filtro.</p>
 		<hr>
 	</div>

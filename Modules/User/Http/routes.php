@@ -1,5 +1,6 @@
 <?php
-Route::group(['middleware' => ['web', 'role:admin', 'license:user'], 'prefix' => 'admin', 'namespace' => 'Modules\User\Http\Controllers'], function()
+use App\User;
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:user'], 'prefix' => 'admin', 'namespace' => 'Modules\User\Http\Controllers'], function()
 {
     Route::resource('user', 'UserController', ['except' => ['edit', 'show']]);
     Route::get('user/destroy', ['as' => 'user.destroy', 'uses' => 'UserController@destroy']);
@@ -7,7 +8,12 @@ Route::group(['middleware' => ['web', 'role:admin', 'license:user'], 'prefix' =>
 	Route::get('user/print', ['as' => 'user.printprofile', 'uses' => 'UserController@print_userprofile']);
 });
 
-Route::group(['middleware' => ['web', 'license:user', 'role:user|admin'], 'namespace' => 'Modules\User\Http\Controllers'], function() {
-    Route::patch('user/updateprofile',['as' => 'user.updateprofile', 'uses' => 'UserController@updateprofile']);
-    Route::get('profile/show', ['as' => 'profile.show', 'uses' => 'UserController@profile']);
+Route::group(['middleware' => ['web', 'license:user', 'role:user|admin|owner'], 'namespace' => 'Modules\User\Http\Controllers'], function() {
+	Route::patch('user/updateprofile',['as' => 'user.updateprofile', 'uses' => 'UserController@updateprofile']);
+	Route::get('profile/show', ['as' => 'profile.show', 'uses' => 'UserController@profile']);
+
+	Route::get('user/dropdown', function(){
+		$id_oratorio = Session::get('session_oratorio');
+		return User::select('users.id', 'users.name', 'users.cognome')->leftJoin('user_oratorio', 'user_oratorio.id_user', '=', 'users.id')->where('user_oratorio.id_oratorio', $id_oratorio)->orderBy("users.cognome", "ASC")->get();
+	});
 });

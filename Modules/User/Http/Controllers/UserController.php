@@ -108,7 +108,13 @@ use ValidatesRequests;
 	$orat->id_user=$user->id;
 	$orat->id_oratorio = Session::get('session_oratorio');
 	$orat->save();
-
+	
+	//salvo attributi
+	$i=0;
+	foreach($input['id_attributo'] as $id) {
+		$attrib = AttributoUser::create(['id_user' => $user->id, 'id_attributo' => $id, 'valore' => $input['attributo'][$i]]);
+		$i++;
+	}
 	Session::flash('flash_message', 'Utente aggiunto!');
 	return redirect()->route('user.index');
     }

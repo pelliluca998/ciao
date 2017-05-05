@@ -1,0 +1,16 @@
+{
+    "name": "Elenco",
+    "alias": "elenco",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 12,
+    "providers": [
+        "Modules\\Elenco\\Providers\\ElencoServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

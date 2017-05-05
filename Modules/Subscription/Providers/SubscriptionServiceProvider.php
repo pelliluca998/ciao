@@ -31,14 +31,11 @@ class SubscriptionServiceProvider extends ServiceProvider
         //Popolo il menu con un link a questo modulo.
         //Il menu è stato definito in app/Provider/AppServiceProvider.php
         $menuList = Menu::get('SegrestaNavBar');
-	   $menuList->add("Iscrizioni", array("route" => "subscription.index"))
+	   /*$menuList->add("Iscrizioni", array("route" => "subscription.index"))
 	   		->prepend("<i class='fa fa-flag' aria-hidden='true'></i> ")
-	   		->data('permissions', ['adminmodule', 'all'])->data('order', 30);
-	   $menuList->add("Le tue iscrizioni", array("route" => "usersubscriptions.show"))
-	   		->prepend("<i class='fa fa-flag' aria-hidden='true'></i> ")
-	   		->data('permissions', ['usermodule', 'all'])->data('order', 4);
+	   		->data('permissions', ['adminmodule', 'all'])->data('order', 30);*/
 	   
-	   $menuList->get('iscrizioni')
+	   $menuList->get('eventi')
 	   		->add('Iscrizioni', array('route'  => 'subscription.index'))
 	   		->prepend("<i class='fa fa-flag' aria-hidden='true'></i> ")
 	   		->data('permissions', ['adminmodule', 'all'])->data('order', 31);

@@ -18,6 +18,7 @@ use App\Oratorio;
 @endif
 
 				<?php
+				$oratorio = null;
                       if(isset($_GET['id_oratorio'])){
                       	$oratorio = Oratorio::where('reg_token', $_GET['id_oratorio'])->first();
                       	if ($oratorio!=null){
@@ -153,10 +154,15 @@ use App\Oratorio;
                                 	}
                                 	echo "</select>";
                                 }else{
-                                	echo $oratorio->nome;
-                                	echo "<input type='hidden' name='id_oratorio' id='id_oratorio' value='".$oratorio->id."' />";
+                                	//echo $oratorio->nome;
+                                	echo "<select id='id_oratorio' class='form-control' name='id_oratorio' onchange='load_attrib_registration(this)'>";
+                                	echo "<option value='".$oratorio->id."'>".$oratorio->nome."</option>";
+                                	//echo "<input type='hidden' name='id_oratorio' id='id_oratorio' value='".$oratorio->id."' />";
+                                	echo "</select>";
+                                	
                                 }
-                                ?>
+                                ?>                                
+                                
                                 @if ($errors->has('id_oratorio'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('id_oratorio') }}</strong>
@@ -173,7 +179,7 @@ use App\Oratorio;
 
                                 @if ($errors->has('username'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('username') }}</strong>
+                                        <strong>{{ $errors->first('usernam$(document).ready(function(){e') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -251,4 +257,10 @@ use App\Oratorio;
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function(){
+	$("#id_oratorio").trigger("change");
+});
+</script>
 @endsection

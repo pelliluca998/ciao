@@ -101,7 +101,7 @@ function stampa_tabella($input, $select_value, $whereRaw, $columSpecs){
 	echo "</tr>";
 	echo "</thead>";
 	
-
+	$tot_iscritti = 0;
 	foreach($subs as $sub){
 		$r=0;
 		$filter_ok=true;
@@ -124,137 +124,139 @@ function stampa_tabella($input, $select_value, $whereRaw, $columSpecs){
 			}
 		}
 		if($filter_ok){
-		echo "<tr>";
-		echo "<td>".$sub->id_subs."</td>";
-		echo "<td>".$sub->cognome." ".$sub->name."</td>";
-		echo "<td>".$sub->type."</td>";
-		echo "<td>";
-		if($sub->confirmed=='1'){
-			echo "<i class='fa fa-check-square-o' aria-hidden='true'></i> ";
-		}else{
-			echo "<i class='fa fa-square-o' aria-hidden='true'></i>";
-		}
-		echo "</td>";
+			$tot_iscritti++;
+			echo "<tr>";
+			echo "<td>".$sub->id_subs."</td>";
+			echo "<td>".$sub->cognome." ".$sub->name."</td>";
+			echo "<td>".$sub->type."</td>";
+			echo "<td>";
+			if($sub->confirmed=='1'){
+				echo "<i class='fa fa-check-square-o' aria-hidden='true'></i> ";
+			}else{
+				echo "<i class='fa fa-square-o' aria-hidden='true'></i>";
+			}
+			echo "</td>";
 		
-		//SPECIFICHE UTENTE
-		if(count($input['spec_user'])>0){
-			foreach($input['spec_user'] as $user){
-				echo "<td>".$sub->$user."</td>";
-			}
-		}
-		//SPECIFICHE ISCRIZIONE
-		if(count($input['spec'])>0){
-			foreach($input['spec'] as $spec){
-				$whereSpec = array('id_eventspec' => $spec, 'id_subscription' => $sub->id_subs);
-
-				$value = EventSpecValue::leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')->where($whereSpec)->first();
-				echo "<td>";
-				if(isset($value->valore)){
-					if($value->id_type>0){
-						$val = TypeSelect::where('id', $value->valore)->get();
-						if(count($val)>0){
-							$val2 = $val[0];
-							echo $val2->option;
-						}else{
-							echo "";
-						}
-					}else{
-						switch($value->id_type){
-							case -1:
-								echo "<p>".$value->valore."</p>";
-								break;
-							case -2:
-								$icon = "<i class='fa ";
-								if($value->valore==1){
-									$icon .= "fa-check-square-o";
-								}else{
-									$icon .= "fa-square-o";
-								}
-								$icon .= " fa-2x' aria-hidden='true'></i>";
-								echo $icon;
-								break;
-							case -3:
-								echo "<p>".$value->valore."</p>";
-								break;
-							case -4:
-								$val = Group::where('id', $value->valore)->get();
-								if(count($val)>0){
-									$val2 = $val[0];
-									echo $val2->nome;
-								}else{
-									echo "";
-								}
-								break;
-						}
-					}				
-
-				}else{
-					echo "n.d.";
-
+			//SPECIFICHE UTENTE
+			if(count($input['spec_user'])>0){
+				foreach($input['spec_user'] as $user){
+					echo "<td>".$sub->$user."</td>";
 				}
-				echo "</td>";
 			}
-		}
-			
-		//ATTRIBUTI
-		if(count($input['att_spec'])>0){
-			foreach($input['att_spec'] as $at){
-				$whereSpec = array('id_attributo' => $at, 'id_user' => $sub->id_user);
+			//SPECIFICHE ISCRIZIONE
+			if(count($input['spec'])>0){
+				foreach($input['spec'] as $spec){
+					$whereSpec = array('id_eventspec' => $spec, 'id_subscription' => $sub->id_subs);
 
-				$value = AttributoUser::leftJoin('attributos', 'attributos.id', '=', 'attributo_users.id_attributo')->where($whereSpec)->first();
-				echo "<td>";
-				if(isset($value->valore)){
-					if($value->id_type>0){
-						$val = TypeSelect::where('id', $value->valore)->gGroupet();
-						if(count($val)>0){
-							$val2 = $val[0];
-							echo $val2->option;
+					$value = EventSpecValue::leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')->where($whereSpec)->first();
+					echo "<td>";
+					if(isset($value->valore)){
+						if($value->id_type>0){
+							$val = TypeSelect::where('id', $value->valore)->get();
+							if(count($val)>0){
+								$val2 = $val[0];
+								echo $val2->option;
+							}else{
+								echo "";
+							}
 						}else{
-							echo "";
-						}
+							switch($value->id_type){
+								case -1:
+									echo "<p>".$value->valore."</p>";
+									break;
+								case -2:
+									$icon = "<i class='fa ";
+									if($value->valore==1){
+										$icon .= "fa-check-square-o";
+									}else{
+										$icon .= "fa-square-o";
+									}
+									$icon .= " fa-2x' aria-hidden='true'></i>";
+									echo $icon;
+									break;
+								case -3:
+									echo "<p>".$value->valore."</p>";
+									break;
+								case -4:
+									$val = Group::where('id', $value->valore)->get();
+									if(count($val)>0){
+										$val2 = $val[0];
+										echo $val2->nome;
+									}else{
+										echo "";
+									}
+									break;
+							}
+						}				
+
 					}else{
-						switch($value->id_type){
-							case -1:
-								echo "<p>".$value->valore."</p>";
-								break;
-							case -2:
-								$icon = "<i class='fa ";
-								if($value->valore==1){
-									$icon .= "fa-check-square-o";
-								}else{
-									$icon .= "fa-square-o";
-								}
-								$icon .= " fa-2x' aria-hidden='true'></i>";
-								echo $icon;
-								break;
-							case -3:
-								echo "<p>".$value->valore."</p>";
-								break;
-							case -4:
-								$val = Group::where('id', $value->valore)->get();
-								if(count($val)>0){
-									$val2 = $val[0];
-									echo $val2->nome;
-								}else{
-									echo "";
-								}
-								break;
-						}
+						echo "n.d.";
+
 					}
-
-				}else{
-					echo "n.d.";
-
+					echo "</td>";
 				}
-				echo "</td>";
 			}
-		}
-		echo "</tr>";
+			
+			//ATTRIBUTI
+			if(count($input['att_spec'])>0){
+				foreach($input['att_spec'] as $at){
+					$whereSpec = array('id_attributo' => $at, 'id_user' => $sub->id_user);
+
+					$value = AttributoUser::leftJoin('attributos', 'attributos.id', '=', 'attributo_users.id_attributo')->where($whereSpec)->first();
+					echo "<td>";
+					if(isset($value->valore)){
+						if($value->id_type>0){
+							$val = TypeSelect::where('id', $value->valore)->gGroupet();
+							if(count($val)>0){
+								$val2 = $val[0];
+								echo $val2->option;
+							}else{
+								echo "";
+							}
+						}else{
+							switch($value->id_type){
+								case -1:
+									echo "<p>".$value->valore."</p>";
+									break;
+								case -2:
+									$icon = "<i class='fa ";
+									if($value->valore==1){
+										$icon .= "fa-check-square-o";
+									}else{
+										$icon .= "fa-square-o";
+									}
+									$icon .= " fa-2x' aria-hidden='true'></i>";
+									echo $icon;
+									break;
+								case -3:
+									echo "<p>".$value->valore."</p>";
+									break;
+								case -4:
+									$val = Group::where('id', $value->valore)->get();
+									if(count($val)>0){
+										$val2 = $val[0];
+										echo $val2->nome;
+									}else{
+										echo "";
+									}
+									break;
+							}
+						}
+
+					}else{
+						echo "n.d.";
+
+					}
+					echo "</td>";
+				}
+			}
+			echo "</tr>";
 		}
 	}
 
 
 echo "</table>";
+echo "<p><b>Totale iscritti: $tot_iscritti</b></p>";
 	}
 
 
@@ -268,12 +270,11 @@ foreach($input['user_filter'] as $f){
 }
 
 if($input['group']>0){
-		$selects = TypeSelect::where('id_type', $input['group'])->orderBy('ordine', 'asc')->get();
-		foreach($selects as $select){
-			echo "<h4>".$select->option."</h4>";
-			stampa_tabella($input, $select->id, $whereRaw, $columSpecs);
-		}
-
+	$selects = TypeSelect::where('id_type', $input['group'])->orderBy('ordine', 'asc')->get();
+	foreach($selects as $select){
+		echo "<h4>".$select->option."</h4>";
+		stampa_tabella($input, $select->id, $whereRaw, $columSpecs);
+	}
 }else{
 	stampa_tabella($input, 0,$whereRaw, $columSpecs);
 }

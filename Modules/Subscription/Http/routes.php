@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'role:admin', 'license:subscription'], 'prefix' => 'admin', 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:subscription'], 'prefix' => 'admin', 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
 {
 	Route::get('subscription', ['as' => 'subscription.index', 'uses' => 'SubscriptionController@indexCurrentEvent']);
 	Route::get('subscription/contact', ['as' => 'subscription.contact', 'uses' => 'SubscriptionController@contact']);
@@ -19,7 +19,7 @@ Route::group(['middleware' => ['web', 'role:admin', 'license:subscription'], 'pr
 	
 });
 
-Route::group(['middleware' => ['web', 'role:user|admin', 'license:subscription'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:user|admin|owner', 'license:subscription'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
 {
 	Route::post('subscribe/create', ['as' => 'subscribe.create', 'uses' => 'SubscriptionController@subscribe_create']); //chiamata dall'utente che vuole iscriversi all'evento
 	Route::post('subscribe/savesubscribe',['as' => 'subscribe.savesubscribe', 'uses' => 'SubscriptionController@savesubscribe']);
@@ -37,7 +37,7 @@ Route::group(['middleware' => ['web', 'role:user|admin', 'license:subscription']
 	
 });
 
-Route::group(['middleware' => ['web', 'role:user|dmin', 'license:subscription'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:user|admin|owner', 'license:subscription'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
 {
 	Route::get('subscriptions', ['as' => 'usersubscriptions.show', 'uses' => 'SubscriptionController@usersubscription']);
 	Route::get('usereventspecvalues', ['as' => 'usersubscriptions.showeventspecs', 'uses' => 'SubscriptionController@usersub_showeventspecs']);

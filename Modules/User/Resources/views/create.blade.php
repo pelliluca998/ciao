@@ -1,5 +1,8 @@
 <?php
 use App\User;
+use App\Group;
+use App\Attributo;
+use App\TypeSelect;
 ?>
 
 @extends('layouts.app')
@@ -81,14 +84,37 @@ use App\User;
 				</div>
 			
 				<div class="form-group">
-					<div class="form-group" style="width: 48%; float: left;">
+					<div class="form-group" style="width: 100%; float: left;">
 						{!! Form::label('photo', 'Foto Profilo') !!}
 						{!! Form::file('photo', null, ['class' => 'form-control']) !!}
 					</div>
 
 				</div>
 
-				
+				<?php
+					$attributi = Attributo::where('id_oratorio', Session::get('session_oratorio'))->orderBy('ordine', 'ASC')->get();
+				?>
+				<h2>Informazioni aggiuntive</h2>
+				@foreach($attributi as $a)
+					<div class="form-group">
+					{!! Form::hidden('id_attributo['.$loop->index.']', $a->id) !!}
+					{!! Form::label('a['.$loop->index.']', $a->nome) !!}
+					@if($a->id_type>0)
+						{!! Form::select('attributo['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+					@else
+						@if($a->id_type==-1)
+							{!! Form::text('attributo['.$loop->index.']', null, ['class' => 'form-control']) !!}
+						@elseif($a->id_type==-2)
+							{!! Form::hidden('attributo['.$loop->index.']', 0) !!}
+							{!! Form::checkbox('attributo['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+						@elseif($a->id_type==-3)
+							{!! Form::number('attributo['.$loop->index.']', null, ['class' => 'form-control']) !!}
+						@elseif($a->id_type==-4)
+							{!! Form::select('attributo['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}
+						@endif
+					@endif
+					</div>
+				@endforeach
 				<div class="form-group">
 				{!! Form::submit('Salva Utente', ['class' => 'btn btn-primary form-control']) !!}
 				</div>				

@@ -1,32 +1,128 @@
 <?php return array (
-  'session' => 
+  'image' => 
   array (
-    'driver' => 'file',
-    'lifetime' => 120,
-    'expire_on_close' => false,
-    'encrypt' => false,
-    'files' => '/var/www/segresta_admin/storage/framework/sessions',
-    'connection' => NULL,
-    'table' => 'sessions',
-    'store' => NULL,
-    'lottery' => 
+    'driver' => 'gd',
+  ),
+  'services' => 
+  array (
+    'mailgun' => 
     array (
-      0 => 2,
-      1 => 100,
+      'domain' => 'mailgun.segresta.it',
+      'secret' => 'key-aef2f7c2269f25786a0d16a402e90ac6',
     ),
-    'cookie' => 'laravel_session',
-    'path' => '/',
-    'domain' => NULL,
-    'secure' => false,
-    'http_only' => true,
+    'ses' => 
+    array (
+      'key' => NULL,
+      'secret' => NULL,
+      'region' => 'us-east-1',
+    ),
+    'sparkpost' => 
+    array (
+      'secret' => NULL,
+    ),
+    'stripe' => 
+    array (
+      'model' => 'App\\User',
+      'key' => NULL,
+      'secret' => NULL,
+    ),
+  ),
+  'mail' => 
+  array (
+    'driver' => 'mailgun',
+    'host' => NULL,
+    'port' => 587,
+    'from' => 
+    array (
+      'address' => 'info@segresta.it',
+      'name' => 'Segresta',
+    ),
+    'encryption' => NULL,
+    'username' => NULL,
+    'password' => NULL,
+    'sendmail' => '/usr/sbin/sendmail -bs',
+    'pretend' => false,
+  ),
+  'cache' => 
+  array (
+    'default' => 'array',
+    'stores' => 
+    array (
+      'apc' => 
+      array (
+        'driver' => 'apc',
+      ),
+      'array' => 
+      array (
+        'driver' => 'array',
+      ),
+      'database' => 
+      array (
+        'driver' => 'database',
+        'table' => 'cache',
+        'connection' => NULL,
+      ),
+      'file' => 
+      array (
+        'driver' => 'file',
+        'path' => '/var/www/segresta_admin/storage/framework/cache',
+      ),
+      'memcached' => 
+      array (
+        'driver' => 'memcached',
+        'persistent_id' => NULL,
+        'sasl' => 
+        array (
+          0 => NULL,
+          1 => NULL,
+        ),
+        'options' => 
+        array (
+        ),
+        'servers' => 
+        array (
+          0 => 
+          array (
+            'host' => '127.0.0.1',
+            'port' => 11211,
+            'weight' => 100,
+          ),
+        ),
+      ),
+      'redis' => 
+      array (
+        'driver' => 'redis',
+        'connection' => 'default',
+      ),
+    ),
+    'prefix' => 'laravel',
+  ),
+  'compile' => 
+  array (
+    'files' => 
+    array (
+    ),
+    'providers' => 
+    array (
+    ),
+  ),
+  'telegram' => 
+  array (
+    'bot_token' => '305880668:AAHY8PzersKLz2LD7yGxYtZ_12x3-eUiNQU',
+    'async_requests' => false,
+    'http_client_handler' => NULL,
+    'commands' => 
+    array (
+    ),
+    'name' => 'Telegram',
   ),
   'app' => 
   array (
     'name' => 'Segresta 2.0',
-    'env' => 'production',
+    'env' => 'local',
     'debug' => true,
     'url' => 'http://localhost/segresta_admin',
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Rome',
     'locale' => 'it',
     'fallback_locale' => 'en',
     'key' => 'base64:vCXs9qjoAWrzu9PTla8Ga2eCpDpjWVK0EAq7H3NEyMg=',
@@ -117,190 +213,46 @@
       'Module' => 'Nwidart\\Modules\\Facades\\Module',
     ),
   ),
-  'services' => 
+  'session' => 
   array (
-    'mailgun' => 
+    'driver' => 'file',
+    'lifetime' => 120,
+    'expire_on_close' => false,
+    'encrypt' => false,
+    'files' => '/var/www/segresta_admin/storage/framework/sessions',
+    'connection' => NULL,
+    'table' => 'sessions',
+    'store' => NULL,
+    'lottery' => 
     array (
-      'domain' => 'mailgun.segresta.it',
-      'secret' => 'key-aef2f7c2269f25786a0d16a402e90ac6',
+      0 => 2,
+      1 => 100,
     ),
-    'ses' => 
-    array (
-      'key' => NULL,
-      'secret' => NULL,
-      'region' => 'us-east-1',
-    ),
-    'sparkpost' => 
-    array (
-      'secret' => NULL,
-    ),
-    'stripe' => 
-    array (
-      'model' => 'App\\User',
-      'key' => NULL,
-      'secret' => NULL,
-    ),
+    'cookie' => 'laravel_session',
+    'path' => '/',
+    'domain' => NULL,
+    'secure' => false,
+    'http_only' => true,
   ),
-  'compile' => 
+  'laravel-menu' => 
   array (
-    'files' => 
+    'settings' => 
     array (
-    ),
-    'providers' => 
-    array (
-    ),
-  ),
-  'queue' => 
-  array (
-    'default' => 'sync',
-    'connections' => 
-    array (
-      'sync' => 
+      'default' => 
       array (
-        'driver' => 'sync',
-      ),
-      'database' => 
-      array (
-        'driver' => 'database',
-        'table' => 'jobs',
-        'queue' => 'default',
-        'retry_after' => 90,
-      ),
-      'beanstalkd' => 
-      array (
-        'driver' => 'beanstalkd',
-        'host' => 'localhost',
-        'queue' => 'default',
-        'retry_after' => 90,
-      ),
-      'sqs' => 
-      array (
-        'driver' => 'sqs',
-        'key' => 'your-public-key',
-        'secret' => 'your-secret-key',
-        'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
-        'queue' => 'your-queue-name',
-        'region' => 'us-east-1',
-      ),
-      'redis' => 
-      array (
-        'driver' => 'redis',
-        'connection' => 'default',
-        'queue' => 'default',
-        'retry_after' => 90,
+        'auto_activate' => true,
+        'activate_parents' => true,
+        'active_class' => 'active',
+        'restful' => false,
+        'cascade_data' => true,
+        'rest_base' => '',
+        'active_element' => 'item',
       ),
     ),
-    'failed' => 
+    'views' => 
     array (
-      'database' => 'mysql',
-      'table' => 'failed_jobs',
+      'bootstrap-items' => 'laravel-menu::bootstrap-navbar-items',
     ),
-  ),
-  'filesystems' => 
-  array (
-    'default' => 'local',
-    'cloud' => 's3',
-    'disks' => 
-    array (
-      'local' => 
-      array (
-        'driver' => 'local',
-        'root' => '/var/www/segresta_admin/storage/app',
-      ),
-      'public' => 
-      array (
-        'driver' => 'local',
-        'root' => '/var/www/segresta_admin/storage/app/public',
-        'visibility' => 'public',
-        'url' => 'http://localhost/segresta_admin/storage',
-      ),
-      's3' => 
-      array (
-        'driver' => 's3',
-        'key' => 'your-key',
-        'secret' => 'your-secret',
-        'region' => 'your-region',
-        'bucket' => 'your-bucket',
-      ),
-    ),
-  ),
-  'view' => 
-  array (
-    'paths' => 
-    array (
-      0 => '/var/www/segresta_admin/resources/views',
-    ),
-    'compiled' => '/var/www/segresta_admin/storage/framework/views',
-  ),
-  'cache' => 
-  array (
-    'default' => 'array',
-    'stores' => 
-    array (
-      'apc' => 
-      array (
-        'driver' => 'apc',
-      ),
-      'array' => 
-      array (
-        'driver' => 'array',
-      ),
-      'database' => 
-      array (
-        'driver' => 'database',
-        'table' => 'cache',
-        'connection' => NULL,
-      ),
-      'file' => 
-      array (
-        'driver' => 'file',
-        'path' => '/var/www/segresta_admin/storage/framework/cache',
-      ),
-      'memcached' => 
-      array (
-        'driver' => 'memcached',
-        'persistent_id' => NULL,
-        'sasl' => 
-        array (
-          0 => NULL,
-          1 => NULL,
-        ),
-        'options' => 
-        array (
-        ),
-        'servers' => 
-        array (
-          0 => 
-          array (
-            'host' => '127.0.0.1',
-            'port' => 11211,
-            'weight' => 100,
-          ),
-        ),
-      ),
-      'redis' => 
-      array (
-        'driver' => 'redis',
-        'connection' => 'default',
-      ),
-    ),
-    'prefix' => 'laravel',
-  ),
-  'mail' => 
-  array (
-    'driver' => 'mailgun',
-    'host' => NULL,
-    'port' => 587,
-    'from' => 
-    array (
-      'address' => 'info@segresta.it',
-      'name' => 'Segresta',
-    ),
-    'encryption' => NULL,
-    'username' => NULL,
-    'password' => NULL,
-    'sendmail' => '/usr/sbin/sendmail -bs',
-    'pretend' => false,
   ),
   'modules' => 
   array (
@@ -416,27 +368,63 @@
       'translations' => true,
     ),
   ),
-  'entrust' => 
+  'filesystems' => 
   array (
-    'role' => 'App\\Role',
-    'roles_table' => 'roles',
-    'permission' => 'App\\Permission',
-    'permissions_table' => 'permissions',
-    'permission_role_table' => 'permission_role',
-    'role_user_table' => 'role_user',
-    'user_foreign_key' => 'user_id',
-    'role_foreign_key' => 'role_id',
-  ),
-  'telegram' => 
-  array (
-    'bot_token' => '305880668:AAHY8PzersKLz2LD7yGxYtZ_12x3-eUiNQU',
-    'async_requests' => false,
-    'http_client_handler' => NULL,
-    'commands' => 
+    'default' => 'local',
+    'cloud' => 's3',
+    'disks' => 
     array (
-      0 => 'Modules\\Telegram\\Http\\Controllers\\Commands\\HelpCommand',
+      'local' => 
+      array (
+        'driver' => 'local',
+        'root' => '/var/www/segresta_admin/storage/app',
+      ),
+      'public' => 
+      array (
+        'driver' => 'local',
+        'root' => '/var/www/segresta_admin/storage/app/public',
+        'visibility' => 'public',
+        'url' => 'http://localhost/segresta_admin/storage',
+      ),
+      's3' => 
+      array (
+        'driver' => 's3',
+        'key' => 'your-key',
+        'secret' => 'your-secret',
+        'region' => 'your-region',
+        'bucket' => 'your-bucket',
+      ),
     ),
-    'name' => 'Telegram',
+  ),
+  'broadcasting' => 
+  array (
+    'default' => 'log',
+    'connections' => 
+    array (
+      'pusher' => 
+      array (
+        'driver' => 'pusher',
+        'key' => '',
+        'secret' => '',
+        'app_id' => '',
+        'options' => 
+        array (
+        ),
+      ),
+      'redis' => 
+      array (
+        'driver' => 'redis',
+        'connection' => 'default',
+      ),
+      'log' => 
+      array (
+        'driver' => 'log',
+      ),
+      'null' => 
+      array (
+        'driver' => 'null',
+      ),
+    ),
   ),
   'database' => 
   array (
@@ -491,9 +479,51 @@
       ),
     ),
   ),
-  'image' => 
+  'queue' => 
   array (
-    'driver' => 'gd',
+    'default' => 'sync',
+    'connections' => 
+    array (
+      'sync' => 
+      array (
+        'driver' => 'sync',
+      ),
+      'database' => 
+      array (
+        'driver' => 'database',
+        'table' => 'jobs',
+        'queue' => 'default',
+        'retry_after' => 90,
+      ),
+      'beanstalkd' => 
+      array (
+        'driver' => 'beanstalkd',
+        'host' => 'localhost',
+        'queue' => 'default',
+        'retry_after' => 90,
+      ),
+      'sqs' => 
+      array (
+        'driver' => 'sqs',
+        'key' => 'your-public-key',
+        'secret' => 'your-secret-key',
+        'prefix' => 'https://sqs.us-east-1.amazonaws.com/your-account-id',
+        'queue' => 'your-queue-name',
+        'region' => 'us-east-1',
+      ),
+      'redis' => 
+      array (
+        'driver' => 'redis',
+        'connection' => 'default',
+        'queue' => 'default',
+        'retry_after' => 90,
+      ),
+    ),
+    'failed' => 
+    array (
+      'database' => 'mysql',
+      'table' => 'failed_jobs',
+    ),
   ),
   'dompdf' => 
   array (
@@ -518,6 +548,55 @@
       'DOMPDF_FONT_HEIGHT_RATIO' => 1.1000000000000001,
       'DOMPDF_ENABLE_CSS_FLOAT' => false,
       'DOMPDF_ENABLE_HTML5PARSER' => false,
+    ),
+  ),
+  'entrust' => 
+  array (
+    'role' => 'App\\Role',
+    'roles_table' => 'roles',
+    'permission' => 'App\\Permission',
+    'permissions_table' => 'permissions',
+    'permission_role_table' => 'permission_role',
+    'role_user_table' => 'role_user',
+    'user_foreign_key' => 'user_id',
+    'role_foreign_key' => 'role_id',
+  ),
+  'auth' => 
+  array (
+    'defaults' => 
+    array (
+      'guard' => 'web',
+      'passwords' => 'users',
+    ),
+    'guards' => 
+    array (
+      'web' => 
+      array (
+        'driver' => 'session',
+        'provider' => 'users',
+      ),
+      'api' => 
+      array (
+        'driver' => 'token',
+        'provider' => 'users',
+      ),
+    ),
+    'providers' => 
+    array (
+      'users' => 
+      array (
+        'driver' => 'eloquent',
+        'model' => 'App\\User',
+      ),
+    ),
+    'passwords' => 
+    array (
+      'users' => 
+      array (
+        'provider' => 'users',
+        'table' => 'password_resets',
+        'expire' => 60,
+      ),
     ),
   ),
   'excel' => 
@@ -778,93 +857,13 @@
       ),
     ),
   ),
-  'laravel-menu' => 
+  'view' => 
   array (
-    'settings' => 
+    'paths' => 
     array (
-      'default' => 
-      array (
-        'auto_activate' => true,
-        'activate_parents' => true,
-        'active_class' => 'active',
-        'restful' => false,
-        'cascade_data' => true,
-        'rest_base' => '',
-        'active_element' => 'item',
-      ),
+      0 => '/var/www/segresta_admin/resources/views',
     ),
-    'views' => 
-    array (
-      'bootstrap-items' => 'laravel-menu::bootstrap-navbar-items',
-    ),
-  ),
-  'auth' => 
-  array (
-    'defaults' => 
-    array (
-      'guard' => 'web',
-      'passwords' => 'users',
-    ),
-    'guards' => 
-    array (
-      'web' => 
-      array (
-        'driver' => 'session',
-        'provider' => 'users',
-      ),
-      'api' => 
-      array (
-        'driver' => 'token',
-        'provider' => 'users',
-      ),
-    ),
-    'providers' => 
-    array (
-      'users' => 
-      array (
-        'driver' => 'eloquent',
-        'model' => 'App\\User',
-      ),
-    ),
-    'passwords' => 
-    array (
-      'users' => 
-      array (
-        'provider' => 'users',
-        'table' => 'password_resets',
-        'expire' => 60,
-      ),
-    ),
-  ),
-  'broadcasting' => 
-  array (
-    'default' => 'log',
-    'connections' => 
-    array (
-      'pusher' => 
-      array (
-        'driver' => 'pusher',
-        'key' => '',
-        'secret' => '',
-        'app_id' => '',
-        'options' => 
-        array (
-        ),
-      ),
-      'redis' => 
-      array (
-        'driver' => 'redis',
-        'connection' => 'default',
-      ),
-      'log' => 
-      array (
-        'driver' => 'log',
-      ),
-      'null' => 
-      array (
-        'driver' => 'null',
-      ),
-    ),
+    'compiled' => '/var/www/segresta_admin/storage/framework/views',
   ),
   'user' => 
   array (

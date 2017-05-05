@@ -36,12 +36,12 @@ class ReportServiceProvider extends ServiceProvider
 	   		->data('permissions', ['adminmodule', 'all'])->data('order', 40);
 	   
 	   $menuList->get('report')
-	   		->add('Report Specifiche evento', array('route'  => 'report.eventspec'))
+	   		->add('Specifiche generali', array('route'  => 'report.eventspec'))
 	   		->prepend("<i class='fa fa-file-text-o' aria-hidden='true'></i> ")
 	   		->data('permissions', ['adminmodule', 'all'])->data('order', 41);
 	   		
 	   $menuList->get('report')
-	   		->add('Report Specifiche settimane', array('route'  => 'report.weekspec'))
+	   		->add('Specifiche settimanali', array('route'  => 'report.weekspec'))
 	   		->prepend("<i class='fa fa-file-text-o' aria-hidden='true'></i> ")
 	   		->data('permissions', ['adminmodule', 'all'])->data('order', 42);
     }

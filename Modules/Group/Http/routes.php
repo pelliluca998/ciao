@@ -1,7 +1,7 @@
 <?php
 use App\Group;
 
-Route::group(['middleware' => ['web', 'role:admin', 'license:group'], 'prefix' => 'admin', 'namespace' => 'Modules\Group\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:group'], 'prefix' => 'admin', 'namespace' => 'Modules\Group\Http\Controllers'], function()
 {
 	Route::resource('group', 'GroupController', ['except' => ['edit', 'show']]);
 	Route::resource('groupuser', 'GroupUserController', ['only' => ['store']]);

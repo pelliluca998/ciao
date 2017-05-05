@@ -121,7 +121,7 @@ class SubscriptionController extends Controller
 		$input = $request->all();
 		$id = $input['id_sub'];
 		$subscription = Subscription::findOrFail($id);
-		$event = Event::findOrfail($sub->id_event);
+		$event = Event::findOrfail($subscription->id_event);
 		if($event->id_oratorio == Session::get('session_oratorio')){
 			return view('subscription::edit')->withSubscription($subscription);
 		}else{
@@ -204,7 +204,7 @@ class SubscriptionController extends Controller
 		}
         	$event = Event::findOrFail($input['id_event']);
         	if($event->more_subscriptions==0){
-            	$sub = (new Subscription)->where([['id_event', $id_event], ['id_user', $input['id_user']]])->get();
+            	$sub = (new Subscription)->where([['id_event', $event->id], ['id_user', $input['id_user']]])->get();
             	if(count($sub)>=1){
                 	Session::flash('flash_message', 'Sembra che tu sia già registrato per questo evento!');
 			    	return redirect('home');
@@ -221,6 +221,7 @@ class SubscriptionController extends Controller
 			//salvo le specifiche
 			$specs = $input['specs'];
 			$id_spec = $input['id_spec'];
+			$costo = $input['costo'];
 			$i=0;
 			foreach($specs as $spec){
 				$e = new EventSpecValue;
@@ -228,6 +229,8 @@ class SubscriptionController extends Controller
 				$e->valore=$spec;
 				$e->id_subscription = $sub->id;
 				$e->id_week=0;
+				$e->costo = $costo[$i];
+				$e->pagato = 0;
 				$e->save();
 				$i++;
 			}
@@ -244,6 +247,7 @@ class SubscriptionController extends Controller
 			$valore = $input['valore'];
 			$id_eventspec = $input['id_eventspec'];
 			$id_week = $input['id_week'];
+			$costo = $input['costo'];
 			$i=0;
 			foreach($valore as $valore){
 				$e = new EventSpecValue;
@@ -251,6 +255,8 @@ class SubscriptionController extends Controller
 				$e->valore=$valore;
 				$e->id_subscription = $input['id_subscription'];
 				$e->id_week = $id_week[$i];
+				$e->pagato = 0;
+				$e->costo = $costo[$i];
 				$e->save();
 				$i++;
 			}
@@ -261,7 +267,7 @@ class SubscriptionController extends Controller
 		//$html = View::make('pdf.subscription', []);
 		//return PDF::loadHTML($html)->download('invoice.pdf');
 		$input = $request->all();
-		$id_subscription = $input['id_subscription'];		
+		$id_subscription = $input['id_sub'];		
 		$sub = Subscription::findOrFail($id_subscription);
 		$event = Event::findOrfail($sub->id_event);
 		if($event->id_oratorio == Session::get('session_oratorio')){

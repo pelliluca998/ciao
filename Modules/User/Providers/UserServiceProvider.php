@@ -30,19 +30,7 @@ class UserServiceProvider extends ServiceProvider
         $this->app['router']->aliasMiddleware('license', \App\Http\Middleware\CheckLicense::class);
         //Popolo il menu con un link a questo modulo.
         //Il menu è stato definito in app/Provider/AppServiceProvider.php
-        $menuList = Menu::get('SegrestaNavBar');
-        $menuList->add('Il tuo profilo',array('route'  => 'profile.show'))
-        		->prepend("<i class='fa fa-address-card-o' aria-hidden='true'></i> ")
-        		->data('permissions', ['usermodule', 'all'])->data('order', 1)
-        		->nickname('profilo');
-        $menuList->get('profilo')
-	   		->add('Il tuo profilo', array('route'  => 'profile.show'))
-	   		->prepend("<i class='fa fa-address-card-o' aria-hidden='true'></i> ")
-	   		->data('permissions', ['usermodule', 'all'])->data('order', 2);
-	   $menuList->get('profilo')
-	   		->add('Affiliazione oratorio', array('route'  => 'oratorio.affiliazione'))
-	   		->prepend("<i class='fa fa-cubes' aria-hidden='true'></i> ")
-	   		->data('permissions', ['usermodule', 'all'])->data('order', 2);
+        $menuList = Menu::get('SegrestaNavBar');           
 	   $menuList->add("Anagrafica", array("route" => "user.index"))
 	   		->prepend("<i class='fa fa-user' aria-hidden='true'></i> ")
 	   		->data('permissions', ['adminmodule', 'all'])->data('order', 2);

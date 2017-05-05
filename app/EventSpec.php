@@ -12,7 +12,7 @@ class EventSpec extends Model
      * @var array
      */
     protected $fillable = [
-        'id_event', 'valid_for', 'general', 'label', 'descrizione', 'id_type', 'hidden'
+        'id_event', 'valid_for', 'general', 'label', 'descrizione', 'id_type', 'hidden', 'price'
     ];
 
     /**

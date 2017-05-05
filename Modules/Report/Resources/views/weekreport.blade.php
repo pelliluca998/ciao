@@ -46,7 +46,7 @@ function stampa_tabella($input){
 	foreach($weeks as $week){
 		//controllo che per la settimana corrente sia stato scelto qualche campo da stampare...
 		if(isset($input['week'][$w])){
-			echo "<h2>Settimana dal ".$week->from_date." al ".$week->to_date."</h2>";
+			echo "<h2>Settimana dal ".$week->from_date." al ".$week->to_date."</h2>";			
 			echo "<table class='testgrid'>";
 			echo "<tr>";
 			echo "<th>ID</th>";
@@ -77,7 +77,8 @@ function stampa_tabella($input){
  					->get()
  					->toArray())
  				->get();
-			foreach($subs as $sub){
+ 				$tot_iscritti = 0;
+			foreach($subs as $sub){				
 				/** Prima di stampare la riga, controllo quali campi hanno il flag Filtra==1
 				Per ogni filtro, eseguo una query e verifico se corrisponde al valore del filtro impostato
 				**/
@@ -104,6 +105,7 @@ function stampa_tabella($input){
 					$f++;
 				}
             		if($filter_ok){
+            			$tot_iscritti++;
 					echo "<tr>";
 					echo "<td>".$sub->id."</td>";
 					echo "<td>".$sub->cognome."</td>";
@@ -207,6 +209,7 @@ function stampa_tabella($input){
 				}
         		}
 			echo "</table>";
+			echo "<p><b>Totale iscritti: $tot_iscritti</b></p>";
 			$w++;
 		}
 	}

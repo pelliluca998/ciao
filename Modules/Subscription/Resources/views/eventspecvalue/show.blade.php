@@ -63,7 +63,7 @@ $specs = (new EventSpecValue)
 	->orderBy('event_spec_values.id_eventspec', 'asc')
 	->get();
 ?>
-@if(count($specs)>0)
+
 <h2>Specifiche generali</h2>
 <table class='testgrid' id='showeventspecvalue'>
 	<thead><tr>
@@ -96,11 +96,13 @@ $specs = (new EventSpecValue)
 			@endif
 			</td>
 			<td>
-				{!! Form::number('costo['.$loop->index.']', $spec->costo, ['class' => 'form-control', 'step' => 'any']) !!}
+				{!! Form::number('costo['.$loop->index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'min' =>'0', 'step' => '0.01']) !!}
 			</td>
 			<td>
 				{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-	               {!! Form::checkbox('pagato['.$loop->index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
+				@if($spec->costo>0)
+		               {!! Form::checkbox('pagato['.$loop->index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
+		          @endif
 			</td>
 			<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
 		</tr>
@@ -109,9 +111,7 @@ $specs = (new EventSpecValue)
 		@endphp
 	@endforeach
 </table><br>
-@else
-	<i>Nessuna specifica generale!</i>
-@endif
+
 
 <?php
 $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
@@ -166,11 +166,13 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 				@endif
 				</td>
 				<td>
-					{!! Form::number('costo['.$index.']', $spec->costo, ['class' => 'form-control', 'step' => 'any']) !!}
+					{!! Form::number('costo['.$index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'min' =>'0', 'step' => '0.01']) !!}
 				</td>
 				<td>
 					{!! Form::hidden('pagato['.$index.']', 0) !!}
-		               {!! Form::checkbox('pagato['.$index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
+					@if($spec->costo>0)
+			               {!! Form::checkbox('pagato['.$index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
+			          @endif
 				</td>
 				<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
 			</tr>

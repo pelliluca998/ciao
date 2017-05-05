@@ -22,7 +22,7 @@ class ReportController extends Controller
 		  return view('report::composer_eventspec');
 	   }else{
 		  Session::flash('flash_message', 'Per generare il report delle iscrizioni, devi prima selezionare un evento con cui lavorare!');
-		  return redirect()->route('event.index');
+		  return redirect()->route('events.index');
 	   }
 	}
 
@@ -31,7 +31,7 @@ class ReportController extends Controller
 		  return view('report::composer_weekspec');
 	   }else{
 		  Session::flash('flash_message', 'Per generare il report delle iscrizioni, devi prima selezionare un evento con cui lavorare!');
-		  return redirect()->route('event.index');
+		  return redirect()->route('events.index');
 	   }
 
 	}	

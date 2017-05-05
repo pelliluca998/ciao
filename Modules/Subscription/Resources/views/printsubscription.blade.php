@@ -96,17 +96,19 @@ Iscrizione #{!! $id_subscription !!}
 <h4>Specifiche iscrizioni - Generale</h4>
 <?php
 $id_event=Session::get('work_event');
-$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type')
+$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.pagato')
 	->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 	->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 1]])
 	->orderBy('event_spec_values.id_eventspec', 'asc')->get();
-
+$importo_totale = 0.00;
 ?>
 
 <table class='testgrid' id='showeventspecvalue'>
 <thead><tr>
 <th style='width: 60%;'>Specifica</th>
 <th>Valore</th>
+<th>Costo (€)</th>
+<th>Pagato</th>
 </tr></thead>
 
 @foreach($specs as $spec)
@@ -132,6 +134,19 @@ $specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_s
 			@elseif($spec->id_type==-4)
 				{{Group::where('id', $spec->valore)->first()->nome}}
 			@endif
+		@endif
+	</td>
+	<td>
+		{{$spec->costo}} €
+		@php
+			$importo_totale += floatval($spec->costo)
+		@endphp
+	</td>
+	<td>
+		@if($spec->pagato==1)
+			<i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
+		@else
+			<i class="fa fa-square-o fa-2x" aria-hidden="true"></i>
 		@endif
 	</td>
 	</tr>
@@ -188,7 +203,10 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 					@endif
 					</td>
 					<td>
-						0,00 €
+						{{$spec->costo}} €
+						@php
+							$importo_totale += floatval($spec->costo)
+						@endphp
 					</td>
 					<td>
 						@if($spec->pagato==1)
@@ -209,6 +227,8 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 @endif
 
 
+<br>
+<p style="text-align: right"><b>Importo totale: {{$importo_totale}}€</b></p>
 <br>
 <div style="float:left; text-align: justify; text-justify: inter-word;">
 <p style="font-size: 10px;">

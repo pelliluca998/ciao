@@ -44,7 +44,16 @@ use App\Week;
 			</tr>
 		</thead>
 		@foreach($specs as $a)
-			<tr>
+				<?php
+				$valid = json_decode($a->valid_for, true);
+				$price = json_decode($a->price, true);
+				$price_0 = 0; //prezzo per la colonna generale
+				if(isset($price[0])){
+					$price_0 = $price[0];
+				}
+				
+				?>
+			<tr id="row_{{$loop->index}}">
 			{!! Form::hidden('id_spec['.$loop->index.']', $a->id) !!}
 			{!! Form::hidden('event['.$loop->index.']', $id_event) !!}
 			<td>
@@ -60,19 +69,27 @@ use App\Week;
 			
 			<td>
 				{!! Form::hidden('general['.$loop->index.']', 0) !!}
-				{!! Form::checkbox("general[".$loop->index."]", 1, $a->general, ['class' => 'form-control']) !!}
+				{!! Form::checkbox("general[".$loop->index."]", 1, $a->general, ['id' => "general_".$a->id, 'class' => 'form-control', "onclick" => "check_week($a->id, 0, true)"]) !!}
+				<br>
+				{!! Form::number("price[".$a->id."][0]", $price_0, ['class' => 'form-control', 'style' => 'width: 70px;', 'min' =>'0', 'step' => '0.01']) !!}
 			</td>
 			@foreach($weeks as $w)
 				<td>
-				<?php
-				$valid = json_decode($a->valid_for, true);
-				?>
+				
 				{!! Form::hidden("valid_for[".$a->id."][".$w->id."]", 0) !!}
 				@if(isset($valid[$w->id]))
-					{!! Form::checkbox("valid_for[".$a->id."][".$w->id."]", 1, $valid[$w->id], ['class' => 'form-control']) !!}
+					{!! Form::checkbox("valid_for[".$a->id."][".$w->id."]", 1, $valid[$w->id], ['id' => "check_".$a->id."_".$w->id, 'class' => 'form-control', "onclick" => "check_week($a->id, $w->id, false)"]) !!}
 				@else
-					{!! Form::checkbox("valid_for[".$a->id."][".$w->id."]", 1, 0, ['class' => 'form-control']) !!}
+					{!! Form::checkbox("valid_for[".$a->id."][".$w->id."]", 1, 0, ['id' => "check_".$a->id."_".$w->id, 'class' => 'form-control', "onclick" => "check_week($a->id, $w->id, false)"]) !!}
 				@endif
+				<br>
+				@php
+					$price_w = 0;
+					if(isset($price[$w->id])){
+						$price_w = $price[$w->id];
+					}
+				@endphp
+				{!! Form::number("price[".$a->id."][".$w->id."]", $price_w, ['class' => 'form-control', 'style' => 'width: 70px;', 'min' =>'0', 'step' => '0.01']) !!}
 				</td>
 			@endforeach
 			
@@ -83,7 +100,7 @@ use App\Week;
 				{!! Form::checkbox("hidden[".$loop->index."]", 1, $a->hidden, ['class' => 'form-control']) !!}
 			</td>
 			<td>
-				<a href="{{url('admin/eventspecs', [$a->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+				<button onclick="elencovalue_destroy({{$a->id}}, {{$loop->index}})" style="font-size: 15px;" type='button' class="btn btn-primary btn-sm" ><i class="fa fa-trash fa-2x" aria-hidden="true"></i></button>
 			</td>
 			</tr>
 			@php
@@ -103,7 +120,16 @@ use App\Week;
     </div>
 </div>
 
-<?php
-
-?>
+<script>
+	function check_week(a, w, general){
+		if(general && $('#general_'+a).is(':checked')){	
+				//setto tutte le settimane !check
+				var weeks = $('[id^=check_'+a+']').prop('checked', false);
+		}else{
+			if($('#check_'+a+'_'+w).is(':checked')){
+				var general = $('[id=general_'+a+']').prop('checked', false);
+			}
+		}
+	}
+</script>
 @endsection

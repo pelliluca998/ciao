@@ -12,6 +12,12 @@ use App\EventSpecValue;
 use App\EventSpec;
 use App\Event;
 use App\Subscription;
+use App\Bilancio;
+use App\User;
+use App\Cassa;
+use App\ModoPagamento;
+use App\TipoPagamento;
+use Module;
 use Input;
 use Session;
 use Auth;
@@ -87,6 +93,15 @@ class EventSpecValueController extends Controller
 			if(Auth::user()->hasRole('admin')){
 				if($event->id_oratorio==Session::get('session_oratorio')){					
 					$value->delete();
+					//delete riga da bilancio
+					if(Module::find('contabilita')!=null){
+						$bilancio = Bilancio::where('id_eventspecvalues', $id)->get();
+						if(count($bilancio)>0){
+							foreach($bilancio as $b){
+								$b->delete();
+							}
+						}
+					}
 					Session::flash("flash_message", "Specifica $id cancellata!");
 				}else{
 					abort(403, 'Unauthorized action.');
@@ -122,11 +137,15 @@ class EventSpecValueController extends Controller
 		$id_week = Input::get('id_week');
 		$i=0;
 		ksort($valore);
-		var_dump($valore);
+		//var_dump($valore);
+		$subscription = Subscription::findOrFail($id_subscription[0]);
+		$user = User::findOrFail($subscription->id_user);
 		foreach($valore as $value) {
+			$old_pagato = 0;
 			if($id_eventspecvalue[$i]>0){
 				//update
 				$spec = EventSpecValue::findOrFail($id_eventspecvalue[$i]);
+				$old_pagato = $spec->pagato;				
 				$spec->valore = $value;
 				$spec->costo = floatval($costo[$i]);
 				$spec->pagato = $pagato[$i];
@@ -142,6 +161,47 @@ class EventSpecValueController extends Controller
 				$spec->pagato = $pagato[$i];
 				$spec->save();
 			}
+			//contabilita
+			if(Module::find('contabilita')!=null){
+				if($old_pagato==0 && $pagato[$i]==1){
+					//pagamento avvenuto ora, salvo una riga in bilancio
+					$id_cassa=0;
+					$id_modo=0;
+					$id_tipo=0;
+					$cassa = Cassa::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
+					if(count($cassa)>0){
+						$id_cassa = $cassa[0]->id;
+					}
+					$modo = ModoPagamento::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
+					if(count($modo)>0){
+						$id_modo = $modo[0]->id;
+					}
+					$tipo = TipoPagamento::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
+					if(count($tipo)>0){
+						$id_tipo = $tipo[0]->id;
+					}
+					$bilancio = new Bilancio;
+					$bilancio->id_event = Session::get('work_event');
+					$bilancio->id_user = Auth::user()->id;
+					$bilancio->id_eventspecvalues = $spec->id;
+					$bilancio->id_tipopagamento = $id_tipo;
+					$bilancio->id_modalita = $id_modo;
+					$bilancio->id_cassa = $id_cassa;
+					$bilancio->descrizione = "Pagamento da ".$user->cognome." ".$user->name." (iscrizione #".$subscription->id.")";
+					$bilancio->importo = floatval($costo[$i]);
+					$bilancio->data = date('Y-m-d');
+					$bilancio->save();
+				}elseif($old_pagato==1 && $pagato[$i]==0){
+					//elimino la riga corrispondente in bilancio
+					$bilancio = Bilancio::where('id_eventspecvalues', $spec->id)->get();
+					if(count($bilancio)>0){
+						foreach($bilancio as $b){
+							$b->delete();
+						}
+					}
+				}
+			}
+			//endcontabilita
     			$i++;
 		}
 		Session::flash("flash_message", "Dettagli salvati!");

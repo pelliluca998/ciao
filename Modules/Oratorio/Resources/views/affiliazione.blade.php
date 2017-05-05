@@ -23,6 +23,10 @@ use App\UserOratorio;
 					{!! Form::select("id_oratorio", Oratorio::where('reg_visible', true)->pluck('nome', 'id'), null, ['class' => 'form-control']) !!}<br>
 					{!! Form::submit('Salva!', ['class' => 'btn btn-primary form-control']) !!}
 				{!! Form::close() !!}
+				<br>
+				{!! Form::open(['route' => 'oratorio.neworatorio']) !!}
+					{!! Form::submit('Crea nuovo oratorio!', ['class' => 'btn btn-primary form-control']) !!}
+				{!! Form::close() !!}
 				
 				<div style="margin-top: 50px;">
 					<?php

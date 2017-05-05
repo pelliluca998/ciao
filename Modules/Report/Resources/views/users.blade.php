@@ -43,7 +43,9 @@ function stampa_tabella($input, $whereRaw){
 $subs = DB::table('subscriptions as sub')->select('sub.id as id_subs', 'users.*', 'sub.type', 'sub.confirmed', 'users.id as id_user')->leftJoin('users', 'users.id', '=', 'sub.id_user')->leftJoin('event_spec_values', 'event_spec_values.id_subscription', '=', 'sub.id')->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')->whereRaw('event_spec_values.valore = '.$select_value.' AND event_specs.id_type > 2 AND '.$whereRaw)->orderBy('users.cognome', 'asc')->orderBy('users.name', 'asc');
 
 	}else{*/
-		$subs = User::select('users.*')->whereRaw($whereRaw)->orderBy('users.cognome', 'asc')->orderBy('users.name', 'asc');
+		$subs = User::select('users.*')
+		->leftJoin('user_oratorio', 'user_oratorio.id_user', 'users.id')
+		->whereRaw($whereRaw)->orderBy('users.cognome', 'asc')->orderBy('users.name', 'asc');
 	//}
 	//echo $subs->toSql();
 	$subs = $subs->get();
@@ -170,7 +172,7 @@ foreach($keys as $key){
 	}
 }
 
-$whereRaw = "";
+$whereRaw = "user_oratorio.id_oratorio = ".Session::get('session_oratorio');
 $i=0;
 foreach($input['user_filter'] as $f){
 	if($f=='1'){
