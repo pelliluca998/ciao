@@ -108,6 +108,12 @@ use App\Type;
                 ->get();
 
             ?>
+            <h3>Cambia password</h3>
+            <div class="form-group">
+		       <p>Se vuoi cambiare la tua password, inseriscila qui sotto</p>
+		       {!! Form::label('password', 'Nuova password') !!}
+		       {!! Form::password('password', null, ['class' => 'form-control']) !!}
+		  </div>
             @if(count($attributos)>0)
             <h3>Informazioni aggiuntive</h3>
             @endif

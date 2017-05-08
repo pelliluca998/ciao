@@ -58,7 +58,7 @@ use App\EventSpec;
 
 						    <div class="form-group" style="width: 48%; float: left;">
 									{!! Form::label('spec_iscrizione', 'Quale specfica stampare nel modulo di iscrizione invece dell\'anagrafica?') !!}
-									{!! Form::select('spec_iscrizione', EventSpec::where('id_event', $event->id)->where('event_specs.id_type', -1)->orderBy('event_specs.id')->pluck('event_specs.label', 'event_specs.id'), null, ['class' => 'form-control']) !!}
+									{!! Form::select('spec_iscrizione', EventSpec::where([['id_event', $event->id], ['event_specs.id_type', -1], ['event_specs.general', 1]])->orderBy('event_specs.id')->pluck('event_specs.label', 'event_specs.id'), null, ['class' => 'form-control']) !!}
 						    </div>
 						</div>
 

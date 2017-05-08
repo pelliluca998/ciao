@@ -39,8 +39,9 @@ use App\Oratorio;
 	
 	<script src="{{ asset('/js/jscolor.js') }}"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="{{ asset('/js/datepicker-it.js') }}"></script>
 
 </head>
 <body>
@@ -270,9 +271,15 @@ tinymce.init({
 });
 	 
 $(function() {
-		$("#datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
-		$("#datepicker2").datepicker({ dateFormat: 'dd/mm/yy' });
-		$("#nato_il").datepicker({ dateFormat: 'dd/mm/yy' });
+	$.datepicker.setDefaults(
+		$.extend(
+			{'dateFormat':'dd/mm/yy'},
+			$.datepicker.regional['it']
+		)
+	);
+	$("#datepicker").datepicker();
+	$("#datepicker2").datepicker();
+	$("#nato_il").datepicker();
 });
 
 function add_eventspec(id_sub, id_event, admin){

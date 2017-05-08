@@ -137,8 +137,8 @@ use ValidatesRequests;
         	$input = $request->all();
 		$id = $input['id_user'];
 		$user = User::findOrFail($id);
-		$orat = UserOratorio::where('id_user', $user->id)->first();
-		if($orat->id_oratorio == Session::get('session_oratorio')){
+		$orat = UserOratorio::where([['id_user', $user->id], ['id_oratorio', Session::get('session_oratorio')]])->get();
+		if(count($orat)>0){
 			return view('user::edit')->withUser($user);
 		}else{
 			abort(403, 'Unauthorized action.');
@@ -232,6 +232,11 @@ use ValidatesRequests;
 				if($user->photo!=""){
 					Storage::delete('public/'.$user->photo);
 				}
+			}
+			if(strlen($input['password'])>0){
+				$input['password'] = Hash::make($input['password']);
+			}else{
+				unset($input['password']);
 			}
 			$user->fill($input)->save();
 			//Salvo gli attributi			
