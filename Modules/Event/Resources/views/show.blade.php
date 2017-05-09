@@ -57,26 +57,31 @@ use Nayjest\Grids\ObjectDataRow;
                              "desc" => "",
                             "url" => "events.edit",
                             "class" => "btn-primary",
+                            "toggle" => "",
                             "icon" => ""],
                              ["label" => "Lavora con questo evento",
                              "desc" => "",
                             "url" => "events.work",
                             "class" => "btn-primary",
+                            "toggle" => "",
                              "icon" => ""],
                             ["label" => "Vedi iscrizioni",
                              "desc" => "",
                             "url" => "subscription.event",
+                            "toggle" => "",
                             "class" => "btn-primary",
                              "icon" => ""],
                             ["label" => "Specifiche",
                              "desc" => "",
                             "url" => "eventspecs.show",
+                            "toggle" => "",
                             "class" => "btn-primary",
                              "icon" => ""],
                             ["label" => "Elimina evento",
                              "desc" => "L'operazione è irreversibile!",
                             "url" => "events.destroy",
                             "class" => "btn-danger",
+                            "toggle" => "confirmation",
                             "icon" => ""]
                         );
                         ?>
@@ -88,7 +93,7 @@ use Nayjest\Grids\ObjectDataRow;
                                 <div style="margin: 5px;">
                                 {!! Form::open(['route' => $button['url'], 'method' => 'GET']) !!}
                                 {!! Form::hidden('id_event', '0', ['id' => 'id_event']) !!}
-                                {!! Form::submit($button['label'], ['class' => 'btn '.$button['class']]) !!}
+                                {!! Form::submit($button['label'], ['class' => 'btn '.$button['class'], 'data-toggle' => $button['toggle']]) !!}
                                 {{$button['desc']}}
                                 {!! Form::close() !!}
                                 </div>
@@ -249,6 +254,18 @@ $(document).ready(function(){
 	modal.find('#name').text(name);
 	modal.find("[id*='id_event']").val(eventid);
 	});
+	
+	$('[data-toggle=confirmation]').confirmation({
+		rootSelector: '[data-toggle=confirmation]',
+		title: 'Sicuro di eliminare l\'evento selezionato?',
+		btnOkLabel: 'Si, elimina!',
+		btnOkIcon: 'glyphicon glyphicon-share-alt',
+		btnOkClass: 'btn-success',
+		btnCancelLabel: 'Annulla',
+		btnCancelIcon: 'glyphicon glyphicon-ban-circle',
+		btnCancelClass: 'btn-danger'
+	});
 });
 </script>
+
 @endsection

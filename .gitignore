@@ -3,4 +3,5 @@ Modules/Email
 Modules/Telegram
 Modules/Contabilita
 public/storage
+resources/views/piwik.blade.php
 .env

@@ -100,7 +100,7 @@ use App\Week;
 				{!! Form::checkbox("hidden[".$loop->index."]", 1, $a->hidden, ['class' => 'form-control']) !!}
 			</td>
 			<td>
-				<button onclick="elencovalue_destroy({{$a->id}}, {{$loop->index}})" style="font-size: 15px;" type='button' class="btn btn-primary btn-sm" ><i class="fa fa-trash fa-2x" aria-hidden="true"></i></button>
+				<button onclick="eventspec_destroy({{$a->id}}, {{$loop->index}})" style="font-size: 15px;" type='button' class="btn btn-primary btn-sm" ><i class="fa fa-trash fa-2x" aria-hidden="true"></i></button>
 			</td>
 			</tr>
 			@php

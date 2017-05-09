@@ -137,6 +137,9 @@ use ValidatesRequests;
 		$id = $input['id_event'];
 		$sub = Event::findOrFail($id);
 		if($sub->id_oratorio==Session::get('session_oratorio')){
+			if(Session::get('work_event')==$sub->id){
+				Session::forget('work_event');
+			}
 			$sub->delete();
 	    		Session::flash("flash_message", "Evento '". $sub->nome."' cancellato!");
 			return redirect()->route('events.index');
