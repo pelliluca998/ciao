@@ -1,5 +1,6 @@
 <?php
 use App\EventSpec;
+use App\Group;
 use App\Type;
 use App\TypeSelect;
 use App\Attributo;
@@ -21,39 +22,43 @@ use App\Attributo;
 				{!! Form::open(['route' => 'subscription.contact_send']) !!}
 				<?php
 				$id_event=Session::get('work_event');
-
-				$specs = (new EventSpec)->select('event_specs.label', 'event_specs.id', 'types.label as type', 'types.id as id_type')->leftJoin('types', 'event_specs.id_type', '=', 'types.id')->where('event_specs.id_event', $id_event)->orderBy('event_specs.label', 'asc')->get();
-				echo "<table class='testgrid' id=''>";
-				echo "<thead><tr>";
-				echo "<th style='width: 60%;'>Specifica</th>";
-				echo "<th>Filtra?</th>";
-				echo "<th>Valore del filtro:</th>";
-				echo "</tr></thead>";
-				
-				$t=0;
-				foreach($specs as $spec){	
-					echo "<tr>";
-					echo "<td>".$spec->label."</td>";
-					echo "<td><input type='hidden' name='filter[".$t."]' value='0'/><input name='filter[".$t."]' value='1' type='checkbox'/></td>";
-
-					$r = "<td><input name='filter_id[$t]' type='hidden' value='".$spec->id."'/>";
-					if($spec->type=="text"){
-						$r .= "<input name='filter_value[".$t."]' type='text'>";
-					}else if($spec->type=="checkbox"){
-						$r .= "<input name='filter_value[".$t."]' type=hidden value='0' >";
-						$r .= "<input name='filter_value[".$t."]' type='checkbox' value='1'>";
-					}else{
-						$r .= Form::select("filter_value[$t]", TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'style' => 'width: inherit;']);
-					}
-
-					echo $r."</td></tr>";
-					$t++;
-				}
-
-				//echo "</tr>";
-				echo "</table><br>";
-
+				$specs = (new EventSpec)->select('event_specs.label', 'event_specs.id', 'event_specs.id_type as id_type')->leftJoin('types', 'event_specs.id_type', '=', 'types.id')->where('event_specs.id_event', $id_event)->orderBy('event_specs.label', 'asc')->get();
 				?>
+				<table class='testgrid' id=''>
+				<thead><tr>
+					<th style='width: 60%;'>Specifica</th>
+					<th>Filtra?</th>
+					<th>Valore del filtro:</th>
+				</tr></thead>
+				
+				@foreach($specs as $spec)
+					<tr>
+										
+					<td>{{$spec->label}}</td>
+					<td><input type='hidden' name="filter[{{$loop->index}}]" value="0"/>
+					<input name="filter[{{$loop->index}}]" value="1" type="checkbox"/></td>
+					<td>
+						<input name="filter_id[{{$loop->index}}]" type="hidden" value="{{$spec->id}}" />
+					
+					@if($spec->id_type>0)
+						{!! Form::select('filter_value['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+					@else
+						@if($spec->id_type==-1)
+							{!! Form::text('filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+						@elseif($spec->id_type==-2)
+							{!! Form::hidden('filter_value['.$loop->index.']', 0) !!}
+							{!! Form::checkbox('filter_value['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+						@elseif($spec->id_type==-3)
+							{!! Form::number('filter_valore['.$loop->index.']', '', ['class' => 'form-control']) !!}
+						@elseif($spec->id_type==-4)
+							{!! Form::select('filter_value['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
+						@endif
+					@endif
+					
+					</td>
+					</tr>
+				@endforeach
+				</table><br>
 
 				<h4>Infomazioni <b>riguardanti gli utenti</b>:</h4>
 				<?php
@@ -94,34 +99,39 @@ use App\Attributo;
 				?>
 				<h4>Attributi degli utenti:</h4>
 				<?php
-				echo "<table class='testgrid' id=''>";
-				echo "<thead><tr>";
-				echo "<th style='width: 60%;'>Attributo</th>";
-				echo "<th>Filtra?</th>";
-				echo "<th>Valore del filtro:</th>";
-				echo "</tr></thead>";
 				$attributos = Attributo::select('attributos.*', 'types.label as type')->leftJoin('types', 'attributos.id_type', '=', 'types.id')->where('attributos.id_oratorio', Session::get('session_oratorio'))->orderBy('ordine', 'ASC')->get();
-				$t=0;
-				foreach($attributos as $a){
-					echo "<tr>";
-					echo "<td>".$a->nome."</td>";
-					echo "<td><input type='hidden' name='att_filter[".$t."]' value='0'/><input name='att_filter[".$t."]' value='1' type='checkbox'/></td>";
-
-					$r = "<td><input name='att_filter_id[$t]' type='hidden' value='".$a->id."'/>";
-					if($a->type=="text"){
-						$r .= "<input name='att_filter_value[".$t."]' type='text'>";
-					}else if($a->type=="checkbox"){
-						$r .= "<input name='att_filter_value[".$t."]' type=hidden value='0' >";
-						$r .= "<input name='att_filter_value[".$t."]' type='checkbox' value='1'>";
-					}else{
-						$r .= Form::select("att_filter_value[$t]", TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'style' => 'width: inherit;']);
-					}
-
-					echo $r."</td></tr>";
-					$t++;
-				}
-				echo "</table><br>";
 				?>
+				<table class='testgrid' id=''>
+				<thead><tr>
+				<th style='width: 60%;'>Attributo</th>
+				<th>Filtra?</th>
+				<th>Valore del filtro:</th>
+				</tr></thead>
+				
+				@foreach($attributos as $a)
+					<tr>
+					<td>{{$a->nome}}</td>
+					<td><input type="hidden" name="att_filter[{{$loop->index}}]" value="0"/>
+					<input name="att_filter[{{$loop->index}}]" value="1" type="checkbox"/></td>
+					<td><input name="att_filter_id[{{$loop->index}}]" type="hidden" value="{{$a->id}}"/>
+					@if($a->id_type>0)
+						{!! Form::select('att_filter_value['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+					@else
+						@if($a->id_type==-1)
+							{!! Form::text('att_filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+						@elseif($a->id_type==-2)
+							{!! Form::hidden('att_filter_value['.$loop->index.']', 0) !!}
+							{!! Form::checkbox('att_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+						@elseif($a->id_type==-3)
+							{!! Form::number('att_filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+						@elseif($a->id_type==-4)
+							{!! Form::select('att_filter_value['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
+						@endif
+					@endif
+					</td>
+					</tr>
+				@endforeach
+				</table><br>
 				
 				<h4>Come vuoi contattare gli utenti?</h4>
 				{!! Form::radio('type', 'sms', true) !!} SMS<br>
@@ -144,11 +154,7 @@ use App\Attributo;
             
     </div>
 </div>
-       
-        
-<?php
-
-?>
+   
 @endsection
 	<script>
 	$('link[rel=stylesheet]').remove();

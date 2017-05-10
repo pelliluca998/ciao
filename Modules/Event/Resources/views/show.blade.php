@@ -171,7 +171,7 @@ use Nayjest\Grids\ObjectDataRow;
 					return $icon;
                         	}),
 				(new FieldConfig)
-                ->setName('edit')
+                	->setName('edit')
 				->setLabel('')
 				->setSortable(false)
 				->setCallback(function ($val, ObjectDataRow $row) {

@@ -12,6 +12,7 @@ use App\SpecSubscription;
 use App\EventSpecValue;
 use App\Event;
 use App\UserOratorio;
+use App\User;
 use Session;
 use Entrust;
 use Input;
@@ -57,8 +58,8 @@ class SubscriptionController extends Controller
     
 	public function selectevent(Request $request){
 		$input = $request->all();
-		$user_oratorio = UserOratorio::where('id_user', $input['id_user'])->get();
-		if(count($user_oratorio)>0 && $user_oratorio[0]->id_oratorio == Session::get('session_oratorio')){
+		$user_oratorio = UserOratorio::where([['id_user', $input['id_user']], ['id_oratorio', Session::get('session_oratorio')]])->get();
+		if(count($user_oratorio)>0){
 			return view('subscription::selectevent')->with('id_user', $input['id_user']);
 		}else{
 			abort(403, 'Unauthorized action.');
@@ -244,21 +245,23 @@ class SubscriptionController extends Controller
 	public function savespecsubscribe(Request $request){
 			$input = $request->all();
 			//salvo le specifiche
-			$valore = $input['valore'];
-			$id_eventspec = $input['id_eventspec'];
-			$id_week = $input['id_week'];
-			$costo = $input['costo'];
-			$i=0;
-			foreach($valore as $valore){
-				$e = new EventSpecValue;
-				$e->id_eventspec=$id_eventspec[$i];
-				$e->valore=$valore;
-				$e->id_subscription = $input['id_subscription'];
-				$e->id_week = $id_week[$i];
-				$e->pagato = 0;
-				$e->costo = $costo[$i];
-				$e->save();
-				$i++;
+			if(isset($input['valore'])){
+				$valore = $input['valore'];
+				$id_eventspec = $input['id_eventspec'];
+				$id_week = $input['id_week'];
+				$costo = $input['costo'];
+				$i=0;
+				foreach($valore as $valore){
+					$e = new EventSpecValue;
+					$e->id_eventspec=$id_eventspec[$i];
+					$e->valore=$valore;
+					$e->id_subscription = $input['id_subscription'];
+					$e->id_week = $id_week[$i];
+					$e->pagato = 0;
+					$e->costo = $costo[$i];
+					$e->save();
+					$i++;
+				}
 			}
 		return view('subscription::subscribe.grazie')->with('id_subscription', Session::get('id_subscription'));
 	}
@@ -310,17 +313,21 @@ class SubscriptionController extends Controller
 		$att_filter_id = Input::get('att_filter_id');
 		$att_filter_value = Input::get('att_filter_value');
 		
-		$whereRaw = "sub.id_event = ".Session::get('work_event');
+		$whereRaw = "subscriptions.id_event = ".Session::get('work_event');
 		$i=0;
 		foreach($user_filter as $f){
 			if($f=='1'){
 				$whereRaw .= " AND users.".$user_filter_id[$i]." LIKE '%".$user_filter_value[$i]."%'";
 			}
 			$i++;
-		}
+		}		
 		
-
-		$subs = DB::table('subscriptions as sub')->select('users.id as id_user')->leftJoin('users', 'users.id', '=', 'sub.id_user')->whereRaw($whereRaw)->orderBy('users.cognome', 'asc')->orderBy('users.name', 'asc')->get();
+		$subs = Subscription::select('subscriptions.id_user', 'subscriptions.id as id_subs')
+			->leftJoin('users', 'users.id', '=', 'subscriptions.id_user')
+			->whereRaw($whereRaw)
+			->orderBy('users.cognome', 'asc')
+			->orderBy('users.name', 'asc')
+			->get();
 		
 		$user_array = array();
 		foreach($subs as $sub){
@@ -335,19 +342,21 @@ class SubscriptionController extends Controller
 			}
 
 			$r=0;
-			foreach($att_filter as $fa){
-				if($fa==1 && $filter_ok){
-					$at = AttributoUser::where([['id_user', $sub->id_user], ['id_attributo', $att_filter_id[$r]], ['valore', $att_filter_value[$r]]])->get();
-					if(count($at)==0) $filter_ok=false;
+			if(count($att_filter)>0){
+				foreach($att_filter as $fa){
+					if($fa==1 && $filter_ok){
+						$at = AttributoUser::where([['id_user', $sub->id_user], ['id_attributo', $att_filter_id[$r]], ['valore', $att_filter_value[$r]]])->get();
+						if(count($at)==0) $filter_ok=false;
+					}
+					$r++;
 				}
-				$r++;
 			}
 			
 			if($filter_ok){
 				array_push($user_array, $sub->id_user);
 			}
 		}
-		$json = json_encode($user_array);
+		$json = json_encode(array_unique($user_array));
 		if($type=='sms'){
 			Session::flash('check_user', $json);
 			return redirect()->route('sms.create');
