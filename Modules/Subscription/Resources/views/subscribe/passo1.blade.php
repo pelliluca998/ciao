@@ -35,18 +35,19 @@ use App\Group;
 				?>
 				@foreach($specs as $spec)
 					{!! Form::hidden('id_spec['.$loop->index.']', $spec->id) !!}
+					<?php
+						$price = json_decode($spec->price, true);
+					?>
+					{!! Form::hidden('costo['.$loop->index.']', $price[0]) !!}
 					@if($spec->hidden==1)
 						{!! Form::hidden('specs['.$loop->index.']', 0) !!}
 					@else
-						<div class="form-group">
+						<div class="form-group">							
 							{!! Form::label($spec->id, $spec->label) !!}
 							@if(strlen($spec->descrizione)>0)
 								- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
-							@endif
-							<?php
-								$price = json_decode($spec->price, true);
-							?>
-							{!! Form::hidden('costo['.$loop->index.']', $price[0]) !!}
+							@endif						
+							
 							@if(floatval($price[0])>0)
 								(Prezzo: {{number_format(floatval($price[0]), 2, ',', '')}}€)
 							@endif

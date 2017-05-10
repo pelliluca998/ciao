@@ -1,6 +1,7 @@
 <?php
 use App\User;
 use App\Type;
+use App\Group;
 use App\Attributo;
 use App\AttributoUser;
 use App\TypeSelect;
@@ -24,21 +25,28 @@ use App\TypeSelect;
 			{!! Form::model($attributouser, ['method' => 'PATCH','route' => ['attributouser.update', $attributouser->id]]) !!}
 				{!! Form::hidden('id_attributouser', $attributouser->id) !!}
             <?php
-            $attributo = Attributo::select('attributos.nome', 'types.label', 'attributos.id_type')
+            $attributo = Attributo::select('attributos.nome', 'attributos.id_type')
                 ->leftJoin('types', 'types.id', 'attributos.id_type')
                 ->where('attributos.id', $attributouser->id_attributo)
                 ->first();
             ?>
 				<div class="form-group">
-				{!! Form::label('label', $attributo->nome) !!}
-                @if($attributo->label=='text')
-                    {!! Form::text('valore', $attributouser->valore, ['class' => 'form-control']) !!}
-                @elseif($attributo->label=='checkbox')
-                    {!! Form::hidden('valore', 0) !!}
-                    {!! Form::checkbox('valore', 1, $attributouser->valore, ['class' => 'form-control']) !!}
-                @else
-                    {!! Form::select('valore', TypeSelect::where('id_type', $attributo->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $attributouser->valore, ['class' => 'form-control'])!!}
-                @endif
+				{!! Form::label('label', $attributo->nome) !!} 
+                
+		          @if($attributo->id_type>0)
+					{!! Form::select('valore', TypeSelect::where('id_type', $attributo->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $attributouser->valore, ['class' => 'form-control'])!!}
+				@else
+					@if($attributo->id_type==-1)
+						{!! Form::text('valore', $attributouser->valore, ['class' => 'form-control']) !!}
+					@elseif($attributo->id_type==-2)
+						{!! Form::hidden('valore', 0) !!}
+						{!! Form::checkbox('valore', 1, $attributouser->valore, ['class' => 'form-control']) !!}
+					@elseif($attributo->id_type==-3)
+						{!! Form::number('valore', $attributouser->valore, ['class' => 'form-control']) !!}
+					@elseif($attributo->id_type==-4)
+						{!! Form::select('valore', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $attributouser->valore, ['class' => 'form-control'])!!}				
+					@endif
+				@endif
 				</div>
 
 				<div class="form-group">
