@@ -56,22 +56,22 @@ use App\Attributo;
 					<td><input name="week[{{$w}}][{{$loop->index}}]" value="{{$spec->id}}" type="checkbox"/></td>
 					<td>{{$spec->label}}</td>
 					<td><input type='hidden' name="week_filter[{{$w}}][{{$loop->index}}]" value="0"/>
-					<input name="week_filter[{{$w}}][{{$loop->index}}]" value="1" type="checkbox"/></td>
+					<input name="week_filter[{{$w}}][{{$loop->index}}]" value="1" type="checkbox" onchange="disable_select(this, 'att_filter_value_{{$w}}_{{$loop->index}}', true)"/></td>
 					<td>
 						<input name="week_filter_id[{{$w}}][{{$loop->index}}]" type="hidden" value="{{$spec->id}}" />
 					
 					@if($spec->id_type>0)
-						{!! Form::select('week_filter_value['.$w.']['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+						{!! Form::select('week_filter_value['.$w.']['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index])!!}
 					@else
 						@if($spec->id_type==-1)
-							{!! Form::text('week_filter_value['.$w.']['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							{!! Form::text('week_filter_value['.$w.']['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index]) !!}
 						@elseif($spec->id_type==-2)
 							{!! Form::hidden('week_filter_value['.$w.']['.$loop->index.']', 0) !!}
-							{!! Form::checkbox('week_filter_value['.$w.']['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+							{!! Form::checkbox('week_filter_value['.$w.']['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index]) !!}
 						@elseif($spec->id_type==-3)
-							{!! Form::number('week_filter_value['.$w.']['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							{!! Form::number('week_filter_value['.$w.']['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index]) !!}
 						@elseif($spec->id_type==-4)
-							{!! Form::select('week_filter_value['.$w.']['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
+							{!! Form::select('week_filter_value['.$w.']['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index])!!}				
 						@endif
 					@endif
 					
@@ -107,22 +107,22 @@ use App\Attributo;
 					<td><input name="spec[{{$loop->index}}]" value="{{$spec->id}}" type="checkbox"/></td>
 					<td>{{$spec->label}}</td>
 					<td><input type='hidden' name="spec_filter[{{$loop->index}}]" value="0"/>
-					<input name="spec_filter[{{$loop->index}}]" value="1" type="checkbox"/></td>
+					<input name="spec_filter[{{$loop->index}}]" value="1" type="checkbox" onchange="disable_select(this, 'spec_filter_value_{{$loop->index}}', true)"/></td>
 					<td>
 						<input name="spec_filter_id[{{$loop->index}}]" type="hidden" value="{{$spec->id}}" />
 					
 					@if($spec->id_type>0)
-						{!! Form::select('spec_filter_value['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+						{!! Form::select('spec_filter_value['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index])!!}
 					@else
 						@if($spec->id_type==-1)
-							{!! Form::text('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							{!! Form::text('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
 						@elseif($spec->id_type==-2)
 							{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
-							{!! Form::checkbox('spec_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+							{!! Form::checkbox('spec_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
 						@elseif($spec->id_type==-3)
-							{!! Form::number('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							{!! Form::number('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
 						@elseif($spec->id_type==-4)
-							{!! Form::select('spec_filter_value['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
+							{!! Form::select('spec_filter_value['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index])!!}				
 						@endif
 					@endif
 					

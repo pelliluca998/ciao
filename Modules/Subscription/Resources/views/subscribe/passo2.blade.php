@@ -22,6 +22,7 @@ use App\TypeSelect;
 		<div class="panel-body">	
 			{!! Form::open(['route' => 'subscribe.savespec']) !!}
 				{!! Form::hidden('id_subscription', $id_subscription) !!}
+				{!! Form::hidden('id_event', $id_event) !!}
 				<?php
 				$weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
 				$index=0;
@@ -33,6 +34,7 @@ use App\TypeSelect;
 						$specs = (new EventSpec)
 						->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.valid_for', 'event_specs.price')
 						->where([['id_event', $id_event], ['event_specs.general', 0]])
+						->orderBy('event_specs.ordine', 'ASC')
 						->get();
 					?>
 					@if(count($specs)>0)
@@ -42,6 +44,9 @@ use App\TypeSelect;
 					<th style='width: 35%;'>Specifica</th>
 					<th>Valore</th>
 					<th>Costo (€)</th>
+					@if(!Auth::user()->hasRole('user'))
+					<th>Pagato</th>
+					@endif
 					</tr></thead>
 	
 					@foreach($specs as $spec)
@@ -72,11 +77,21 @@ use App\TypeSelect;
 								<td>
 									<?php
 										$price = json_decode($spec->price, true);
+										if(count($price)==0) $price[$w->id]=0;
 									?>
 									{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
 									{!! Form::hidden('costo['.$index.']', $price[$w->id]) !!}
-									{!! Form::hidden('pagato['.$index.']', 0) !!}
 								</td>
+								@if(!Auth::user()->hasRole('user'))
+									<td>
+										{!! Form::hidden('pagato['.$index.']', 0) !!}
+										@if($price[$w->id]>0)
+											{!! Form::checkbox('pagato['.$index.']', 1, '', ['class' => 'form-control']) !!}
+										@endif
+									</td>
+								@else
+									{!! Form::hidden('pagato['.$index.']', 0) !!}
+								@endif
 								
 							</tr>	
 						@php

@@ -95,7 +95,11 @@ class EventSpecController extends Controller
 		$label = Input::get('label');
 		$descrizione = Input::get('descrizione');
 		$hidden = Input::get('hidden');
+		$ordine = Input::get('ordine');
 		$id_type = Input::get('id_type');
+		$id_cassa = Input::get('cassa');
+		$id_modo_pagamento = Input::get('modo_pagamento');
+		$id_tipo_pagamento = Input::get('tipo_pagamento');
 		$keys = array_keys($id_spec);
 		foreach($keys as $key) {
 			if($id_spec[$key]>0){
@@ -105,6 +109,10 @@ class EventSpecController extends Controller
 				$spec->descrizione = $descrizione[$key];
 				$spec->id_type = $id_type[$key];
 				$spec->hidden = $hidden[$key];
+				$spec->ordine = $ordine[$key];
+				$spec->id_cassa = $id_cassa[$key];
+				$spec->id_modopagamento = $id_modo_pagamento[$key];
+				$spec->id_tipopagamento = $id_tipo_pagamento[$key];
 				$spec->general = $input['general'][$key];
 				//Specifica valida per le settimane...
 				if(isset($input['valid_for'][$id_spec[$key]])){
@@ -123,6 +131,10 @@ class EventSpecController extends Controller
 				$spec->id_type = $id_type[$key];
 				$spec->id_event = $event[$key];
 				$spec->hidden = $hidden[$key];
+				$spec->ordine = $ordine[$key];
+				$spec->id_cassa = null;
+				$spec->id_modopagamento = null;
+				$spec->id_tipopagamento = null;
 				if(isset($input['valid_for'][$id_spec[$key]])){
 					$weeks = $input['valid_for'][$id_spec[$key]];
 					$spec->valid_for = json_encode($weeks);

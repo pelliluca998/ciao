@@ -99,7 +99,7 @@ $id_event=Session::get('work_event');
 $specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.pagato')
 	->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 	->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 1]])
-	->orderBy('event_spec_values.id_eventspec', 'asc')->get();
+	->orderBy('event_specs.ordine', 'asc')->get();
 $importo_totale = 0.00;
 ?>
 
@@ -132,12 +132,23 @@ $importo_totale = 0.00;
 			@elseif($spec->id_type==-3)
 				{{$spec->valore}}
 			@elseif($spec->id_type==-4)
-				{{Group::where('id', $spec->valore)->first()->nome}}
+				<?php
+					$group = Group::where('id', $spec->valore)->get();
+				?>
+				@if(count($group)>0)
+					{{$group[0]->nome}}
+				@else
+					<i style="font-size: 12px;">Nessun gruppo!</i>
+				@endif
+				
+				
 			@endif
 		@endif
 	</td>
 	<td>
-		{{$spec->costo}} €
+		@if($spec->costo>0)
+			{{$spec->costo}} €
+		@endif
 		@php
 			$importo_totale += floatval($spec->costo)
 		@endphp
@@ -164,7 +175,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 			$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.pagato', 'event_specs.valid_for')
 				->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 				->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 0], ['event_spec_values.id_week', $w->id]])
-				->orderBy('event_spec_values.id_eventspec', 'asc')->get();
+				->orderBy('event_specs.ordine', 'asc')->get();
 		?>
 		@if(count($specs)>0)
 		<p><b>Settimana {{$loop->index+1}} - dal {{$w->from_date}} al {{$w->to_date}}</b></p>
@@ -203,7 +214,9 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 					@endif
 					</td>
 					<td>
-						{{$spec->costo}} €
+						@if($spec->costo>0)
+							{{$spec->costo}} €
+						@endif
 						@php
 							$importo_totale += floatval($spec->costo)
 						@endphp
@@ -228,14 +241,17 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 
 
 <br>
-<p style="text-align: right"><b>Importo totale: {{$importo_totale}}€</b></p>
+@if($importo_totale>0)
+	<p style="text-align: right"><b>Importo totale: {{$importo_totale}}€</b></p>
+@endif
+
 <br>
 <div style="float:left; text-align: justify; text-justify: inter-word;">
 <p style="font-size: 10px;">
 {!! $event->informativa !!}
 </p>
 </div><br><bR>
-<div style="width: 50%; border-style: solid; float: left;padding-top: 20px; padding-bottom: 20px; margin-top: 5px;">
+<div style="width: 50%; height: 100px; border-style: solid; float: left;padding-top: 20px; padding-bottom: 20px; margin-top: 5px;">
 {{ $event->firma }}
 </div>
 </div>

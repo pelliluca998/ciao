@@ -57,9 +57,16 @@ class GroupUserController extends Controller
 	* @param  int  $id
 	* @return Response
 	*/
-	public function select(){
-		$id_users = Session::get('check_user'); //json
-		return view('group::groupuser.create')->with('check_user', $id_users);
+	public function select(Request $request){
+		$input = $request->all();
+		$check_user = $input['check'];
+		if(count(json_decode($check_user))>0){
+			return view('group::groupuser.create')->with('check_user', $check_user);
+		}else{
+			Session::flash("flash_message", "Devi selezionare almeno un contatto prima di inserirlo in un gruppo!");
+			return redirect()->route('user.index');
+		}
+		
 	}
 	
 	public function show($id){

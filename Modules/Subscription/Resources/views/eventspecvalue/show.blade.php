@@ -60,7 +60,7 @@ $specs = (new EventSpecValue)
 	->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.pagato')
 	->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 	->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 1]])
-	->orderBy('event_spec_values.id_eventspec', 'asc')
+	->orderBy('event_specs.ordine', 'asc')
 	->get();
 ?>
 
@@ -91,7 +91,15 @@ $specs = (new EventSpecValue)
 				@elseif($spec->id_type==-3)
 					{!! Form::number('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
 				@elseif($spec->id_type==-4)
-					{!! Form::select('valore['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control'])!!}				
+					<?php
+					$gruppi = Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->get();
+					?>
+					@if(count($gruppi)>0)
+						{!! Form::select('valore['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control']) !!}
+					@else
+						<i style="font-size: 12px;">Nessun gruppo disponibile!</i>{!! Form::hidden('valore['.$loop->index.']', 0) !!}
+					@endif						
+					 				
 				@endif
 			@endif
 			</td>
@@ -116,6 +124,7 @@ $specs = (new EventSpecValue)
 <?php
 $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
 ?>
+
 @if(count($weeks)>0)
 <h2>Specifiche settimanali</h2>
 
@@ -125,7 +134,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 			->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.pagato')
 			->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 			->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 0], ['event_spec_values.id_week', $w->id]])
-			->orderBy('event_spec_values.id_eventspec', 'asc')
+			->orderBy('event_specs.ordine', 'asc')
 			->get();
 	?>
 	
@@ -186,7 +195,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 	
 @endforeach
 @else
-	<i>Nessuna settimana inserita!</i>
+	<i>Nessuna settimana inserita!</i><br><br>
 @endif
 
 

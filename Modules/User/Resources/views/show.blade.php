@@ -61,12 +61,7 @@ use Nayjest\Grids\ObjectDataRow;
                              "desc" => "",
                             "url" => "user.edit",
                             "class" => "btn-primary",
-                            "icon" => ""],
-                             ["label" => "Informazioni aggiuntive",
-                             "desc" => "",
-                            "url" => "attributouser.show",
-                            "class" => "btn-primary",
-                             "icon" => ""],                             
+                            "icon" => ""],                                                          
                             ["label" => "Stampa scheda",
                              "desc" => "",
                             "url" => "user.printprofile",
@@ -108,84 +103,23 @@ use Nayjest\Grids\ObjectDataRow;
 					</div>
 				</div>
 			</div>
-
-			<?php
-			//array con i pulsanti in cima alla tabella
-			$components = [
-						(new HtmlTag)
-                      			->setTagName('button')
-                      			->setAttributes([
-                            			'type' => 'submit',
-										'name' => 'new_user',
-										'value' => 'new_user',
-                            			# Some bootstrap classes
-                            			'class' => 'btn btn-primary'
-                     			 	])
-                      			->setContent("<i class='fa fa-plus'> Aggiungi Utente</i>"),
-						(new HtmlTag)
-                      			->setTagName('button')
-                      			->setAttributes([
-                            			'type' => 'submit',
-										'name' => 'report',
-										'value' => 'report',
-                            			# Some bootstrap classes
-                            			'class' => 'btn btn-primary'
-                     			 	])
-                      			->setContent(" <i class='fa fa-file-text'>Report</i> "),
-										
-					(new HtmlTag)
-                      			->setTagName('button')
-                      			->setAttributes([
-                            			'type' => 'submit',
-										'name' => 'group',
-										'value' => 'group',
-                            			# Some bootstrap classes
-                            			'class' => 'btn btn-primary'
-                     			 	])
-                      			->setContent("<i class='fa fa-users'> Aggiungi ad un gruppo</i>")
-					
-					];
-			//Se esiste il modulo sms, email e telegram, aggiungo i pulsanti
-			if(Module::find('sms')!=null){
-				$button = (new HtmlTag)
-						->setTagName('button')
-						->setAttributes([
-							'type' => 'submit',
-							'name' => 'sms',
-							'value' => 'sms',
-							# Some bootstrap classes
-							'class' => 'btn btn-primary'
-						])
-						->setContent("<i class='fa fa-comment'> Invia SMS</i>");
-				array_push($components, $button);
-			}
-			if(Module::find('email')!=null){
-				$button = (new HtmlTag)
-						->setTagName('button')
-						->setAttributes([
-							'type' => 'submit',
-							'name' => 'email',
-							'value' => 'email',
-							# Some bootstrap classes
-							'class' => 'btn btn-primary'
-						])
-						->setContent("<i class='fa fa-envelope'> Invia Email</i>");
-				array_push($components, $button);
-			}
 			
-			if(Module::find('telegram')!=null){
-				$button = (new HtmlTag)
-						->setTagName('button')
-						->setAttributes([
-							'type' => 'submit',
-							'name' => 'telegram',
-							'value' => 'telegram',
-							# Some bootstrap classes
-							'class' => 'btn btn-primary'
-						])
-						->setContent("<i class='fa fa-telegram'> Telegram</i>");
-				array_push($components, $button);
-			}
+			<button onclick="redirect_check('{{route('user.create')}}', 'GET', false)" class="btn btn-primary"><i class='fa fa-plus'> Aggiungi Utente</i></button>
+			<button onclick="redirect_check('{{route('report.user')}}', 'GET', false)" class="btn btn-primary"><i class='fa fa-file-text'> Report</i></button>
+			Se selezionati:
+			<button onclick="redirect_check('{{route('groupusers.select')}}')" class="btn btn-primary"><i class='fa fa-users'> Aggiungi ad un gruppo</i></button>
+			@if(Module::find('sms')!=null)
+				<button onclick="redirect_check('{{route('sms.create')}}')" class="btn btn-primary"><i class='fa fa-comment'> Invia SMS</i></button>
+			@endif
+			
+			@if(Module::find('email')!=null)
+				<button onclick="redirect_check('{{route('email.create')}}')" class="btn btn-primary"><i class='fa fa-envelope'> Invia Email</i></button>
+			@endif
+			
+			@if(Module::find('telegram')!=null)
+				<button onclick="redirect_check('{{route('telegram.create')}}')" class="btn btn-primary"><i class='fa fa-telegram'> Telegram</i></button>
+			@endif
+			<?php
 			$query = Input::query(); //sono i parametri GET della tabella
 			Session::put('query_param', $query);
 			$query = (new User)
@@ -212,7 +146,7 @@ use Nayjest\Grids\ObjectDataRow;
 				->setSortable(true),
 				(new FieldConfig)
                 		->setName('photo')
-						->setLabel('User Photo')
+						->setLabel('Foto')
 						->setSortable(false)
 						->setCallback(function ($val, ObjectDataRow $row) {
 							$user = $row->getSrc();
@@ -321,7 +255,7 @@ use Nayjest\Grids\ObjectDataRow;
                				(new ColumnHeadersRow),
 					# Add this if you have filters for automatic placing to this row
 					new FiltersRow,
-					# Row with additional controls
+					# Row with additional controls					
 					(new OneCellRow)
 				        ->setComponents([
 						# Control for specifying quantity of records displayed on page
@@ -352,8 +286,7 @@ use Nayjest\Grids\ObjectDataRow;
 					])
 					# Components may have some placeholders for rendering children there.
 					->setRenderSection(THead::SECTION_BEGIN),
-					(new OneCellRow)
-							->setComponents($components)->setRenderSection(THead::SECTION_BEGIN),
+					
 
 				]),
 				# Renders table footer (table>tfoot)

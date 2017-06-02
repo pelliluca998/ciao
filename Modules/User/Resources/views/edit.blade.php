@@ -2,6 +2,10 @@
 use App\User;
 use App\Role;
 use App\RoleUser;
+use App\Attributo;
+use App\AttributoUser;
+use App\TypeSelect;
+use App\Group;
 ?>
 
 @extends('layouts.app')
@@ -19,15 +23,7 @@ use App\RoleUser;
 		<div class="panel panel-default">
 		<div class="panel-heading">Anagrafica Utenti</div>
 		<div class="panel-body">
-			<?php
-			$role = RoleUser::where([['user_id', $user->id]])->first();
-			if($role==null || count($role)==0){
-                $role2 = Role::where([['name', '=', 'user'],['id_oratorio', Session::get('session_oratorio')]])->first();
-                $user->id_role = $role2->id;
-            }else{
-                $user->id_role = $role->role_id;
-            }
-			?>
+			
 			{!! Form::model($user, ['method' => 'PATCH','files' => true,'route' => ['user.update', $user->id]]) !!}
 				{!! Form::hidden('id_user', $user->id) !!}
 				<div class="form-group">
@@ -100,8 +96,61 @@ use App\RoleUser;
 			
 				<div class="form-group">
 				{!! Form::label('id_role', 'Ruolo') !!}
-				{!! Form::select('id_role', Role::where('id_oratorio', Session::get('session_oratorio'))->orderBy('id')->pluck('display_name', 'id'), null, ['class' => 'form-control']) !!}
+				{!! Form::select('id_role', Role::where('id_oratorio', Session::get('session_oratorio'))->orderBy('id')->pluck('display_name', 'id'), $user->roles[0]->id, ['class' => 'form-control']) !!}
 				</div>
+				
+				<h3>Cambia password</h3>
+				  <div class="form-group">
+					  <p>Se vuoi cambiare la tua password, inseriscila qui sotto</p>
+					  {!! Form::label('password', 'Nuova password') !!}
+					  {!! Form::password('password', null, ['class' => 'form-control']) !!}
+				  </div>
+				  
+				<!--ATTRIBUTI//-->
+				  <?php
+				  $attributos = Attributo::where([['id_oratorio', Session::get('session_oratorio')]])->orderBy('ordine', 'ASC')->get();
+				  ?>
+				  
+				  
+				  
+				  @if(count($attributos)>0)
+				  <h3>Informazioni aggiuntive</h3>
+				  @endif
+				  @foreach($attributos as $a)
+				  	<?php
+				  	$valore = AttributoUser::where([['id_user', $user->id],['id_attributo', $a->id]])->get();
+				  	if(count($valore)>0){
+				  		$attributo_val = $valore[0]->valore;
+				  		$attributo_id = $valore[0]->id;
+				  	}else{
+				  		$attributo_val = null;
+				  		$attributo_id = 0;
+				  	}
+				  	?>
+					<div class="form-group">
+						{!! Form::hidden('id_attributo['.$loop->index.']', $a->id) !!}
+						{!! Form::hidden('id_attributouser['.$loop->index.']', $attributo_id) !!}
+						{!! Form::label('nome', $a->nome) !!}
+					  	@if($a->id_type>0)
+							{!! Form::select('valore['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $attributo_val , ['class' => 'form-control'])!!}
+						@else
+							@if($a->id_type==-1)
+								{!! Form::text('valore['.$loop->index.']', $attributo_val , ['class' => 'form-control']) !!}
+							@elseif($a->id_type==-2)
+								{!! Form::hidden('valore['.$loop->index.']', 0) !!}
+								{!! Form::checkbox('valore['.$loop->index.']', 1, $attributo_val , ['class' => 'form-control']) !!}
+							@elseif($a->id_type==-3)
+								{!! Form::number('valore['.$loop->index.']', $attributo_val , ['class' => 'form-control']) !!}
+							@elseif($a->id_type==-4)
+								{!! Form::select('valore['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $attributo_val , ['class' => 'form-control'])!!}				
+							@endif
+						@endif
+					
+					
+						
+
+					</div>
+				  @endforeach
 
 				<div class="form-group">
 				{!! Form::submit('Salva Utente', ['class' => 'btn btn-primary form-control']) !!}

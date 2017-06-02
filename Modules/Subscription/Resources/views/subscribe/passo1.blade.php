@@ -31,18 +31,28 @@ use App\Group;
 				$specs = (new EventSpec)
 					->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.price')
 					->where([['id_event', $event->id], ['event_specs.general', 1]])
+					->orderBy('event_specs.ordine', 'ASC')
 					->get();
 				?>
 				@foreach($specs as $spec)
 					{!! Form::hidden('id_spec['.$loop->index.']', $spec->id) !!}
 					<?php
 						$price = json_decode($spec->price, true);
+						if(count($price)==0) $price[0]=0;
 					?>
 					{!! Form::hidden('costo['.$loop->index.']', $price[0]) !!}
-					@if($spec->hidden==1)
+					@if(Auth::user()->hasRole('user') && $spec->hidden==1)
 						{!! Form::hidden('specs['.$loop->index.']', 0) !!}
+						{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
 					@else
-						<div class="form-group">							
+						<div class="form-group" >
+							<table style="width: 100%;">
+							@if(!Auth::user()->hasRole('user'))
+								<tr><td style="width: 80%;"></td><td style="width: 10%;"></td></tr>
+							@else
+								<tr><td style="width: 100%;"></td></tr>
+							@endif
+							<tr><td>					
 							{!! Form::label($spec->id, $spec->label) !!}
 							@if(strlen($spec->descrizione)>0)
 								- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
@@ -65,6 +75,21 @@ use App\Group;
 									{!! Form::select('specs['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
 								@endif
 							@endif
+							</td>
+							@if(!Auth::user()->hasRole('user'))
+								<td>
+									{!! Form::label($spec->id, 'Pagato') !!}
+									{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
+									@if(floatval($price[0])>0)
+										{!! Form::checkbox('pagato['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+									@endif
+								</td>
+							@else
+								{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
+							@endif
+							
+							</tr>
+							</table>
 						</div>
 					@endif
 				@endforeach				

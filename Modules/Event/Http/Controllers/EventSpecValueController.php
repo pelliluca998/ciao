@@ -17,6 +17,7 @@ use App\User;
 use App\Cassa;
 use App\ModoPagamento;
 use App\TipoPagamento;
+use App\License;
 use Module;
 use Input;
 use Session;
@@ -162,24 +163,22 @@ class EventSpecValueController extends Controller
 				$spec->save();
 			}
 			//contabilita
-			if(Module::find('contabilita')!=null){
+			if(Module::find('contabilita')!=null && License::isValid('contabilita')){
 				if($old_pagato==0 && $pagato[$i]==1){
 					//pagamento avvenuto ora, salvo una riga in bilancio
 					$id_cassa=0;
 					$id_modo=0;
 					$id_tipo=0;
-					$cassa = Cassa::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
-					if(count($cassa)>0){
-						$id_cassa = $cassa[0]->id;
+					$event_spec = EventSpec::where('id', $spec->id_eventspec)->first();	
+					if($event_spec->id_cassa!=null){
+						$id_cassa = $event_spec->id_cassa;
 					}
-					$modo = ModoPagamento::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
-					if(count($modo)>0){
-						$id_modo = $modo[0]->id;
+					if($event_spec->id_modopagamento!=null){
+						$id_modo = $event_spec->id_modopagamento;
 					}
-					$tipo = TipoPagamento::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
-					if(count($tipo)>0){
-						$id_tipo = $tipo[0]->id;
-					}
+					if($event_spec->id_tipopagamento!=null){
+						$id_tipo = $event_spec->id_tipopagamento;
+					}					
 					$bilancio = new Bilancio;
 					$bilancio->id_event = Session::get('work_event');
 					$bilancio->id_user = Auth::user()->id;
@@ -207,7 +206,7 @@ class EventSpecValueController extends Controller
 		Session::flash("flash_message", "Dettagli salvati!");
        	$query = Session::get('query_param');
 		Session::forget('query_param');
-		if(Auth::user()->hasRole('admin')){
+		if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('owner')){
 			return redirect()->route('subscription.index', $query);
 		}else{
 			return redirect()->route('usersubscriptions.show');

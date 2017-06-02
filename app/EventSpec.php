@@ -12,8 +12,7 @@ class EventSpec extends Model
      * @var array
      */
     protected $fillable = [
-        'id_event', 'valid_for', 'general', 'label', 'descrizione', 'id_type', 'hidden', 'price'
-    ];
+        'id_event', 'ordine', 'valid_for', 'general', 'label', 'descrizione', 'id_type', 'hidden', 'price', 'id_cassa', 'id_tipopagamento', 'id_modopagamento'];
 
     /**
      * The attributes that should be hidden for arrays.

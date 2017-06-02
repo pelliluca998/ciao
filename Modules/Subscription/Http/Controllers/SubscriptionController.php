@@ -8,11 +8,18 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use App\Subscription;
+use App\Oratorio;
 use App\SpecSubscription;
 use App\EventSpecValue;
 use App\Event;
 use App\UserOratorio;
 use App\User;
+use App\Bilancio;
+use App\Cassa;
+use App\ModoPagamento;
+use App\TipoPagamento;
+use App\License;
+use Module;
 use Session;
 use Entrust;
 use Input;
@@ -21,6 +28,7 @@ use View;
 use PDF;
 use DB;
 use URL;
+use Mail;
 
 class SubscriptionController extends Controller
 {
@@ -82,36 +90,7 @@ class SubscriptionController extends Controller
 		return redirect()->route('subscription.index');
 	}
     
-	/*
-	DA ELIMINARE, NON PIÙ UTILIZZATA
-	public function storeselect(Request $request){
-		$input = $request->all();
-		$id_event = $input['id_event'];
-		$users = json_decode($input['id_users']);
-		if(count($users)>0){
-			foreach($users as $user){
-				//cerco se lo stesso utente è già iscritto. Altrimenti inserisco nuovo record
-				$g = (new Subscription)->where([['id_user', '=', $user], ['id_event', '=', $id_event]])->first();
-				if(count($g)==0){
-					$sub = new Subscription;
-					$sub->id_event=$id_event;
-					$sub->id_user=$user;
-					$sub->confirmed=true;
-					$sub->type="ADMIN";
-					$sub->save();
-				}
-			}
-			if(!Session::has('work_event')){
-				Session::put('work_event', $id_event);
-			}   
-			return redirect()->route('subscription.index');
-		}else{
-			Session::flash('flash_message', "Devi selezionare degli utenti prima di iscriverli all'evento!");
-			return redirect()->route('subscription.index');
-		}
-	}*/
-
-
+	
 	/**
 	* Show the form for editing the specified resource.
 	*
@@ -162,10 +141,24 @@ class SubscriptionController extends Controller
 	public function destroy(Request $request){
         	$input = $request->all();
 		$id = $input['id_sub'];
-		$sub = Subscription::findOrFail($id);
+		
+		$this->delete_subscription($id);
+		
+		Session::flash("flash_message", "Iscrizione $id cancellata!");
+		$query = Session::get('query_param');
+		Session::forget('query_param');
+		if(Auth::user()->hasRole('user')){
+			return redirect()->route('usersubscriptions.show');			
+		}else{
+			return redirect()->route('subscription.index', $query);			
+		}
+	}
+	
+	function delete_subscription($id_sub){
+		$sub = Subscription::findOrFail($id_sub);
 		$event = Event::findOrfail($sub->id_event);
 		//controllo che l'utente o l'amministratore abbia i permessi
-		if(Auth::user()->hasRole('admin')){
+		if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('owner')){
 			if($event->id_oratorio == Session::get('session_oratorio')){
 				$sub->delete();
 			}else{
@@ -177,15 +170,6 @@ class SubscriptionController extends Controller
 			}else{
 				abort(403, 'Unauthorized action.');
 			}
-		}
-		
-		Session::flash("flash_message", "Iscrizione $id cancellata!");
-		$query = Session::get('query_param');
-		Session::forget('query_param');
-		if(Auth::user()->hasRole('admin')){
-			return redirect()->route('subscription.index', $query);
-		}else{
-			return redirect()->route('usersubscriptions.show');
 		}
 	}
     
@@ -223,6 +207,7 @@ class SubscriptionController extends Controller
 			$specs = $input['specs'];
 			$id_spec = $input['id_spec'];
 			$costo = $input['costo'];
+			$pagato = $input['pagato'];
 			$i=0;
 			foreach($specs as $spec){
 				$e = new EventSpecValue;
@@ -230,11 +215,50 @@ class SubscriptionController extends Controller
 				$e->valore=$spec;
 				$e->id_subscription = $sub->id;
 				$e->id_week=0;
-				$e->costo = $costo[$i];
-				$e->pagato = 0;
+				$e->costo = floatval($costo[$i]);
+				$e->pagato = $pagato[$i];
 				$e->save();
+				
+				//contabilita
+				if(Module::find('contabilita')!=null && License::isValid('contabilita') && !Auth::user()->hasRole('user')){
+					if($pagato[$i]==1){
+						//pagamento avvenuto ora, salvo una riga in bilancio
+						$id_cassa=0;
+						$id_modo=0;
+						$id_tipo=0;
+						$cassa = Cassa::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
+						if(count($cassa)>0){
+							$id_cassa = $cassa[0]->id;
+						}
+						$modo = ModoPagamento::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
+						if(count($modo)>0){
+							$id_modo = $modo[0]->id;
+						}
+						$tipo = TipoPagamento::where([['id_oratorio', Session::get('session_oratorio')], ['as_default', 1]])->get();
+						if(count($tipo)>0){
+							$id_tipo = $tipo[0]->id;
+						}
+						$bilancio = new Bilancio;
+						$bilancio->id_event = $input['id_event'];
+						$bilancio->id_user = Auth::user()->id;
+						$bilancio->id_eventspecvalues = $e->id;
+						$bilancio->id_tipopagamento = $id_tipo;
+						$bilancio->id_modalita = $id_modo;
+						$bilancio->id_cassa = $id_cassa;
+						$user = User::findOrFail($input['id_user']);
+						$bilancio->descrizione = "Pagamento da ".$user->cognome." ".$user->name." (iscrizione #".$sub->id.")";
+						$bilancio->importo = floatval($costo[$i]);
+						$bilancio->data = date('Y-m-d');
+						$bilancio->save();
+					}
+				}
+				//endcontabilita
+				
 				$i++;
 			}
+			
+			
+			
 			Session::put('id_subscription', $sub->id);
 			Session::put('id_event', $sub->id_event);
 			//Session::flash('flash_message', 'Iscrizione avvenuta con successo!');
@@ -250,6 +274,8 @@ class SubscriptionController extends Controller
 				$id_eventspec = $input['id_eventspec'];
 				$id_week = $input['id_week'];
 				$costo = $input['costo'];
+				$pagato = $input['pagato'];
+				$user = User::findOrFail(Subscription::findOrFail($input['id_subscription'])->id_user);
 				$i=0;
 				foreach($valore as $valore){
 					$e = new EventSpecValue;
@@ -257,9 +283,42 @@ class SubscriptionController extends Controller
 					$e->valore=$valore;
 					$e->id_subscription = $input['id_subscription'];
 					$e->id_week = $id_week[$i];
-					$e->pagato = 0;
+					$e->pagato = $pagato[$i];
 					$e->costo = $costo[$i];
 					$e->save();
+					
+					//contabilita
+					if(Module::find('contabilita')!=null && License::isValid('contabilita') && !Auth::user()->hasRole('user')){
+						if($pagato[$i]==1){
+							//pagamento avvenuto ora, salvo una riga in bilancio
+							$id_cassa=0;
+							$id_modo=0;
+							$id_tipo=0;
+							$event_spec = EventSpec::where('id', $e->id_eventspec)->first();	
+							if($event_spec->id_cassa!=null){
+								$id_cassa = $event_spec->id_cassa;
+							}
+							if($event_spec->id_modopagamento!=null){
+								$id_modo = $event_spec->id_modopagamento;
+							}
+							if($event_spec->id_tipopagamento!=null){
+								$id_tipo = $event_spec->id_tipopagamento;
+							}
+							$bilancio = new Bilancio;
+							$bilancio->id_event = $input['id_event'];
+							$bilancio->id_user = Auth::user()->id;
+							$bilancio->id_eventspecvalues = $e->id;
+							$bilancio->id_tipopagamento = $id_tipo;
+							$bilancio->id_modalita = $id_modo;
+							$bilancio->id_cassa = $id_cassa;
+							$bilancio->descrizione = "Pagamento da ".$user->cognome." ".$user->name." (iscrizione #".$input['id_subscription'].")";
+							$bilancio->importo = floatval($costo[$i]);
+							$bilancio->data = date('Y-m-d');
+							$bilancio->save();
+						}
+					}
+					//endcontabilita
+					
 					$i++;
 				}
 			}
@@ -286,13 +345,6 @@ class SubscriptionController extends Controller
 		$id_event = $input['id_event'];
 		return view('subscription::eventspecvalue.showuser', ['id_subscription' => $id_subscription, 'id_event' => $id_event]);
 	}
-	
-	/*public function usersub_showweekpecs(Request $request){
-		$input = $request->all();
-		$id_subscription = $input['id_sub'];
-		$id_event = $input['id_event'];
-		return view('subscription::specsubscription.showuser', ['id_sub' => $id_subscription, 'id_event' => $id_event]);
-	}*/
 	
 	
 	
@@ -367,5 +419,55 @@ class SubscriptionController extends Controller
 			Session::flash('check_user', $json);
 			return redirect()->route('telegram.create');
 		}
+	}
+	
+	public function approve(Request $request){
+		$input = $request->all();
+		$check_user = $input['check'];
+		if(count(json_decode($check_user))>0){
+			$subs = Subscription::where('confirmed', 0)->whereIn('id', json_decode($check_user))->get();
+			foreach($subs as $sub){
+				$sub->confirmed=1;
+				$sub->save();
+				//mando la mail all'utente
+				$user = User::findOrFail($sub->id_user);
+				$event = Event::findOrFail($sub->id_event);
+				Mail::send('subscription::confirmed_email', 
+					['html' => 'subscription::confirmed_email', 'event_name' => $event->nome, 'user' => $user->full_name], 
+					function ($message) use ($user){
+						$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
+						$message->from($oratorio->email, $oratorio->nome);
+						$message->subject("La tua iscrizione è stata approvata");
+						$message->to($user->email, $user->full_name);
+				});
+			}
+			
+			Session::flash("flash_message", "Hai approvato ".count(json_decode($check_user))." iscrizioni!");
+			return redirect()->route('subscription.index');
+		}else{
+			Session::flash("flash_message", "Devi selezionare almeno un'iscrizione prima di approvarle!");
+			return redirect()->route('subscription.index');
+		}
+		
+
+	}
+	
+	public function batch_delete(Request $request){
+		$input = $request->all();
+		$check_user = $input['check'];
+		$subs = json_decode($check_user);
+		if(count($subs)>0){
+			foreach($subs as $sub){
+				$this->delete_subscription($sub);
+				//echo $sub."<br>";
+			}
+			Session::flash("flash_message", "Hai cancellato ".count($subs)." iscrizioni!");
+			return redirect()->route('subscription.index');
+		}else{
+			Session::flash("flash_message", "Devi selezionare almeno un'iscrizione prima di cancellarle!");
+			return redirect()->route('subscription.index');
+		}
+		
+
 	}
 }

@@ -53,7 +53,7 @@ use App\EventSpec;
 							<div class="form-group" style="width: 48%; float: left;">
 								{!! Form::label('stampa_anagrafica', 'Nel modulo di iscrizione, mostra anagrafica utente') !!}
 								{!! Form::hidden('stampa_anagrafica', 0) !!}
-								{!! Form::checkbox('stampa_anagrafica', 1, $event->stampa_anagrafica, ['class' => 'form-control']) !!}
+								{!! Form::checkbox('stampa_anagrafica', 1, $event->stampa_anagrafica, ['class' => 'form-control', 'onchange' => "disable_select(this, 'spec_iscrizione')", 'id' => 'stampa']) !!}
 						    </div>
 
 						    <div class="form-group" style="width: 48%; float: left;">
@@ -112,4 +112,10 @@ use App\EventSpec;
 		</div>
 	</div>
 </div>
+
+<script>
+$(document).ready(function(){
+	$('#stampa').change();
+});
+</script>
 @endsection

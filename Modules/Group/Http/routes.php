@@ -12,7 +12,7 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:group'], 'pre
 	
 	Route::get('groupusers/show/{id_group}', ['as' => 'groupusers.showcomponents', 'uses' => 'GroupUserController@showcomponents']);
 	Route::get('groupusers/{id_user}/destroy', 'GroupUserController@destroy');
-	Route::get('groupusers/select', ['as' => 'groupusers.select', 'uses' => 'GroupUserController@select']);
+	Route::post('groupusers/select', ['as' => 'groupusers.select', 'uses' => 'GroupUserController@select']);
 	//Route::post('groupusers/create', ['as' => 'groupusers.new', 'uses' => 'GroupUserController@create']);
 	Route::get('groups/dropdown', function(){
 	    	return Group::where("id_oratorio", Session::get('session_oratorio'))->orderBy("nome", "ASC")->get();

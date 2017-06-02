@@ -15,7 +15,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Concerns\BuildsQueries;
 use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Processors\Processor;
 
 class Builder
@@ -279,6 +278,8 @@ class Builder
     protected function parseSubSelect($query)
     {
         if ($query instanceof self) {
+            $query->columns = [$query->columns[0]];
+
             return [$query->toSql(), $query->getBindings()];
         } elseif (is_string($query)) {
             return [$query, []];
@@ -1423,9 +1424,7 @@ class Builder
      */
     public function orderByDesc($column)
     {
-        $this->orderBy($column, 'desc');
-
-        return $this;
+        return $this->orderBy($column, 'desc');
     }
 
     /**
@@ -1729,7 +1728,7 @@ class Builder
 
         $results = $total ? $this->forPage($page, $perPage)->get($columns) : collect();
 
-        return new LengthAwarePaginator($results, $total, $perPage, $page, [
+        return $this->paginator($results, $total, $perPage, $page, [
             'path' => Paginator::resolveCurrentPath(),
             'pageName' => $pageName,
         ]);
@@ -1752,7 +1751,7 @@ class Builder
 
         $this->skip(($page - 1) * $perPage)->take($perPage + 1);
 
-        return new Paginator($this->get($columns), $perPage, $page, [
+        return $this->simplePaginator($this->get($columns), $perPage, $page, [
             'path' => Paginator::resolveCurrentPath(),
             'pageName' => $pageName,
         ]);
@@ -2074,6 +2073,12 @@ class Builder
     protected function setAggregate($function, $columns)
     {
         $this->aggregate = compact('function', 'columns');
+
+        if (empty($this->groups)) {
+            $this->orders = null;
+
+            $this->bindings['order'] = [];
+        }
 
         return $this;
     }

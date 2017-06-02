@@ -4,6 +4,7 @@ use App\Group;
 use App\Role;
 use App\RoleUser;
 use App\Attributo;
+use App\AttributoUser;
 use App\TypeSelect;
 use App\Type;
 ?>
@@ -12,6 +13,7 @@ use App\Type;
 
 @section('content')
 <div class="container">
+
     <div class="row">
         <h1>Il tuo profilo</h1>
 	<p class="lead">Modifica e salva il tuo profilo, oppure <a href="{{ route('home') }}">torna alla pagina principale.</a></p>
@@ -98,14 +100,7 @@ use App\Type;
 				{!! Form::hidden('id', $user->id) !!}
             <!--ATTRIBUTI//-->
             <?php
-            $attributos = Attributo::select('attributos.id', 'attributos.nome', 'attributo_users.valore', 'attributos.id_type as id_type', 'attributo_users.id as id_attributouser')
-                ->leftJoin('attributo_users', 'attributo_users.id_attributo', 'attributos.id')
-                ->where([['attributos.hidden', 0], ['attributos.id_oratorio', Session::get('session_oratorio')]])
-                ->where(function ($query) use ($user){
-                    $query->where('attributo_users.id_user', $user->id)
-                        ->orWhere('attributo_users.id_user', null);
-                })
-                ->get();
+            $attributos = Attributo::where([['hidden', 0], ['id_oratorio', Session::get('session_oratorio')]])->orderBy('ordine', 'ASC')->get();
 
             ?>
             <h3>Cambia password</h3>
@@ -114,31 +109,43 @@ use App\Type;
 		       {!! Form::label('password', 'Nuova password') !!}
 		       {!! Form::password('password', null, ['class' => 'form-control']) !!}
 		  </div>
+		  
+		  
             @if(count($attributos)>0)
             <h3>Informazioni aggiuntive</h3>
             @endif
             @foreach($attributos as $a)
-            <div class="form-group">
-			{!! Form::hidden('id_attributo['.$loop->index.']', $a->id) !!}
-			{!! Form::hidden('id_attributouser['.$loop->index.']', $a->id_attributouser) !!}
-			{!! Form::label('nome', $a->nome) !!}
-            	@if($a->id_type>0)
-				{!! Form::select('valore['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $a->valore, ['class' => 'form-control'])!!}
-			@else
-				@if($a->id_type==-1)
-					{!! Form::text('valore['.$loop->index.']', $a->valore, ['class' => 'form-control']) !!}
-				@elseif($a->id_type==-2)
-					{!! Form::hidden('valore['.$loop->index.']', 0) !!}
-					{!! Form::checkbox('valore['.$loop->index.']', 1, $a->valore, ['class' => 'form-control']) !!}
-				@elseif($a->id_type==-3)
-					{!! Form::number('valore['.$loop->index.']', $a->valore, ['class' => 'form-control']) !!}
-				@elseif($a->id_type==-4)
-					{!! Form::select('valore['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $a->valore, ['class' => 'form-control'])!!}				
+            	<?php
+            	$valore = AttributoUser::where([['id_user', $user->id],['id_attributo', $a->id]])->get();
+            	if(count($valore)>0){
+            		$attributo_val = $valore[0]->valore;
+            		$attributo_id = $valore[0]->id;
+            	}else{
+            		$attributo_val = null;
+            		$attributo_id = 0;
+            	}
+            	?>
+			<div class="form-group">
+				{!! Form::hidden('id_attributo['.$loop->index.']', $a->id) !!}
+				{!! Form::hidden('id_attributouser['.$loop->index.']', $attributo_id) !!}
+				{!! Form::label('nome', $a->nome) !!}
+		       	@if($a->id_type>0)
+					{!! Form::select('valore['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $attributo_val , ['class' => 'form-control'])!!}
+				@else
+					@if($a->id_type==-1)
+						{!! Form::text('valore['.$loop->index.']', $attributo_val , ['class' => 'form-control']) !!}
+					@elseif($a->id_type==-2)
+						{!! Form::hidden('valore['.$loop->index.']', 0) !!}
+						{!! Form::checkbox('valore['.$loop->index.']', 1, $attributo_val , ['class' => 'form-control']) !!}
+					@elseif($a->id_type==-3)
+						{!! Form::number('valore['.$loop->index.']', $attributo_val , ['class' => 'form-control']) !!}
+					@elseif($a->id_type==-4)
+						{!! Form::select('valore['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $attributo_val , ['class' => 'form-control'])!!}				
+					@endif
 				@endif
-			@endif
 					
 					
-               
+		          
 
 			</div>
             @endforeach

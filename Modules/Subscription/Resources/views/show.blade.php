@@ -1,6 +1,7 @@
 <?php
 use App\Subscription;
 use App\Event;
+use App\EventSpecValue;
 use App\Role;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;
@@ -97,32 +98,59 @@ use Nayjest\Grids\ObjectDataRow;
 
 
 
-			<a href='{!! route('subscription.contact') !!}' class="btn btn-primary">Contatta tutti gli iscritti</a>
+			<button onclick="redirect_check('{{route('subscription.contact')}}', 'GET', false)" class="btn btn-primary"><i class='fa fa-envelope'> Contatta tutti gli iscritti</i></button>
+			Se selezionati:
+			<button onclick="redirect_check('{{route('subscription.approve')}}')" class="btn btn-primary"><i class='fa fa-users'> Approva</i></button>
+			<button onclick="redirect_check('{{route('subscription.batch_delete')}}')" class="btn btn-danger"><i class='fa fa-trash'> Cancella</i></button>
+			
 			<?php
 			$query = Input::query(); //sono i parametri GET della tabella
 			Session::put('query_param', $query);
 			if(!isset($id_event) || $id_event==null){
 				$id_event=Session::get('work_event');
 			}
-            $event = Event::findOrFail($id_event);
-            if($event->stampa_anagrafica==1){
-                //nel campo utente, stampo il nome dell'utente così come compare in anagrafica
-                $query = (new Subscription)
-                    ->newQuery()
-                    ->select(DB::raw("concat(users.name, ' ', users.cognome) as name"),
-                             'subscriptions.id', 'subscriptions.confirmed', 'subscriptions.type')
-                    ->leftJoin('users', 'users.id', '=', 'subscriptions.id_user')
-                    ->where('subscriptions.id_event', '=', $id_event);
-            }else{
-                //il campo 'utente' è in una delle specifiche dell'iscrizione
-                $query = (new Subscription)
-                    ->newQuery()
-                    ->select(DB::raw("event_spec_values.valore as name"),
-                             'subscriptions.id', 'subscriptions.confirmed', 'subscriptions.type')
-                    ->leftJoin('event_spec_values', 'event_spec_values.id_subscription', '=', 'subscriptions.id')
-                    ->where('subscriptions.id_event', '=', $id_event)
-                    ->where('event_spec_values.id_eventspec', '=', $event->spec_iscrizione);
-            }
+			$event = Event::findOrFail($id_event);
+			$query = (new Subscription)
+				->newQuery()
+				->select(DB::raw("concat(users.name, ' ', users.cognome) as name"),
+				'subscriptions.id', 'subscriptions.confirmed', 'subscriptions.type')
+				->leftJoin('users', 'users.id', '=', 'subscriptions.id_user')
+				->where('subscriptions.id_event', '=', $id_event); 
+				
+			$components = [
+						(new HtmlTag)
+                      			->setTagName('button')
+                      			->setAttributes([
+                            			'type' => 'submit',
+										'name' => 'new_user',
+										'value' => 'new_user',
+                            			# Some bootstrap classes
+                            			'class' => 'btn btn-primary'
+                     			 	])
+                      			->setContent("<i class='fa fa-plus'> Aggiungi Utente</i>"),
+						(new HtmlTag)
+                      			->setTagName('button')
+                      			->setAttributes([
+                            			'type' => 'submit',
+										'name' => 'report',
+										'value' => 'report',
+                            			# Some bootstrap classes
+                            			'class' => 'btn btn-primary'
+                     			 	])
+                      			->setContent(" <i class='fa fa-file-text'>Report</i> "),
+										
+					(new HtmlTag)
+                      			->setTagName('button')
+                      			->setAttributes([
+                            			'type' => 'submit',
+										'name' => 'group',
+										'value' => 'group',
+                            			# Some bootstrap classes
+                            			'class' => 'btn btn-primary'
+                     			 	])
+                      			->setContent("<i class='fa fa-users'> Aggiungi ad un gruppo</i>")
+					
+			];
 			
 			$grid = new Grid(
     			(new GridConfig)
@@ -136,60 +164,79 @@ use Nayjest\Grids\ObjectDataRow;
 			# Setup table columns
 			->setColumns([
                 # simple results numbering, not related to table PK or any obtained data
+			(new FieldConfig)
+				->setName('id')
+				->setLabel('ID')
+				->setSortable(true),
             	(new FieldConfig)
-                    ->setName('id')
-				    ->setLabel('ID')
-				    ->setSortable(true),
-            	(new FieldConfig)
-                    ->setName('name')
-				    ->setLabel('Utente')
-				    ->addFilter(
-				        (new FilterConfig)
-				            ->setName('name')
-				            ->setOperator(FilterConfig::OPERATOR_LIKE))
-				            # sorting buttons will be added to header, DB query will be modified
-				            ->setSortable(true),
-				(new FieldConfig)
-                	->setName('confirmed')
-				    ->setLabel('OK?')
-				    ->setSortable(true)
-				    ->setCallback(function ($val, ObjectDataRow $row) {
-                        $sub = $row->getSrc();
-                        $icon = "<i class='fa ";
-                        if($val==1){
-                            $icon .= "fa-check-square-o";
-                        }else{
-                            $icon .= "fa-square-o";
-                        }
-                        $icon .= " fa-2x' aria-hidden='true'></i>";
-                        return $icon;
-                     }),
-				(new FieldConfig)
-                		->setName('type')
+		       	->setName('name')
+				->setLabel('Utente')
+				->addFilter(
+					(new FilterConfig)
+						->setName('name')
+						->setOperator(FilterConfig::OPERATOR_LIKE))			
+				->setSortable(true)
+				->setCallback(function ($val, ObjectDataRow $row) use ($event){
+					$sub = $row->getSrc();
+					if($event->stampa_anagrafica==0){
+						$value = EventSpecValue::where([['id_eventspec', $event->spec_iscrizione], ['id_subscription', $sub->id]])->get();
+						if(count($value)>0){
+							return $value[0]->valore;
+						}else{
+							return "<i>Specifica non esistente!</i>";
+						}
+					}else{
+						return $val;
+					}
+				}),
+			(new FieldConfig)
+				->setName('confirmed')
+				->setLabel('OK?')
+				->setSortable(true)
+				->setCallback(function ($val, ObjectDataRow $row) {
+					$sub = $row->getSrc();
+					$icon = "<i class='fa ";
+					if($val==1){
+						$icon .= "fa-check-square-o";
+					}else{
+						$icon .= "fa-square-o";
+					}
+					$icon .= " fa-2x' aria-hidden='true'></i>";
+					return $icon;
+				}),
+			(new FieldConfig)
+				->setName('type')
 				->setLabel('Tipo')
-				->setSortable(true),				
-
-                (new FieldConfig)
-                ->setName('edit')
+				->setSortable(true),
+			(new FieldConfig)
+				->setName('check')
 				->setLabel('')
 				->setSortable(false)
 				->setCallback(function ($val, ObjectDataRow $row) {
 					$sub = $row->getSrc();
-                    $icon = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#subOp' data-name='".$sub->name."' data-subid='".$sub->id."'><i class='fa fa-pencil fa-2x' aria-hidden='true'></i> </button>";
+					$icon = "<input name='check_sub[]' id='check_subs_".$sub->id."' type='checkbox' value='".$sub->id."'/>";
 					return $icon;
-                        	}),
-                        	(new FieldConfig)
-                		->setName('Vedi specifiche')
+				}),				
+
+			(new FieldConfig)
+				->setName('edit')
+				->setLabel('')
+				->setSortable(false)
+				->setCallback(function ($val, ObjectDataRow $row) {
+					$sub = $row->getSrc();
+					$icon = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#subOp' data-name='".$sub->name."' data-subid='".$sub->id."'><i class='fa fa-pencil fa-2x' aria-hidden='true'></i> </button>";
+					return $icon;
+				}),
+			(new FieldConfig)
+				->setName('Vedi specifiche')
 				->setLabel('')
 				->setSortable(false)
 				->setCallback(function ($val, ObjectDataRow $row) {
 					$sub = $row->getSrc();
 					$click = "load_spec_subscription(".$sub->id.")";
-					//$click = "$('#spec').load('specsubscriptions/4')";
-					//$click="$('#spec').html('ciao ciao')";
 					$icon = "<i style= \"color:#3e93c3; cursor: pointer;\" onclick=\"$click\" class='fa fa-flag fa-2x' aria-hidden='true'></i>";
 					return $icon;
-                        	})
+				})
                         	
         		])
 			# Setup additional grid components

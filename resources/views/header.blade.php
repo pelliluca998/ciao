@@ -17,7 +17,11 @@
             <ul class="nav navbar-nav">               
                 @if (!Auth::guest())
 		           <?php
-				Menu::make('MyNavBar', function($menu){});	
+				//Menu::make('MyNavBar', function($menu){});	
+				$menuList = Menu::get('SegrestaNavBar');
+				$menuList->add("Help", "http://doc.segresta.it")
+				   		->prepend("<i class='fa fa-life-ring' aria-hidden='true'></i> ")
+				   		->data('permissions', ['usermodule', 'all'])->data('order', 70);
 	
 				//filtro il menu popolato dai vari moduli in base al ruolo
 				$seg = Menu::get('SegrestaNavBar');				

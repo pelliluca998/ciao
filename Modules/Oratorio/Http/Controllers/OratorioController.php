@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests;
 use App\Oratorio;
 use App\License;
+use App\OwnerMessage;
 use App\Role;
 use App\RoleUser;
 use App\Permission;
@@ -98,7 +99,7 @@ class OratorioController extends Controller
 		
 		//Fatto!
 		Session::flash('flash_message', 'Oratorio creato!');
-		return view('oratorio::gestione.show');
+		return redirect()->route('oratorio.showall');
 	}
 
     /**
@@ -177,15 +178,18 @@ class OratorioController extends Controller
 	}
 
     /**
-     * Remove the specified resource from storage.
+     * Rimuove l'oratorio specificato
      *
      * @param  int  $id
      * @return Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+	public function destroy(Request $request){
+		$input = $request->all();
+		$oratorio = Oratorio::findOrFail($input['id_oratorio']);
+		$oratorio->delete();
+		Session::flash('flash_message', 'Oratorio eliminato');
+		return redirect()->route('oratorio.showall');
+	}
     
     
 	/**
@@ -199,6 +203,31 @@ class OratorioController extends Controller
 	
 	public function neworatorio(Request $request){
 		return view('neworatorio');
+	}
+	
+	public function new_message(Request $request){
+		return view('oratorio::gestione.add_message');
+	}
+	
+	public function save_message(Request $request){
+		$input = $request->all();
+		$message = OwnerMessage::create($input);
+		//invio la mail a tutti gli oratori
+		$oratori = Oratorio::all();
+		foreach($oratori as $o){
+			Mail::send('oratorio::gestione.message', 
+			['html' => 'oratorio::gestione.message', 'oratorio' => $o->nome, 'titolo' => $input['title'], 'messaggio' => $input['message']], 
+			function ($message) use ($o){
+				$message->from('info@segresta.it', 'Segresta');
+				$message->subject("Segresta - Nuovo messaggio!");
+				$message->to($o->email, $o->nome);
+			});
+		
+		
+		//Fatto!
+		Session::flash('flash_message', 'Messaggio creato e email inviata!');
+		return redirect()->route('oratorio.showall');
+		}
 	}
 	
 	public function neworatorio_emailfromuser(Request $request){

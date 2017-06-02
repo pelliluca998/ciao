@@ -2,6 +2,7 @@
 
 namespace App;
 use Carbon\Carbon;
+use Session;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,10 +20,28 @@ class License extends Model
     }
     
     public function getDataFineAttribute($value){
-		return Carbon::parse($value)->format('d/m/Y');
+    		if($value!=null){
+			return Carbon::parse($value)->format('d/m/Y');
+		}else{
+			return "";
+		}
     }
 	
 	public function setDataFineAttribute($value){
-		$this->attributes['data_fine'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
+		if($value=="" || $value==null){
+			$this->attributes['data_fine'] = null;			
+		}else{
+			$this->attributes['data_fine'] = Carbon::createFromFormat('d/m/Y', $value)->toDateString();
+		}
     }
+    
+	public static function isValid($moduleName){
+		$now = date("Y-m-d");
+		$license = License::leftJoin('license_types', 'licenses.license_type', 'license_types.id')->where([['licenses.id_oratorio', Session::get('session_oratorio')], ["modules", "like", "%".$moduleName."%"]])->orWhere([['licenses.data_fine', '>=', $now], ['licenses.data_fine', 'null']])->get();
+		if(count($license)>0){
+			return true;
+		}else{
+		  	return false;
+		}
+	}
 }

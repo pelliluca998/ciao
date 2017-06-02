@@ -23,14 +23,15 @@ use App\Group;
 				{!! Form::open(['route' => 'report.gen_user']) !!}
 
 				<h4>Passo 1: Scegli le infomazioni <b>riguardanti gli utenti</b> da inserire nel report:</h4>
+				<table class='testgrid' id=''>
+				<thead><tr>
+				<th>Check</th>
+				<th style='width: 60%;'>Specifica</th>
+				<th>Filtra?</th>
+				<th>Valore del filtro:</th>
+				</tr></thead>
+				
 				<?php
-				echo "<table class='testgrid' id=''>";
-				echo "<thead><tr>";
-				echo "<th>Check</th>";
-				echo "<th style='width: 60%;'>Specifica</th>";
-				echo "<th>Filtra?</th>";
-				echo "<th>Valore del filtro:</th>";
-				echo "</tr></thead>";
 
 				$c = [];
 				$c[] = ['id'=>'name', 'label'=>'Nome'];
@@ -43,34 +44,35 @@ use App\Group;
 				$c[] = ['id'=>'sesso', 'label'=>'Sesso'];
 				$c[] = ['id'=>'residente', 'label'=>'Residenza'];
 				$c[] = ['id'=>'via', 'label'=>'Indirizzo'];
-				$c[] = ['id'=>'photo', 'label'=>'Foto'];
-				//var_dump($c);
-				$t=0;
-				foreach($c as $column){	
-					echo "<tr>";
-					echo "<td><input name='spec_user[$t]' value='".$column['id']."' type='checkbox'/></td>";
-					echo "<td>".$column['label']."</td>";
-					echo "<td><input type='hidden' name='user_filter[".$t."]' value='0'/><input name='user_filter[".$t."]' value='1' type='checkbox'/></td>";
-					$r = "<td><input name='user_filter_id[$t]' type='hidden' value='".$column['id']."'/>";
-					$r .= "<input name='user_filter_value[".$t."]' type='text'>";
-					echo $r."</td>";
-					echo "</tr>";
-					$t++;
-				}
-
-				echo "</tr>";
-				echo "</table><br>";
 
 				?>
+				
+				@foreach($c as $column)
+					<tr>
+					<td><input name="spec_user[{{$loop->index}}]" value="{{$column['id']}}" type="checkbox"/></td>
+					<td>{{$column['label']}}</td>
+					<td><input type='hidden' name="user_filter[{{$loop->index}}]" value="0"/>
+					<input name="user_filter[{{$loop->index}}]" value="1" type="checkbox" onchange="disable_select(this, 'user_filter_value_{{$loop->index}}', true)"/></td>
+					<td>
+						<input name="user_filter_id[{{$loop->index}}]" type="hidden" value="{{$column['id']}}"/>
+					
+					{!! Form::text('user_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "user_filter_value_".$loop->index]) !!}
+					
+					</td>
+					</tr>
+				@endforeach
+				</table><br>
+				
+				
 				<h4>Passo 2: Scegli gli attributi degli utenti da inserire nel report:</h4>
+				<table class='testgrid' id=''>
+				<thead><tr>
+				<th>Check</th>
+				<th style='width: 60%;'>Attributo</th>
+				<th>Filtra?</th>
+				<th>Valore del filtro:</th>
+				</tr></thead>
 				<?php
-				echo "<table class='testgrid' id=''>";
-				echo "<thead><tr>";
-				echo "<th>Check</th>";
-				echo "<th style='width: 60%;'>Attributo</th>";
-				echo "<th>Filtra?</th>";
-				echo "<th>Valore del filtro:</th>";
-				echo "</tr></thead>";
 				$attributos = Attributo::select('attributos.*')->where('attributos.id_oratorio', Session::get('session_oratorio'))->orderBy('ordine', 'ASC')->get();
 				?>
 				@foreach($attributos as $a)
@@ -78,20 +80,20 @@ use App\Group;
 					<td><input name="att_spec[{{$loop->index}}]" value="{{$a->id}}" type="checkbox"/></td>
 					<td>{{$a->nome}}</td>
 					<td><input type="hidden" name="att_filter[{{$loop->index}}]" value="0"/>
-					<input name="att_filter[{{$loop->index}}]" value="1" type="checkbox"/></td>
+					<input name="att_filter[{{$loop->index}}]" value="1" type="checkbox" onchange="disable_select(this, 'att_filter_value_{{$loop->index}}', true)"/></td>
 					<td><input name="att_filter_id[{{$loop->index}}]" type="hidden" value="{{$a->id}}"/>
 					@if($a->id_type>0)
-						{!! Form::select('att_filter_value['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+						{!! Form::select('att_filter_value['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index])!!}
 					@else
 						@if($a->id_type==-1)
-							{!! Form::text('att_filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							{!! Form::text('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
 						@elseif($a->id_type==-2)
 							{!! Form::hidden('att_filter_value['.$loop->index.']', 0) !!}
-							{!! Form::checkbox('att_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+							{!! Form::checkbox('att_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
 						@elseif($a->id_type==-3)
-							{!! Form::number('att_filter_value['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							{!! Form::number('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
 						@elseif($a->id_type==-4)
-							{!! Form::select('att_filter_value['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
+							{!! Form::select('att_filter_value['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index])!!}				
 						@endif
 					@endif
 					</td>

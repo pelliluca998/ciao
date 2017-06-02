@@ -73,7 +73,7 @@ use Nayjest\Grids\ObjectDataRow;
 						<td><i class="fa fa-square-o fa-2x" aria-hidden='true'></i></td>
 						<td><a href="{{route('subscription.destroy', ['id_sub' => $sub->id])}}"><i class="fa fa-trash fa-2x" aria-hidden="true" style="cursor: unset;"></i></a></td>
 					@endif
-					<td><a href="{{url('subscription/print')}}?id_subscription={{$sub->id}}"><i class="fa fa-print fa-2x" aria-hidden='true'></i></a></td>
+					<td><a href="{{url('subscription/print')}}?id_sub={{$sub->id}}"><i class="fa fa-print fa-2x" aria-hidden='true'></i></a></td>
 					<td><i style="color:#3e93c3" onclick="load_spec_usersubscription({{$sub->id}}, {{$sub->id_event}})" class="fa fa-flag fa-2x" aria-hidden="true"></i></td>
 					</tr>
 				@endforeach

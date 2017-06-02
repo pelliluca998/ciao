@@ -50,6 +50,7 @@ if(count($input['spec'])>0){
 <h3 style="text-align: center;">Report delle iscrizioni</h3>
 <?php
 function stampa_tabella($input, $select_value, $whereRaw, $columSpecs){
+	$event = Event::findOrFail(Session::get('work_event'));
 	if($select_value>0){
 		$subs = DB::table('subscriptions as sub')
 			->select('sub.id as id_subs', 'users.*', 'sub.type', 'sub.confirmed', 'users.id as id_user')
@@ -127,7 +128,18 @@ function stampa_tabella($input, $select_value, $whereRaw, $columSpecs){
 			$tot_iscritti++;
 			echo "<tr>";
 			echo "<td>".$sub->id_subs."</td>";
-			echo "<td>".$sub->cognome." ".$sub->name."</td>";
+			//controllo se stampare il nome in anagrafica o una delle specifiche indicate
+			if($event->stampa_anagrafica==0){
+				$anagrafica = EventSpecValue::where([['id_eventspec', $event->spec_iscrizione], ['id_subscription', $sub->id_subs]])->get();
+				if(count($anagrafica)>0){
+					echo "<td>".$anagrafica[0]->valore."</td>";
+				}else{
+					echo "<td><i style='font-size:12px;'>Specifica non esistente!</i></td>";
+				}
+			}else{
+				echo "<td>".$sub->cognome." ".$sub->name."</td>";
+			}
+			//echo "<td>".$sub->cognome." ".$sub->name."</td>";
 			echo "<td>".$sub->type."</td>";
 			echo "<td>";
 			if($sub->confirmed=='1'){
@@ -206,7 +218,7 @@ function stampa_tabella($input, $select_value, $whereRaw, $columSpecs){
 					echo "<td>";
 					if(isset($value->valore)){
 						if($value->id_type>0){
-							$val = TypeSelect::where('id', $value->valore)->gGroupet();
+							$val = TypeSelect::where('id', $value->valore)->get();
 							if(count($val)>0){
 								$val2 = $val[0];
 								echo $val2->option;

@@ -57,11 +57,19 @@ use Nayjest\Grids\ObjectDataRow;
                              "desc" => "",
                             "url" => "oratorioowner.edit",
                             "class" => "btn-primary",
+                            "toggle" => "",
                             "icon" => ""],
                              ["label" => "Lavora con questo oratorio",
                              "desc" => "",
                             "url" => "oratorioowner.work",
                             "class" => "btn-primary",
+                            "toggle" => "",
+                            "icon" => ""],
+                            ["label" => "Elimina oratorio",
+                             "desc" => "",
+                            "url" => "oratorio.destroy",
+                            "class" => "btn-danger",
+                            "toggle" => "confirmation",
                             "icon" => ""]
                             
                         );
@@ -74,7 +82,7 @@ use Nayjest\Grids\ObjectDataRow;
                                 <div style="margin: 5px;">
                                 {!! Form::open(['route' => $button['url'], 'method' => 'GET']) !!}
                                 {!! Form::hidden('id_oratorio', '0', ['id' => 'id_oratorio']) !!}
-                                {!! Form::submit($button['label'], ['class' => 'btn '.$button['class']]) !!}
+                                {!! Form::submit($button['label'], ['class' => 'btn '.$button['class'], 'data-toggle' => $button['toggle']]) !!}
                                 {{$button['desc']}}
                                 {!! Form::close() !!}
                                 </div>
@@ -90,7 +98,7 @@ use Nayjest\Grids\ObjectDataRow;
 				</div>
 			</div>
 
-		<a href="{{route('oratorio.create')}}" class="btn btn-primary">Aggiungi nuovo oratorio</a>
+		<a href="{{route('oratorio.create')}}" class="btn btn-primary">Aggiungi nuovo oratorio</a> <a href="{{route('oratorio.new_message')}}" class="btn btn-primary">Pubblica messaggio</a>
 			<?php			
 			$query = (new Oratorio)->newQuery();
 
@@ -139,6 +147,10 @@ use Nayjest\Grids\ObjectDataRow;
 				        		->setName('email')
 				        		->setOperator(FilterConfig::OPERATOR_LIKE)
 					)
+					->setSortable(true),
+				(new FieldConfig)
+                		->setName('last_login')
+					->setLabel('Ultimo accesso')					
 					->setSortable(true),				
 				(new FieldConfig)
                 		->setName('edit')
@@ -223,6 +235,17 @@ $(document).ready(function(){
 	var modal = $(this);
 	modal.find('#name').text(name);
 	modal.find("[id*='id_oratorio']").val(oratorioid);
+	});
+	
+	$('[data-toggle=confirmation]').confirmation({
+		rootSelector: '[data-toggle=confirmation]',
+		title: 'Sicuro di eliminare l\'oratorio selezionato?',
+		btnOkLabel: 'Si, elimina!',
+		btnOkIcon: 'glyphicon glyphicon-share-alt',
+		btnOkClass: 'btn-success',
+		btnCancelLabel: 'Annulla',
+		btnCancelIcon: 'glyphicon glyphicon-ban-circle',
+		btnCancelClass: 'btn-danger'
 	});
 });
 </script>

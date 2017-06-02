@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Entrust;
 use Session;
 use App\UserOratorio;
+use App\Oratorio;
 use Auth;
 use Input;
 
@@ -47,11 +48,23 @@ class HomeController extends Controller
 			}
 
 		}
-		return view('home');
+		if(Auth::user()->hasRole('user')){
+			return view('home');
+		}else{			
+			return redirect()->route('admin');
+		}
+		
 
     }
 	
 	public function admin(){
+		if(Session::get('session_oratorio')==null || Session::get('session_oratorio')==''){
+			return redirect()->route('home');
+		}
+		//registro un nuovo accesso, poi rimando alla pagina admin
+		$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
+		$oratorio->last_login = date('Y-m-d H:i:s', time());
+		$oratorio->save();
 		return view('admin');
 	}
 	

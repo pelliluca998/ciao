@@ -17,6 +17,7 @@ use Storage;
 class EventController extends Controller
 {
 use ValidatesRequests;
+
 	/**
 	* Display a listing of the resource.
 	* @return Response

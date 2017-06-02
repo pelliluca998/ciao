@@ -51,4 +51,9 @@ class ReportController extends Controller
 		return view('report::users', ['input' => $input]);
 	}
 	
+	public function user(Request $request){
+		$input = $request->all();
+		return view('report::composer_user');
+	}
+	
 }

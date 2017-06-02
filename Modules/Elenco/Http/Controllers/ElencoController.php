@@ -203,7 +203,7 @@ class ElencoController extends Controller
 			//cerco le iscrizioni che rispondono al criterio
 			$subs = EventSpecValue::select('subscriptions.id_user')
 				->leftJoin('subscriptions', 'subscriptions.id', 'event_spec_values.id_subscription')
-				->where([['subscriptions.id_event', Session::get('work_event')], ['event_spec_values.id_eventspec', $input['spec_iscrizione']], ['event_spec_values.valore', 1]])
+				->where([['subscriptions.id_event', Session::get('work_event')], ['event_spec_values.id_eventspec', $input['spec_iscrizione']], ['event_spec_values.valore', $input['valore']]])
 				->whereNotIn('subscriptions.id_user', $elenco_val)
 				->get();
 		}

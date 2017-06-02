@@ -23,6 +23,8 @@ use Storage;
 class UserController extends Controller
 {
 use ValidatesRequests;
+
+	
     /**
      * Display a listing of the resource.
      * @return Response
@@ -159,7 +161,7 @@ use ValidatesRequests;
 		$input = $request->all();
 		$user = User::findOrFail($input['id_user']);
 		$orat = UserOratorio::where('id_user', $user->id)->first();
-		if($orat->id_oratorio==Session::get('session_oratorio') || Auth::user()->id==$id){
+		if($orat->id_oratorio==Session::get('session_oratorio') || Auth::user()->id==$input['id_user']){
 			
 			if(Input::hasFile('photo')){
 				$file = $request->photo;
@@ -174,14 +176,46 @@ use ValidatesRequests;
 					Storage::delete('public/'.$user->photo);
 				}
 			}
-			
+			if(strlen($input['password'])>0){
+				$input['password'] = Hash::make($input['password']);
+			}else{
+				unset($input['password']);
+			}
 			$user->fill($input)->save();
 			Session::flash('flash_message', 'Utente salvato!');
 			$query = Session::get('query_param');
 			Session::forget('query_param');
 			//salvo ruolo
-			$user->roles()->sync(array($input['id_role']));
-			//$role = RoleUser:: where()->get();
+			//$user->roles()->sync(array($input['id_role']));
+			$role = RoleUser::where([['user_id', $user->id],['role_id', $user->roles[0]->id]])->first();
+			$role->role_id = $input['id_role'];
+			$role->save();
+			
+			//Salvo gli attributi			
+			$keys = ['id_attributo', 'id_attributouser', 'valore'];
+			foreach($keys as $key){
+				if(!array_key_exists($key, $input)){			
+					$input[$key] = array();
+				}
+			}
+			$id_attributo = $input['id_attributo'];
+			$id_attributouser = $input['id_attributouser'];
+			$valore = $input['valore'];
+			$i=0;
+			foreach($id_attributo as $id){
+				if($id_attributouser[$i]>0){
+					$u = AttributoUser::findOrfail($id_attributouser[$i]);
+					$u->valore = $valore[$i];
+					$u->save();
+				}else{
+					$u = new AttributoUser();
+					$u->id_user = $user->id;
+					$u->id_attributo = $id_attributo[$i];
+					$u->valore = $valore[$i];
+					$u->save();
+				}
+				$i++;
+			}
 
 			//end salvo ruolo
 			if(Auth::user()->hasRole('user')){

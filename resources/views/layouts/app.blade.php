@@ -44,12 +44,11 @@ use App\Oratorio;
 	<script src="{{ asset('/js/jscolor.js') }}"></script>
 	<script type="text/javascript" src="{{ asset ('/js/datepicker-it.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('/js/bootstrap-confirmation.min.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('/js/jquery.redirect.js') }}"></script>
 
 @include('piwik')
 
 </head>
-
-
 
 <body>
 
@@ -392,6 +391,8 @@ function change_eventspec(sel, id_event){
 }
 
 
+/*
+OLD, NON RICORDO DOVE È UTILIZZATA, FORSE NON PIÙ UTILIZZATA!
 function change_type(sel, t){
 	$.get("{{ url('types/type')}}",
 		{id_eventspec: sel.value }, 
@@ -438,6 +439,54 @@ function change_type(sel, t){
 				$("#span_type"+t).html(row);
 			});
 	});
+}*/
+
+function change_type(sel){
+	$.get("{{ url('types/type')}}",
+		{id_eventspec: sel.value }, 
+	    	function(data) {
+			$.each(data, function(index, element) {
+				var row = "";
+				if(element.id>0){
+					row = "<select id='valore' name='valore'></select>";
+					$.get("{{ url('types/options')}}",
+						{id_type: element.id }, 
+					    	function(data2) {
+							var model = $("#valore");
+							model.empty();
+							$.each(data2, function(index_2, element_2) {
+								model.append("<option value='"+ element_2.id +"'>" + element_2.option + "</option>");
+							});
+					});
+				}else{
+					switch(element.id){
+						case -1:
+							row = "<input name='valore' type='text' value='' class='form-control' style='width: 300px'/>";
+							break;
+						case -2:
+							row = "<input name='valore' type='hidden' value='0'/>";
+							row += "<input name='valore' type='checkbox' value='1' />";
+							break;
+						case -3:
+							row = "<input name='valore' type='number' value='' class='form-control' style='width: 300px'/>";
+							break;
+						case -4:
+							row = "<select id='valore' name='valore'></select>";
+							$.get("{{ url('admin/groups/dropdown')}}",
+								{}, 
+							    	function(data2) {
+									var model = $("#valore");
+									model.empty();
+									$.each(data2, function(index_2, element_2) {
+										model.append("<option value='"+ element_2.id +"'>" + element_2.nome + "</option>");
+									});
+							});
+							break;
+					}
+				}					
+				$("#span_type").html(row);
+			});
+	});
 }
 	
 function change_attrib(sel, t){
@@ -471,23 +520,34 @@ function change_attrib(sel, t){
 
 function eventspecs_add(id_event){
 	var t = parseInt($('#contatore').val());
-	var row = "<tr>";
-	var select = ('{{ Form::select("id_type[]", Type::getTypes(), null, ["class" => "form-control"]) }}').replace(/"/g, '\'');
-	select = select.replace("id_type[]", "id_type["+t+"]");
+	var row = "<tr>";	
 	row += "<input name='id_spec["+t+"]' type='hidden' value='0'/>";
+	row += "<input name='hidden["+t+"]' type='hidden' value='0'/>";
 	row += "<input name='event["+t+"]' type='hidden' value='"+id_event+"'/>";
+	//Nome
 	var form = ('{{ Form::text("label[]", "", ["class" => "form-control", "style" => "width: 100%"]) }}').replace(/"/g, '\'');
 	form = form.replace("label[]", "label["+t+"]");
 	row += "<td>"+form+"</td>";
+	//Descrizione
 	form = ('{{ Form::text("descrizione[]", "", ["class" => "form-control", "style" => "width: 100%"]) }}').replace(/"/g, '\'');
 	form = form.replace("descrizione[]", "descrizione["+t+"]");
-	row += "<td>"+form+"</td>";		
+	row += "<td>"+form+"</td>";
+	//tipo
+	var select = ('{{ Form::select("id_type[]", Type::getTypes(), null, ["class" => "form-control"]) }}').replace(/"/g, '\'');
+	select = select.replace("id_type[]", "id_type["+t+"]");	
 	row += "<td>"+select+"</td>";
-	form = ('{{ Form::hidden("hiddenn", "0") }} {{ Form::checkbox("hiddenn", "1", false,  ["class" => "form-control"]) }}').replace(/"/g, '\'');
-	form = form.replace(/hiddenn/g, "hidden["+t+"]");
+	//ordine
+	form = ('{{ Form::number("ordine[]", "0", ["class" => "form-control", "style" => "width: 100%","min" => "0", "step" => "1"]) }}').replace(/"/g, '\'');
+	form = form.replace("ordine[]", "ordine["+t+"]");
+	row += "<td>"+form+"</td>";
+	//Generale
+	form = ('{{ Form::hidden("general[]", "0") }} {{ Form::checkbox("general[]", "1", false,  ["class" => "form-control"]) }}').replace(/"/g, '\'');
+	form = form.replace("general[]", "general["+t+"]");
 	row += "<td>"+form+"</td>";	
-
-	row += "<td>E</td>";
+	row += "<td>";
+	
+	row += "</td>";
+	row += "<td></td>";
 	row += "</tr>";
 
 	$('#showeventspecs tr:last').after(row);
@@ -768,6 +828,31 @@ function elencovalues_add(num_colonne, keys){
 	row += "</tr>";
 
 	$('#elenco_values tr:last').after(row);
+}
+
+function redirect_check(route, method='POST', send_param=true){
+	var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+	var selected = [];
+	$('input[type=checkbox]').each(function() {
+		if ($(this).is(":checked")){
+			selected.push($(this).attr('value'));
+		}
+	});
+	if(send_param){
+		$.redirect(route, {check: JSON.stringify(selected), _token: CSRF_TOKEN}, method);
+	}else{
+		$.redirect(route, {}, method);
+	}
+	
+}
+
+function disable_select(checkbox, id_select, inverse=false){
+	if(inverse){
+		$('#'+id_select).prop('disabled', !checkbox.checked);
+	}else{
+		$('#'+id_select).prop('disabled', checkbox.checked);
+	}
+	
 }
 	
 	</script>

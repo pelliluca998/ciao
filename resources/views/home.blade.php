@@ -26,7 +26,7 @@ use App\UserOratorio;
                 <div class="panel-body">                
 				@if (Session::get('session_oratorio')!=null)					 	
 					Ciao {{Auth::user()->name}}, qui sotto trovi la lista degli eventi che il tuo oratorio ha creato. Clicca sulla bandiera accanto all'evento per iscriverti e inserire ulteriori dettagli!<br><br>
-				
+					
 					<?php
 					$user_oratorio = UserOratorio::where('id_user', Auth::user()->id)->get();
 					?>

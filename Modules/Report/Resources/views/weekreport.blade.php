@@ -41,6 +41,7 @@ $oratorio = Oratorio::findOrFail($event->id_oratorio);
 <h3 style="text-align: center;">Report delle iscrizioni</h3>
 <?php
 function stampa_tabella($input){
+	$event = Event::findOrFail(Session::get('work_event'));
 	$weeks = Week::where('id_event', Session::get('work_event'))->orderBy('from_date', 'ASC')->get();
 	$w=0;
 	foreach($weeks as $week){
@@ -50,8 +51,7 @@ function stampa_tabella($input){
 			echo "<table class='testgrid'>";
 			echo "<tr>";
 			echo "<th>ID</th>";
-			echo "<th>Cognome</th>";
-			echo "<th>Nome</th>";
+			echo "<th>Utente</th>";
 			//intestazione campi da inserire nel report
 			//$columCampi = Campo::select('campos.label', 'campos.id', 'campos.id_type as id_type')->whereIn('campos.id', $input['campo'][$w])->orderBy('campos.id', 'asc')->get();
 			$columnSpecs1 = (new EventSpec)
@@ -89,7 +89,7 @@ function stampa_tabella($input){
 				$f=0;
 				foreach($filters as $filter){
 					if($filter==1 && $filter_ok){
-						$specs = EventSpecValues::where([['id_subscription', $sub->id],['id_week', $week->id], ['id_eventspec', $filter_id[$f]], ['valore', $filter_values[$f]]])->orderBy('id_eventspec')->get();
+						$specs = EventSpecValue::where([['id_subscription', $sub->id],['id_week', $week->id], ['id_eventspec', $filter_id[$f]], ['valore', $filter_values[$f]]])->orderBy('id_eventspec')->get();
 						if(count($specs)==0) $filter_ok=false;
 					}
 					$f++;
@@ -108,8 +108,18 @@ function stampa_tabella($input){
             			$tot_iscritti++;
 					echo "<tr>";
 					echo "<td>".$sub->id."</td>";
-					echo "<td>".$sub->cognome."</td>";
-					echo "<td>".$sub->name."</td>";
+					//controllo se stampare il nome in anagrafica o una delle specifiche indicate
+					if($event->stampa_anagrafica==0){
+						$anagrafica = EventSpecValue::where([['id_eventspec', $event->spec_iscrizione], ['id_subscription', $sub->id_subs]])->get();
+						if(count($anagrafica)>0){
+							echo "<td>".$anagrafica[0]->valore."</td>";
+						}else{
+							echo "<td><i style='font-size:12px;'>Specifica non esistente!</i></td>";
+						}
+					}else{
+						echo "<td>".$sub->cognome." ".$sub->name."</td>";
+					}
+					//echo "<td>".$sub->cognome."</td>";
 					//get valore dei campi
 					foreach($columnSpecs1 as $c){
 						$specs = EventSpecValue::where([['id_subscription', $sub->id],['id_week', $week->id], ['id_eventspec', $c->id]])->orderBy('id_eventspec')->first();
