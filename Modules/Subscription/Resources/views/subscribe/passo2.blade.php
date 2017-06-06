@@ -45,7 +45,7 @@ use App\TypeSelect;
 					<th>Valore</th>
 					<th>Costo (€)</th>
 					@if(!Auth::user()->hasRole('user'))
-					<th>Pagato</th>
+						<th>Pagato</th>
 					@endif
 					</tr></thead>
 	
@@ -80,17 +80,17 @@ use App\TypeSelect;
 										if(count($price)==0) $price[$w->id]=0;
 									?>
 									{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
-									{!! Form::hidden('costo['.$index.']', $price[$w->id]) !!}
+									{!! Form::hidden('costo_2['.$index.']', $price[$w->id]) !!}
 								</td>
 								@if(!Auth::user()->hasRole('user'))
 									<td>
-										{!! Form::hidden('pagato['.$index.']', 0) !!}
+										{!! Form::hidden('pagato_2['.$index.']', 0) !!}
 										@if($price[$w->id]>0)
-											{!! Form::checkbox('pagato['.$index.']', 1, '', ['class' => 'form-control']) !!}
+											<input type="checkbox" name="pagato_2[{{$index}}]" value="1" class="form-control" />
 										@endif
 									</td>
 								@else
-									{!! Form::hidden('pagato['.$index.']', 0) !!}
+									{!! Form::hidden('pagato_2['.$index.']', 0) !!}
 								@endif
 								
 							</tr>	

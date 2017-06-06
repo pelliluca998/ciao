@@ -89,8 +89,10 @@ function stampa_tabella($input){
 				$f=0;
 				foreach($filters as $filter){
 					if($filter==1 && $filter_ok){
+						if(isset($filter_values[$f])){
 						$specs = EventSpecValue::where([['id_subscription', $sub->id],['id_week', $week->id], ['id_eventspec', $filter_id[$f]], ['valore', $filter_values[$f]]])->orderBy('id_eventspec')->get();
 						if(count($specs)==0) $filter_ok=false;
+						}
 					}
 					$f++;
 				}

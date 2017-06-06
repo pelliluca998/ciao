@@ -24,6 +24,7 @@ use Modules\Sms\Http\Controllers\SmsController;
                 	<?php 
                 		$licenza = License::leftJoin('license_types', 'license_types.id', 'licenses.license_type')->where('id_oratorio', Session::get('session_oratorio'))->first();
                 		$sms = License::leftJoin('license_types', 'licenses.license_type', 'license_types.id')->where([['licenses.id_oratorio', Session::get('session_oratorio')], ["modules", "like", "%sms%"]])->orWhere([['licenses.data_fine', '>=', date("Y-m-d")], ['licenses.data_fine', 'null']])->get();
+                		
                 	?>
                 	
                 	<h3>Licenza</h3>

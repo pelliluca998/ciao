@@ -63,9 +63,16 @@ use App\TypeSelect;
 				{!! Form::text('via', null, ['class' => 'form-control']) !!}
 				</div>
 				
-				<div class="form-group">
-				{!! Form::label('email', 'Email') !!}
-				{!! Form::text('email', null, ['class' => 'form-control']) !!}
+				<div class="form-group" style="width: 100%; float: left;">
+					{!! Form::label('email', 'Email') !!}
+					<div style="width: 100%">
+						<div style="width: 76%; float: left; margin-right: 3%">
+							{!! Form::text('email', null, ['class' => 'form-control']) !!}
+						</div>
+						<div style="width: 20%; float: left;">
+							<input name="genera_email" value="1" type="checkbox" onchange="disable_email(this)"/> Genera Email
+						</div>
+					</div>
 				</div>
 			
 				<div class="form-group">
@@ -73,9 +80,16 @@ use App\TypeSelect;
 				{!! Form::text('cell_number', null, ['class' => 'form-control']) !!}
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group" style="width: 100%; float: left;">
 				{!! Form::label('password', 'Password') !!}
-				{!! Form::password('password', null, ['class' => 'form-control']) !!}
+					<div style="width: 100%">
+						<div style="width: 76%; float: left; margin-right: 3%">
+							{!! Form::password('password', null, ['class' => 'form-control']) !!}
+						</div>
+						<div style="width: 20%; float: left;">
+							<input name="genera_password" value="1" type="checkbox" onchange="disable_password(this)"/> Genera Password
+						</div>
+					</div>
 				</div>
 				
 				<div class="form-group">
@@ -115,9 +129,12 @@ use App\TypeSelect;
 					@endif
 					</div>
 				@endforeach
+				
+				
 				<div class="form-group">
-				{!! Form::submit('Salva Utente', ['class' => 'btn btn-primary form-control']) !!}
-				</div>				
+					{!! Form::submit('Salva Utente', ['class' => 'btn btn-primary form-control']) !!}
+				</div>
+								
 				
            		{!! Form::close() !!}           		
 
@@ -126,4 +143,15 @@ use App\TypeSelect;
         </div>
     </div>
 </div>
+
+<script>
+function disable_email(check){
+	$('#email').prop('disabled', check.checked);
+	$('#username').prop('disabled', check.checked);
+}
+
+function disable_password(check){
+	$('#password').prop('disabled', check.checked);
+}
+</script>
 @endsection

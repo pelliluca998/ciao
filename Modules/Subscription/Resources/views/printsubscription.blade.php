@@ -146,7 +146,7 @@ $importo_totale = 0.00;
 		@endif
 	</td>
 	<td>
-		@if($spec->costo>0)
+		@if($spec->costo!=0)
 			{{$spec->costo}} €
 		@endif
 		@php
@@ -214,7 +214,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 					@endif
 					</td>
 					<td>
-						@if($spec->costo>0)
+						@if($spec->costo!=0)
 							{{$spec->costo}} €
 						@endif
 						@php
@@ -241,7 +241,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $su
 
 
 <br>
-@if($importo_totale>0)
+@if($importo_totale!=0)
 	<p style="text-align: right"><b>Importo totale: {{$importo_totale}}€</b></p>
 @endif
 

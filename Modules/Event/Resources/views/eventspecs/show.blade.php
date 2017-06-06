@@ -83,7 +83,7 @@ use App\License;
 				{!! Form::hidden('general['.$loop->index.']', 0) !!}
 				{!! Form::checkbox("general[".$loop->index."]", 1, $a->general, ['id' => "general_".$a->id, 'class' => 'form-control', "onclick" => "check_week($a->id, 0, true)"]) !!}
 				<br>
-				Prezzo: {!! Form::number("price[".$a->id."][0]", $price_0, ['class' => 'form-control', 'style' => 'width: 90px;', 'min' =>'0', 'step' => '0.01']) !!}
+				Prezzo: {!! Form::number("price[".$a->id."][0]", $price_0, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
 			</td>
 			@foreach($weeks as $w)
 				<td>
@@ -101,7 +101,7 @@ use App\License;
 						$price_w = $price[$w->id];
 					}
 				@endphp
-				Prezzo: {!! Form::number("price[".$a->id."][".$w->id."]", $price_w, ['class' => 'form-control', 'style' => 'width: 90px;', 'min' =>'0', 'step' => '0.01']) !!}
+				Prezzo: {!! Form::number("price[".$a->id."][".$w->id."]", $price_w, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
 				</td>
 			@endforeach
 			

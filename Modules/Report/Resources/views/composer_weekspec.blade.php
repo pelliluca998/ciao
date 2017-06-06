@@ -31,6 +31,7 @@ use App\Attributo;
                 <?php
                 $weeks = Week::where('id_event', $id_event)->orderBy('from_date', 'ASC')->get();
                 $w=0;
+                $index = 0;
                 foreach($weeks as $week){
                     echo "<b>Settimana dal ".$week->from_date." al ". $week->to_date."</b><br>";
                     //get campi per ogni settimana
@@ -53,31 +54,35 @@ use App\Attributo;
 					?>
 					@if($valid[$week->id]==1)
 					<tr>
-					<td><input name="week[{{$w}}][{{$loop->index}}]" value="{{$spec->id}}" type="checkbox"/></td>
+					<td><input name="week[{{$w}}][{{$index}}]" value="{{$spec->id}}" type="checkbox"/></td>
 					<td>{{$spec->label}}</td>
-					<td><input type='hidden' name="week_filter[{{$w}}][{{$loop->index}}]" value="0"/>
-					<input name="week_filter[{{$w}}][{{$loop->index}}]" value="1" type="checkbox" onchange="disable_select(this, 'att_filter_value_{{$w}}_{{$loop->index}}', true)"/></td>
+					<td><input type='hidden' name="week_filter[{{$w}}][{{$index}}]" value="0"/>
+					<input name="week_filter[{{$w}}][{{$index}}]" value="1" type="checkbox" onchange="disable_select(this, 'week_filter_value_{{$w}}_{{$index}}', true)"/></td>
 					<td>
-						<input name="week_filter_id[{{$w}}][{{$loop->index}}]" type="hidden" value="{{$spec->id}}" />
+						<input name="week_filter_id[{{$w}}][{{$index}}]" type="hidden" value="{{$spec->id}}" />
+						
+						{!! Form::hidden('week_filter_value['.$w.']['.$index.']', 0) !!}
 					
 					@if($spec->id_type>0)
-						{!! Form::select('week_filter_value['.$w.']['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index])!!}
+						{!! Form::select('week_filter_value['.$w.']['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$index])!!}
 					@else
 						@if($spec->id_type==-1)
-							{!! Form::text('week_filter_value['.$w.']['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index]) !!}
+							{!! Form::text('week_filter_value['.$w.']['.$index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$index]) !!}
 						@elseif($spec->id_type==-2)
-							{!! Form::hidden('week_filter_value['.$w.']['.$loop->index.']', 0) !!}
-							{!! Form::checkbox('week_filter_value['.$w.']['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index]) !!}
+							{!! Form::hidden('week_filter_value['.$w.']['.$index.']', 0) !!}
+							{!! Form::checkbox('week_filter_value['.$w.']['.$index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$index]) !!}
 						@elseif($spec->id_type==-3)
-							{!! Form::number('week_filter_value['.$w.']['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index]) !!}
+							{!! Form::number('week_filter_value['.$w.']['.$index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$index]) !!}
 						@elseif($spec->id_type==-4)
-							{!! Form::select('week_filter_value['.$w.']['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$loop->index])!!}				
+							{!! Form::select('week_filter_value['.$w.']['.$index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "week_filter_value_".$w."_".$index])!!}				
 						@endif
 					@endif
 					
 					</td>
 					</tr>
+					<?php $index++; ?>
 					@endif
+					
 				@endforeach				
 				</table>
 				<br>

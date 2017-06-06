@@ -11,6 +11,7 @@ use Session;
 use Entrust;
 use Carbon\Carbon;
 use App\RoleUser;
+use App\Role;
 use Input;
 use File;
 use Image;
@@ -80,45 +81,72 @@ use ValidatesRequests;
      * @param  Request $request
      * @return Response
      */
-    public function store(Request $request)
-    {
-	$this->validate($request, [
-		'name' => 'required',
-		'cognome' => 'required',
-		'nato_il' => 'required|date_format:d/m/Y',
-		'nato_a' => 'required',
-		'email' =>'required|unique:users',
-		'username' => 'unique:users',
-		'password' => 'required'
-	]);
-	$input = $request->all();
-	$date = Carbon::createFromFormat('d/m/Y', $input['nato_il']);
-	if(Input::hasFile('photo')){
-		$file = $request->photo;
-		$filename = $request->photo->store('profile', 'public');
-		$path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
-		$image = Image::make($path);
-		$image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
-		$image->save($path);
-		$input['photo'] = $filename;		
-	}
-	$input['password'] = Hash::make($input['password']);
-	//salvo l'utente
-	$user = User::create($input);
-	//salvo il link utente-oratorio
-	$orat = new UserOratorio;
-	$orat->id_user=$user->id;
-	$orat->id_oratorio = Session::get('session_oratorio');
-	$orat->save();
+	public function store(Request $request)
+	{
+		//Genera user, password e email se non forniti
+		if(isset($request['genera_email'])){
+			$user = new User;
+			$email = "";
+			do{
+				$email = str_random(20);
+				$user = User::where([['email', $email.'@segresta.it'], ['username', $email]])->get();
+			}while(count($user)>0);
+			
+			$request['email'] = $email.'@segresta.it';
+			$request['username'] = $email;
+		}
+		
+		if(isset($request['genera_password'])){
+			$request['password'] = str_random(40);
+		}
+		
+		$this->validate($request, [
+			'name' => 'required',
+			'cognome' => 'required',
+			'nato_il' => 'required|date_format:d/m/Y',
+			'nato_a' => 'required',
+			'email' =>'required|unique:users',
+			'username' => 'required|unique:users',
+			'password' => 'required'
+		]);
+		$input = $request->all();
+		$date = Carbon::createFromFormat('d/m/Y', $input['nato_il']);
+		if(Input::hasFile('photo')){
+			$file = $request->photo;
+			$filename = $request->photo->store('profile', 'public');
+			$path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
+			$image = Image::make($path);
+			$image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
+			$image->save($path);
+			$input['photo'] = $filename;		
+		}
+		$input['password'] = Hash::make($input['password']);
+		//salvo l'utente
+		$user = User::create($input);
+		//salvo il link utente-oratorio
+		$orat = new UserOratorio;
+		$orat->id_user=$user->id;
+		$orat->id_oratorio = Session::get('session_oratorio');
+		$orat->save();
 	
-	//salvo attributi
-	$i=0;
-	foreach($input['id_attributo'] as $id) {
-		$attrib = AttributoUser::create(['id_user' => $user->id, 'id_attributo' => $id, 'valore' => $input['attributo'][$i]]);
-		$i++;
-	}
-	Session::flash('flash_message', 'Utente aggiunto!');
-	return redirect()->route('user.index');
+		//salvo attributi
+		$i=0;
+		foreach($input['id_attributo'] as $id) {
+			$attrib = AttributoUser::create(['id_user' => $user->id, 'id_attributo' => $id, 'valore' => $input['attributo'][$i]]);
+			$i++;
+		}
+	
+		//aggiungo il ruolo
+		$roles = Role::where([['name', 'user'], ['id_oratorio', Session::get('session_oratorio')]])->get();
+		if(count($roles)>0){
+			//creo il ruolo
+			$role = new RoleUser;
+			$role->user_id = $user->id;
+			$role->role_id = $roles[0]->id;
+			$role->save();
+		}
+		Session::flash('flash_message', 'Utente aggiunto!');
+		return redirect()->route('user.index');
     }
 
     /**
@@ -308,5 +336,22 @@ use ValidatesRequests;
 		}
 			
 
+	}
+	
+	public function sistema_permessi(){
+		$user_oratorio = UserOratorio::all();
+		foreach($user_oratorio as $uo){
+			$role = RoleUser::where('user_id', $uo->id_user)->get();
+			if(count($role)==0){
+				$roles = Role::where([['name', 'user'], ['id_oratorio', $uo->id_oratorio]])->get();
+				if(count($roles)>0){
+					//creo il ruolo
+					$role = new RoleUser;
+					$role->user_id = $uo->id_user;
+					$role->role_id = $roles[0]->id;
+					$role->save();
+				}
+			}
+		}
 	}
 }

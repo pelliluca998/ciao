@@ -44,6 +44,7 @@ class ReportController extends Controller
 	public function gen_weekspec(Request $request){
 		$input = $request->all();
 		return view ('report::weekreport', ['input' => $input]);
+		//var_dump($input);
 	}
 	
 	public function gen_user(Request $request){

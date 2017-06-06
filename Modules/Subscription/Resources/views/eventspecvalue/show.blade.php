@@ -104,7 +104,7 @@ $specs = (new EventSpecValue)
 			@endif
 			</td>
 			<td>
-				{!! Form::number('costo['.$loop->index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'min' =>'0', 'step' => '0.01']) !!}
+				{!! Form::number('costo['.$loop->index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'step' => '0.01']) !!}
 			</td>
 			<td>
 				{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
@@ -175,11 +175,11 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 				@endif
 				</td>
 				<td>
-					{!! Form::number('costo['.$index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'min' =>'0', 'step' => '0.01']) !!}
+					{!! Form::number('costo['.$index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'step' => '0.01']) !!}
 				</td>
 				<td>
 					{!! Form::hidden('pagato['.$index.']', 0) !!}
-					@if($spec->costo>0)
+					@if($spec->costo!=0)
 			               {!! Form::checkbox('pagato['.$index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
 			          @endif
 				</td>

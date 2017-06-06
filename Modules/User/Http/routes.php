@@ -6,6 +6,7 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:user'], 'pref
     Route::get('user/destroy', ['as' => 'user.destroy', 'uses' => 'UserController@destroy']);
 	Route::get('user/edit', ['as' => 'user.edit', 'uses' => 'UserController@edit']);
 	Route::get('user/print', ['as' => 'user.printprofile', 'uses' => 'UserController@print_userprofile']);
+	Route::get('user/sistema_permessi', ['as' => 'user.permessi', 'uses' => 'UserController@sistema_permessi']);
 });
 
 Route::group(['middleware' => ['web', 'license:user', 'role:user|admin|owner'], 'namespace' => 'Modules\User\Http\Controllers'], function() {

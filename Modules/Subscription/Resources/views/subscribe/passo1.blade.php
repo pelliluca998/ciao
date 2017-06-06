@@ -21,10 +21,16 @@ use App\Group;
 		<div class="panel-body">	
 			{!! Form::open(['route' => 'subscribe.savesubscribe']) !!}
 
-				{!! Form::hidden('type', 'WEB') !!}
+				@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('owner'))
+					{!! Form::hidden('type', 'ADMIN') !!}
+					{!! Form::hidden('confirmed', '1') !!}
+				@else
+					{!! Form::hidden('type', 'WEB') !!}
+					{!! Form::hidden('confirmed', '0') !!}
+				@endif
 				{!! Form::hidden('id_user', $id_user) !!}
 				{!! Form::hidden('id_event', $event->id) !!}
-				{!! Form::hidden('confirmed', '0') !!}
+				
 				
 				<?php
 				//specifiche dell'evento
@@ -78,10 +84,11 @@ use App\Group;
 							</td>
 							@if(!Auth::user()->hasRole('user'))
 								<td>
-									{!! Form::label($spec->id, 'Pagato') !!}
+									
 									{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
 									@if(floatval($price[0])>0)
-										{!! Form::checkbox('pagato['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+										{!! Form::label($spec->id, 'Pagato') !!}
+										{!! Form::checkbox('pagato['.$loop->index.']', 1, false, ['class' => 'form-control']) !!}
 									@endif
 								</td>
 							@else

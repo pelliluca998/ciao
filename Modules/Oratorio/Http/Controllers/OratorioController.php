@@ -224,10 +224,10 @@ class OratorioController extends Controller
 			});
 		
 		
-		//Fatto!
+		//Fatto!		
+		}
 		Session::flash('flash_message', 'Messaggio creato e email inviata!');
 		return redirect()->route('oratorio.showall');
-		}
 	}
 	
 	public function neworatorio_emailfromuser(Request $request){

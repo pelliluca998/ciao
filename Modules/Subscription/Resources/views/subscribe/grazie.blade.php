@@ -14,7 +14,7 @@ use App\Event;
 		<div class="panel panel-default">
 		<div class="panel-body">	
 			GRAZIE, ISCRIZIONE SALVATA!
-			<p>{!! Event::leftJoin('subscriptions', 'subscriptions.id_event', 'events.id')->where('subscriptions.id', $id_subscription)->first()->grazie!!}</p>
+			<p>{!! Event::leftJoin('subscriptions', 'subscriptions.id_event', 'events.id')->where('subscriptions.id', $id_subscription)->first()->grazie !!}</p>
 			Clicca sul pulsante qui sotto per stampare la ricevuta.
 			{!! Form::open(['route' => 'subscribe.print', 'target' => '_blank']) !!}
 				{!! Form::hidden('id_sub', $id_subscription) !!}

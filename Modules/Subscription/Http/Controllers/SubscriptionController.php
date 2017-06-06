@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use App\Subscription;
+use App\EventSpec;
 use App\Oratorio;
 use App\SpecSubscription;
 use App\EventSpecValue;
@@ -261,7 +262,6 @@ class SubscriptionController extends Controller
 			
 			Session::put('id_subscription', $sub->id);
 			Session::put('id_event', $sub->id_event);
-			//Session::flash('flash_message', 'Iscrizione avvenuta con successo!');
 		}
 		return view('subscription::subscribe.passo2', ['id_subscription' => Session::get('id_subscription'), 'id_event' => Session::get('id_event')]);
 	}
@@ -273,8 +273,8 @@ class SubscriptionController extends Controller
 				$valore = $input['valore'];
 				$id_eventspec = $input['id_eventspec'];
 				$id_week = $input['id_week'];
-				$costo = $input['costo'];
-				$pagato = $input['pagato'];
+				$costo = $input['costo_2'];
+				$pagato = $input['pagato_2'];
 				$user = User::findOrFail(Subscription::findOrFail($input['id_subscription'])->id_user);
 				$i=0;
 				foreach($valore as $valore){
