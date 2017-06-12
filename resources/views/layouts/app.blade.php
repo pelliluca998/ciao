@@ -225,13 +225,13 @@ function add_eventspec(id_sub, id_event, admin){
 	
 	row += "</td>";		
 	if(admin){
-		row += "<td><input name='costo["+t+"]' type='number' value='"+price+"' class='form-control' style='width: 70px;' min='0' step='0.01'/></td>";
+		row += "<td><input name='costo["+t+"]' type='number' value='"+price+"' class='form-control' style='width: 70px;' step='0.01'/></td>";
 		row += "<td>";
 		row += "<input name='pagato["+t+"]' type='hidden' value='0'/>";
 		row += "<input name='pagato["+t+"]' type='checkbox' value='1' class='form-control'/>";
 		row += "</td>";
 	}else{
-		row += "<td><input name='costo["+t+"]' type='hidden' value='0' class='form-control' style='width: 70px;' min='0' step='0.01'/>0.00</td>";
+		row += "<td><input name='costo["+t+"]' type='hidden' value='0' class='form-control' style='width: 70px;' />"+price+"€</td>";
 		row += "<td>";
 		row += "<input name='pagato["+t+"]' type='hidden' value='0'/>";
 		row += "</td>";
@@ -268,19 +268,27 @@ function change_eventspec(sel, id_event){
 	});
 }
 
+/**
+Funzione che viene richiamata quando un select cambia valore; viene popolato lo span (#span_type) 
+con un input del tipo corretto (seelct, testo, checkbox).
 
-function change_type(sel){
+sel: il select
+multiple: se viene generato un select, indica se sono possibili scelte multiple
+name: il name da dare all'input generato
+id: l'id da dare all'input generato
+**/
+function change_type(sel, multiple='', name='valore', id='valore', show_checkbox_hidden=true, span_id="span_type"){
 	$.get("{{ url('types/type')}}",
-		{id_eventspec: sel.value }, 
+		{id_eventspec: sel.value}, 
 	    	function(data) {
 			$.each(data, function(index, element) {
 				var row = "";
 				if(element.id>0){
-					row = "<select id='valore' name='valore'></select>";
+					row = "<select id='"+id+"' name='"+name+"' "+multiple+" class='form-control'></select>";
 					$.get("{{ url('types/options')}}",
 						{id_type: element.id }, 
 					    	function(data2) {
-							var model = $("#valore");
+							var model = $("#"+id+"");
 							model.empty();
 							$.each(data2, function(index_2, element_2) {
 								model.append("<option value='"+ element_2.id +"'>" + element_2.option + "</option>");
@@ -289,21 +297,23 @@ function change_type(sel){
 				}else{
 					switch(element.id){
 						case -1:
-							row = "<input name='valore' type='text' value='' class='form-control' style='width: 300px'/>";
+							row = "<input name='"+name+"' type='text' value='' class='form-control' style='width: 300px'/>";
 							break;
 						case -2:
-							row = "<input name='valore' type='hidden' value='0'/>";
-							row += "<input name='valore' type='checkbox' value='1' />";
+							if(show_checkbox_hidden){
+								row = "<input name='"+name+"' type='hidden' value='0'/>";
+							}
+							row += "<input name='"+name+"' type='checkbox' value='1' />";
 							break;
 						case -3:
-							row = "<input name='valore' type='number' value='' class='form-control' style='width: 300px'/>";
+							row = "<input name='"+name+"' type='number' value='' class='form-control' style='width: 300px'/>";
 							break;
 						case -4:
-							row = "<select id='valore' name='valore'></select>";
+							row = "<select id='"+id+"' name='"+name+"'></select>";
 							$.get("{{ url('admin/groups/dropdown')}}",
 								{}, 
 							    	function(data2) {
-									var model = $("#valore");
+									var model = $("#"+id+"");
 									model.empty();
 									$.each(data2, function(index_2, element_2) {
 										model.append("<option value='"+ element_2.id +"'>" + element_2.nome + "</option>");
@@ -312,7 +322,7 @@ function change_type(sel){
 							break;
 					}
 				}					
-				$("#span_type").html(row);
+				$("#"+span_id).html(row);
 			});
 	});
 }
@@ -572,6 +582,9 @@ function load_attrib_registration(sel){
 }
 function load_spec_subscription(id_subscription){
 	$('#spec1').load("eventspecvalues/"+id_subscription);
+	$('html,body').animate({
+		scrollTop: $("#nome_sub").offset().top},
+		'slow');
 }
 
 function load_spec_usersubscription(id_subscription, id_event){

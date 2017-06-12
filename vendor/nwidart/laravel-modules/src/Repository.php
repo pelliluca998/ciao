@@ -392,13 +392,11 @@ class Repository implements RepositoryInterface, Countable
     /**
      * Get all modules as laravel collection instance.
      *
-     * @param $status
-     *
      * @return Collection
      */
-    public function collections($status = 1)
+    public function collections()
     {
-        return new Collection($this->getByStatus($status));
+        return new Collection($this->enabled());
     }
 
     /**

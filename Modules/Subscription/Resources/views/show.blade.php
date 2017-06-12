@@ -10,6 +10,7 @@ use Nayjest\Grids\Components\ColumnsHider;
 use Nayjest\Grids\Components\CsvExport;
 use Nayjest\Grids\Components\ExcelExport;
 use Nayjest\Grids\Components\Filters\DateRangePicker;
+use Nayjest\Grids\SelectFilterConfig;
 use Nayjest\Grids\Components\FiltersRow;
 use Nayjest\Grids\Components\HtmlTag;
 use Nayjest\Grids\Components\Laravel5\Pager;
@@ -109,13 +110,56 @@ use Nayjest\Grids\ObjectDataRow;
 			if(!isset($id_event) || $id_event==null){
 				$id_event=Session::get('work_event');
 			}
+			
 			$event = Event::findOrFail($id_event);
-			$query = (new Subscription)
-				->newQuery()
-				->select(DB::raw("concat(users.name, ' ', users.cognome) as name"),
-				'subscriptions.id', 'subscriptions.confirmed', 'subscriptions.type')
-				->leftJoin('users', 'users.id', '=', 'subscriptions.id_user')
-				->where('subscriptions.id_event', '=', $id_event); 
+			
+			if($event->stampa_anagrafica){
+				$query = (new Subscription)
+					->newQuery()
+					->select(DB::raw("concat(users.name, ' ', users.cognome) as name"),
+					'subscriptions.id', 'subscriptions.confirmed', 'subscriptions.type')
+					->leftJoin('users', 'users.id', '=', 'subscriptions.id_user')
+					->where('subscriptions.id_event', '=', $id_event);
+				$field_valore = (new FieldConfig)
+					  	->setName('name')
+						->setLabel('Utente')
+						->addFilter(
+							(new FilterConfig)
+								->setName('name')
+								->setOperator(FilterConfig::OPERATOR_LIKE))			
+						->setSortable(true)
+						->setCallback(function ($val, ObjectDataRow $row) use ($event){
+							$sub = $row->getSrc();
+							return $val;
+						});
+			}else{
+				$query = Subscription::select('event_spec_values.valore as valore', 'subscriptions.id', 'subscriptions.confirmed', 'subscriptions.type')
+					->leftJoin('event_spec_values', function ($join) use ($event){
+				  		$join->on('subscriptions.id', '=', 'event_spec_values.id_subscription')
+				      		->where('event_spec_values.id_eventspec', '=', $event->spec_iscrizione);
+			  		})
+			  		->where('subscriptions.id_event', $id_event);
+			  		
+			  	$field_valore = (new FieldConfig)
+				  	->setName('valore')
+					->setLabel('Utente')
+					->addFilter(
+						(new FilterConfig)
+							->setName('valore')
+							->setOperator(FilterConfig::OPERATOR_LIKE))			
+					->setSortable(true)
+					->setCallback(function ($val, ObjectDataRow $row) use ($event){
+						$sub = $row->getSrc();
+						if($val==null){
+							return "<i>Specifica non esistente!</i>";
+						}
+						return $val;
+					});
+			}
+			
+			
+			
+			
 				
 			$components = [
 						(new HtmlTag)
@@ -168,30 +212,15 @@ use Nayjest\Grids\ObjectDataRow;
 				->setName('id')
 				->setLabel('ID')
 				->setSortable(true),
-            	(new FieldConfig)
-		       	->setName('name')
-				->setLabel('Utente')
-				->addFilter(
-					(new FilterConfig)
-						->setName('name')
-						->setOperator(FilterConfig::OPERATOR_LIKE))			
-				->setSortable(true)
-				->setCallback(function ($val, ObjectDataRow $row) use ($event){
-					$sub = $row->getSrc();
-					if($event->stampa_anagrafica==0){
-						$value = EventSpecValue::where([['id_eventspec', $event->spec_iscrizione], ['id_subscription', $sub->id]])->get();
-						if(count($value)>0){
-							return $value[0]->valore;
-						}else{
-							return "<i>Specifica non esistente!</i>";
-						}
-					}else{
-						return $val;
-					}
-				}),
+            	$field_valore,
 			(new FieldConfig)
 				->setName('confirmed')
-				->setLabel('OK?')
+				->setLabel('Confermata')
+				->addFilter(
+					(new SelectFilterConfig)
+						->setName('confirmed')
+						->setOptions(array('1' => 'SI', '0' => 'NO'))
+				)
 				->setSortable(true)
 				->setCallback(function ($val, ObjectDataRow $row) {
 					$sub = $row->getSrc();
@@ -207,6 +236,11 @@ use Nayjest\Grids\ObjectDataRow;
 			(new FieldConfig)
 				->setName('type')
 				->setLabel('Tipo')
+				->addFilter(
+					(new SelectFilterConfig)
+						->setName('confirmed')
+						->setOptions(array('ADMIN' => 'ADMIN', 'WEB' => 'WEB'))
+				)
 				->setSortable(true),
 			(new FieldConfig)
 				->setName('check')

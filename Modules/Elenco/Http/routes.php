@@ -13,3 +13,4 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:elenco'], 'pr
 	Route::post('elenco/save_values',['as' => 'elenco.save_values', 'uses' => 'ElencoController@save_values']);
 	Route::post('elenco/destroy_value', ['as' => 'elenco.destroy_value', 'uses' => 'ElencoController@destroy_value']);
 });
+

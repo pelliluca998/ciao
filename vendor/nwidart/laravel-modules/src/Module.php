@@ -6,12 +6,9 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Illuminate\Support\Traits\Macroable;
 
 class Module extends ServiceProvider
 {
-    use Macroable;
-
     /**
      * The laravel application instance.
      *
@@ -42,7 +39,7 @@ class Module extends ServiceProvider
      */
     public function __construct(Application $app, $name, $path)
     {
-        parent::__construct($app);
+        $this->app = $app;
         $this->name = $name;
         $this->path = realpath($path);
     }
@@ -181,8 +178,6 @@ class Module extends ServiceProvider
 
     /**
      * Get json contents.
-     *
-     * @param $file
      *
      * @return Json
      */
@@ -352,6 +347,8 @@ class Module extends ServiceProvider
 
     /**
      * Disable the current module.
+     *
+     * @return bool
      */
     public function disable()
     {

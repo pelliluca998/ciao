@@ -31,6 +31,8 @@ class SeedCommand extends Command
 
     /**
      * Execute the console command.
+     *
+     * @return mixed
      */
     public function fire()
     {
@@ -92,13 +94,13 @@ class SeedCommand extends Command
         $config = $module->get('migration');
         if (is_array($config) && array_key_exists('seeds', $config)) {
             foreach ((array)$config['seeds'] as $class) {
-                if (class_exists($class)) {
+                if (@class_exists($class)) {
                     $seeders[] = $class;
                 }
             }
         } else {
             $class = $this->getSeederName($name); //legacy support
-            if (class_exists($class)) {
+            if (@class_exists($class)) {
                 $seeders[] = $class;
             }
         }
@@ -113,6 +115,8 @@ class SeedCommand extends Command
      * Seed the specified module.
      *
      * @param string $className
+     *
+     * @return array
      */
     protected function dbSeed($className)
     {

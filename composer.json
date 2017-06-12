@@ -20,7 +20,7 @@
         "lavary/laravel-menu": "^1.6",
         "longman/telegram-bot": "^0.39.0",
         "irazasyed/telegram-bot-sdk": "^2.0",
-        "nwidart/laravel-modules": "^1.19",
+        "nwidart/laravel-modules": "1.19",
         "spatie/laravel-cookie-consent": "^1.8"
     },
     "require-dev": {

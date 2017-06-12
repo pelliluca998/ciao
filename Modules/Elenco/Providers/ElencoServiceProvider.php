@@ -35,7 +35,7 @@ class ElencoServiceProvider extends ServiceProvider
 	   $menuList->get('eventi')
 	   		->add('Elenchi', array('route'  => 'elenco.index'))
 	   		->prepend("<i class='fa fa-th-list' aria-hidden='true'></i> ")
-	   		->data('permissions', ['adminmodule', 'all'])->data('order', 23);
+	   		->data('permissions', ['adminmodule', 'all', 'mod_elenco'])->data('order', 23);
     }
 
     /**

@@ -22,6 +22,8 @@ use Module;
 use Input;
 use Session;
 use Auth;
+use App\TypeSelect;
+use App\Week;
 
 class EventSpecValueController extends Controller
 {
@@ -211,5 +213,96 @@ class EventSpecValueController extends Controller
 		}else{
 			return redirect()->route('usersubscriptions.show');
 		}
+	}
+	
+	public function riempi_specifica(Request $request){
+		//echo "Riempimento specifica<br>";
+		$id_eventspec = $request['id_eventspec'];
+		$id_pesco = $request['id_pesco'];
+		$valori_validi = $request['valore2'];
+		$valori_validi_specifica = $request['valore1'];
+		$event_spec = EventSpec::findOrFail($id_eventspec);
+		$spec_vincolo = EventSpec::findOrFail($id_pesco);
+		
+		if($spec_vincolo->id_type == -2 && $valori_validi == null){
+			$valori_validi = array("0");
+		}
+		
+		echo "Specifica da riempire: ".$event_spec->label."<br>";
+		echo "<br>Da dove pesco i valori: faccio scegliere una specifica e calcolo gli utenti totali per quella sepcifica. In questo caso scelgo solo gli utenti che nella specifica 'Classe frequentata' hanno un valore tra 'Prima elementare' e 'Quarta elementare'";
+		
+		//$valori_validi = array(106,107,108,109);
+		//quante iscrizioni hanno queste caratteristiche
+		$values = EventSpecValue::select('id_subscription')->where('id_eventspec', $id_pesco)->whereIn('valore', $valori_validi)->get()->toArray();
+		$subscriptions = Subscription::select('id')->whereIn('id', $values)->get()->toArray();
+		$num_sub = count($subscriptions);
+		echo "<br>In totale ho $num_sub iscrizioni corrispondenti alle indicazioni<br>";
+		
+		//in quanti gruppi devo dividerli?
+		$gruppi = TypeSelect::where('id_type', $event_spec->id_type)->whereIn('id', $valori_validi_specifica)->get();
+		$num_gruppi = count($gruppi);
+		$per_gruppo = intval($num_sub/$num_gruppi);
+		echo "Numero gruppi in cui suddividerli: $num_gruppi, ovvero $per_gruppo per gruppo CIRCA";
+		
+		//divido
+		$pescati = array();
+		$gruppi_generati = array();
+		foreach($gruppi as $gruppo){
+			$g = array();
+			echo "<h2>Gruppo ".$gruppo->option."</h2>";
+			//ne pesco per_gruppo;
+			$v = Subscription::whereIn('id', $subscriptions)->whereNotIn('id', $pescati)->take($per_gruppo)->inRandomOrder()->get();
+			foreach($v as $spec){
+				array_push($pescati, $spec->id);
+				array_push($g, $spec->id);
+				//echo "---- Aggiunta iscrizione ".$spec->id."<br>";
+			}
+			
+			array_push($gruppi_generati, $g);
+			var_dump($g);
+			
+		}
+		
+		$avanzo = $num_sub-count($pescati);
+		//echo "<br><br>Se ho fatto bene i conti, avanzano $avanzo iscrizioni... Ridistribuisco!<br>";
+		
+		for($i=0; $i<$avanzo; $i++){
+			//prendo un'iscrizione alla volta
+			$s = Subscription::whereIn('id', $subscriptions)->whereNotIn('id', $pescati)->take($per_gruppo)->limit(1)->first();
+			echo "<br>Iscrizione pescata: ".$s->id."<br>";
+			array_push($pescati, $s->id);
+			$index_array = rand(0, count($gruppi_generati)-1);
+			array_push($gruppi_generati[$index_array], $s->id);
+		}
+		
+		//creo le specifiche
+		$i = 0;
+		foreach($gruppi as $gruppo){
+			
+			foreach($gruppi_generati[$i] as $subs){		
+				$spec = new EventSpecValue;
+				$spec->id_eventspec = $id_eventspec;
+				$spec->id_subscription = $subs;
+				$spec->valore = $gruppo->id;
+				$spec->id_week = 0;
+				$spec->costo = 0;
+				$spec->pagato = 0;
+				$spec->save();
+				
+			}
+			$i++;
+		}
+		
+		Session::flash('flash_message', 'Squadre generate!');
+		return redirect()->route('subscription.index');
+		
+		//echo "<br><br><h1>Gruppi defintivi:</h1>";
+		//var_dump($gruppi_generati);	
+	}
+	
+	public function elimina_specifica(Request $request){
+		EventSpecValue::where('id_eventspec', $request['id_eventspec'])->delete();
+		Session::flash('flash_message', 'Specifica eliminata da tutte le iscrizioni!');
+		return redirect()->route('subscription.index');
 	}
 }

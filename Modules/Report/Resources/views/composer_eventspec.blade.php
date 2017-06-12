@@ -76,7 +76,7 @@ use App\Attributo;
                 </div>
 
             <div style="width: 100%; float: left;">
-                <div class="panel-heading" style="">Passo 2: Scegli le infomazioni <b>anagrafiche degli utenti</b> da inserire nel report:</div>
+                <h4>Passo 2: Scegli le infomazioni <b>anagrafiche degli utenti</b> da inserire nel report:</h4>
 				
 				<table class='testgrid' id=''>
 				<thead><tr>

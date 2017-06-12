@@ -150,4 +150,12 @@ use ValidatesRequests;
 	}		
 	
 	
+	public function strumenti(Request $request){
+		if(Session::has('work_event')){
+            return view('event::strumenti');
+        }else{
+            Session::flash('flash_message', 'Per vedere gli strumenti, devi prima selezionare un evento con cui lavorare!');
+            return redirect()->route('events.index');
+        }
+	}
 }

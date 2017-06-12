@@ -9,7 +9,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
 use App\EventSpec;
+use App\EventSpecValue;
+use App\Subscription;
 use App\Event;
+use App\TypeSelect;
+use App\Week;
 use Auth;
 use Input;
 use Session;
@@ -152,4 +156,6 @@ class EventSpecController extends Controller
 	public function show_eventspecvalues($id_sub){
 		return view('subscription::eventspecvalue.show', ['id_sub' => $id_sub]);
 	}
+	
+	
 }

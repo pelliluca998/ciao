@@ -92,10 +92,10 @@ function stampa_tabella($input, $select_value, $whereRaw, $columSpecs){
 	}
 
 	if(count($input['att_spec'])>0){
-	foreach($input['att_spec'] as $fa){
-		$a = Attributo::findOrfail($fa);
-		echo "<th>".$a->nome."</th>";
-	}
+		foreach($input['att_spec'] as $fa){
+			$a = Attributo::findOrfail($fa);
+			echo "<th>".$a->nome."</th>";
+		}
 	}
 
 

@@ -33,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
         $menuList = Menu::get('SegrestaNavBar');
 	   $menuList->add("Eventi", array("route" => "events.index"))
 	   		->prepend("<i class='fa fa-calendar' aria-hidden='true'></i> ")
-	   		->data('permissions', ['adminmodule', 'all'])->data('order', 20);
+	   		->data('permissions', ['adminmodule', 'all', 'mod_elenco'])->data('order', 20);
 	   
 	   $menuList->get('eventi')
 	   		->add('Eventi', array('route'  => 'events.index'))
@@ -42,6 +42,11 @@ class EventServiceProvider extends ServiceProvider
 	   		
 	   $menuList->get('eventi')
 	   		->add('Settimane', array('route'  => 'week.index'))
+	   		->prepend("<i class='fa fa-sun-o' aria-hidden='true'></i> ")
+	   		->data('permissions', ['adminmodule', 'all'])->data('order', 22);
+	   		
+	   $menuList->get('eventi')
+	   		->add('Strumenti', array('route'  => 'events.strumenti'))
 	   		->prepend("<i class='fa fa-sun-o' aria-hidden='true'></i> ")
 	   		->data('permissions', ['adminmodule', 'all'])->data('order', 22);
 	   		

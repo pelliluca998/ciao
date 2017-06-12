@@ -18,16 +18,30 @@ class ElencoController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
-    {
-		if(Session::has('work_event')){
-			return view('elenco::index');
-		}else{
+	public function index(Request $request){
+		if(!isset($request['id_event']) && !Session::has('work_event')){
 			Session::flash('flash_message', 'Per vedere le iscrizioni, devi prima selezionare un evento con cui lavorare!');
 			return redirect()->route('events.index');
 		}
-        
-    }
+		
+		if(Session::has('work_event')){
+			return view('elenco::index');
+		}
+		
+		if(isset($request['id_event'])){
+			$event = Event::where([['id', $request['id_event']], ['id_oratorio', Session::get('session_oratorio')]])->get();
+			if(count($event)>0){
+				Session::put('work_event', $event[0]->id);
+				return view('elenco::index');
+			}else{
+				Session::flash('flash_message', 'Per vedere le iscrizioni, devi prima selezionare un evento con cui lavorare!');
+				return redirect()->route('events.index');
+			}
+			
+		}		
+		
+
+	}
 
     /**
      * Show the form for creating a new resource.

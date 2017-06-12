@@ -138,7 +138,6 @@ class SchemaParser implements Arrayable
      *
      * @param string $column
      * @param array  $attributes
-     * @param string $type
      *
      * @return string
      */
@@ -154,7 +153,7 @@ class SchemaParser implements Arrayable
             }
         }
 
-        return $results . ';' . PHP_EOL;
+        return $results .= ';' . PHP_EOL;
     }
 
     /**

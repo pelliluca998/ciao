@@ -1,7 +1,15 @@
 <?php return array (
+  'event' => 
+  array (
+    'name' => 'Event',
+  ),
   'image' => 
   array (
     'driver' => 'gd',
+  ),
+  'report' => 
+  array (
+    'name' => 'Report',
   ),
   'services' => 
   array (
@@ -26,6 +34,10 @@
       'key' => NULL,
       'secret' => NULL,
     ),
+  ),
+  'attributo' => 
+  array (
+    'name' => 'Attributo',
   ),
   'mail' => 
   array (
@@ -106,6 +118,10 @@
     array (
     ),
   ),
+  'email' => 
+  array (
+    'name' => 'Email',
+  ),
   'telegram' => 
   array (
     'bot_token' => '305880668:AAHY8PzersKLz2LD7yGxYtZ_12x3-eUiNQU',
@@ -115,6 +131,10 @@
     array (
     ),
     'name' => 'Telegram',
+  ),
+  'elenco' => 
+  array (
+    'name' => 'Elenco',
   ),
   'app' => 
   array (
@@ -234,6 +254,14 @@
     'domain' => NULL,
     'secure' => false,
     'http_only' => true,
+  ),
+  'subscription' => 
+  array (
+    'name' => 'Subscription',
+  ),
+  'contabilita' => 
+  array (
+    'name' => 'Contabilita',
   ),
   'laravel-menu' => 
   array (
@@ -427,6 +455,10 @@
       ),
     ),
   ),
+  'sms' => 
+  array (
+    'name' => 'Sms',
+  ),
   'database' => 
   array (
     'fetch' => 5,
@@ -479,6 +511,14 @@
         'database' => 0,
       ),
     ),
+  ),
+  'oratorio' => 
+  array (
+    'name' => 'Oratorio',
+  ),
+  'group' => 
+  array (
+    'name' => 'Group',
   ),
   'queue' => 
   array (
@@ -858,6 +898,11 @@
       ),
     ),
   ),
+  'laravel-cookie-consent' => 
+  array (
+    'enabled' => true,
+    'cookie_name' => 'laravel_cookie_consent',
+  ),
   'view' => 
   array (
     'paths' => 
@@ -866,53 +911,8 @@
     ),
     'compiled' => '/var/www/segresta_admin/storage/framework/views',
   ),
-  'laravel-cookie-consent' => 
-  array (
-    'enabled' => true,
-    'cookie_name' => 'laravel_cookie_consent',
-  ),
   'user' => 
   array (
     'name' => 'User',
-  ),
-  'group' => 
-  array (
-    'name' => 'Group',
-  ),
-  'oratorio' => 
-  array (
-    'name' => 'Oratorio',
-  ),
-  'event' => 
-  array (
-    'name' => 'Event',
-  ),
-  'subscription' => 
-  array (
-    'name' => 'Subscription',
-  ),
-  'report' => 
-  array (
-    'name' => 'Report',
-  ),
-  'email' => 
-  array (
-    'name' => 'Email',
-  ),
-  'sms' => 
-  array (
-    'name' => 'Sms',
-  ),
-  'attributo' => 
-  array (
-    'name' => 'Attributo',
-  ),
-  'contabilita' => 
-  array (
-    'name' => 'Contabilita',
-  ),
-  'elenco' => 
-  array (
-    'name' => 'Elenco',
   ),
 );

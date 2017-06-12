@@ -79,7 +79,7 @@ class FileGenerator extends Generator
     /**
      * Set filesystem.
      *
-     * @param Filesystem $filesystem
+     * @param null $filesystem
      *
      * @return $this
      */

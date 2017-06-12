@@ -131,9 +131,11 @@ use ValidatesRequests;
 	
 		//salvo attributi
 		$i=0;
-		foreach($input['id_attributo'] as $id) {
-			$attrib = AttributoUser::create(['id_user' => $user->id, 'id_attributo' => $id, 'valore' => $input['attributo'][$i]]);
-			$i++;
+		if(isset($input['id_attributo']) && count($input['id_attributo'])>0){
+			foreach($input['id_attributo'] as $id) {
+				$attrib = AttributoUser::create(['id_user' => $user->id, 'id_attributo' => $id, 'valore' => $input['attributo'][$i]]);
+				$i++;
+			}
 		}
 	
 		//aggiungo il ruolo

@@ -7,6 +7,8 @@ use App\Permission;
 use App\EventSpecValue;
 use App\EventSpec;
 use App\SpecSubscription;
+use App\Subscription;
+use App\Event;
 use App\TypeSelect;
 use Modules\Oratorio\Http\Controllers\TypeController;
 
@@ -18,6 +20,8 @@ use Modules\Oratorio\Http\Controllers\TypeController;
 <?php
 $id_event=Session::get('work_event');
 $id_subscription=$id_sub;
+$subscription = Subscription::findOrFail($id_subscription);
+$event = Event::findOrfail($id_event);
 ?>
 <!-- Modal2 -->
 <div class="modal fade" id="eventspecsOp" tabindex="-1" role="dialog" aria-labelledby="EventSpecsOperation">
@@ -63,6 +67,24 @@ $specs = (new EventSpecValue)
 	->orderBy('event_specs.ordine', 'asc')
 	->get();
 ?>
+
+<div style="padding: 2px; text-align: center; background: #90EE90;" id="nome_sub">
+	@if($event->stampa_anagrafica)
+		<h2>{{User::findOrfail($subscription->id_user)->full_name}}</h2>
+	@else
+		<?php
+			$query = Subscription::select('event_spec_values.valore as valore')
+					->leftJoin('event_spec_values', function ($join) use ($event){
+				  		$join->on('subscriptions.id', '=', 'event_spec_values.id_subscription')
+				      		->where('event_spec_values.id_eventspec', '=', $event->spec_iscrizione);
+			  		})
+			  		->where('subscriptions.id', $id_subscription)
+			  		->first();
+		?>
+		<h2>{{$query->valore}}</h2>
+	@endif
+</div>
+
 
 <h2>Specifiche generali</h2>
 <table class='testgrid' id='showeventspecvalue'>

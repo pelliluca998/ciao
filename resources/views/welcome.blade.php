@@ -29,6 +29,7 @@
                 align-items: center;
                 display: flex;
                 justify-content: center;
+                background-image: url("{{ url('background.jpg') }}")
             }
 
             .position-ref {
@@ -39,10 +40,14 @@
                 position: absolute;
                 right: 10px;
                 top: 18px;
+                background-color: rgba(255, 255, 255, 0.80);
             }
 
             .content {
                 text-align: center;
+                background-color: rgba(255, 255, 255, 0.80);
+                padding: 5px;
+                
             }
 
             .title {
@@ -66,10 +71,14 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
+            @if (Route::has('login'))                
                 <div class="top-right links">
-                    <a href="{{ url('/login') }}">Login</a>
-                    <a href="{{ url('/register') }}">Register</a>
+                    @if (Auth::check())
+                        <a href="{{ url('/home') }}">Entra!</a>
+                    @else
+                        <a href="{{ url('/login') }}">Login</a>
+                        <a href="{{ url('/register') }}">Registrati</a>
+                    @endif
                 </div>
             @endif
 
@@ -77,10 +86,9 @@
                 <div class="title m-b-md">
                     Benvenuto in Segresta 2.0
                 </div>
-
-                <div class="links">
-                	Esegui il login in alto, oppure registrati.
-                </div>
+                
+                <p style="color: black;">Un nuovo modo di gestire il tuo oratorio</p>
+                
             </div>
         </div>
     </body>

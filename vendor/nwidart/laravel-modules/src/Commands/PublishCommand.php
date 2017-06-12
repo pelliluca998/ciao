@@ -25,13 +25,13 @@ class PublishCommand extends Command
 
     /**
      * Execute the console command.
+     *
+     * @return mixed
      */
     public function fire()
     {
         if ($name = $this->argument('module')) {
-            $this->publish($name);
-
-            return;
+            return $this->publish($name);
         }
 
         $this->publishAll();
