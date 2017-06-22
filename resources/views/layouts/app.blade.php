@@ -100,9 +100,18 @@ use App\Oratorio;
 			    					
 			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
 			    						<?php $buttons=$buttons_1; ?>
-			    				@else			    				
-				    					<div style="float:left; margin-right: 5px;">Non hai specificato nessun evento!</div>
+			    				@else
+			    					@if($oratorio->last_id_event>0 && Event::findOrFail($oratorio->last_id_event)->count()>0)
+			    						<?php Session::put('work_event', $oratorio->last_id_event); 
+			    						$event=Event::where('id', Session::get('work_event'))->first();
+			    						?>
+			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
+			    						<?php $buttons=$buttons_1; ?>
+			    					@else
+			    						<div style="float:left; margin-right: 5px;">Non hai specificato nessun evento!</div>
 				    					<?php $buttons=$buttons_2; ?>
+			    					@endif		    				
+				    					
 				    				
 			    				@endif
 			    				<div style="float:left; margin-right: 5px;"> <i class="fa fa-star" aria-hidden="true"></i>

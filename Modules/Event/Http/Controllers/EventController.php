@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Event;
+use App\Oratorio;
 use Session;
 use Input;
 use Entrust;
@@ -35,6 +36,9 @@ use ValidatesRequests;
 	public function work(Request $request){
 		$input = $request->all();
 		$id_event = $input['id_event'];
+		$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
+		$oratorio->last_id_event = $id_event;
+		$oratorio->save();
 		Session::put('work_event', $id_event);
 		return redirect()->route('subscription.index');
 	}

@@ -35,10 +35,133 @@ use App\AttributoUser;
 
 $event = Event::findOrFail(Session::get('work_event'));
 $oratorio = Oratorio::findOrFail($event->id_oratorio);
+$keys = ['week_filter', 'week_filter_id', 'week_filter_value', 'spec', 'spec_filter', 'spec_filter_id', 'spec_filter_value', 'att_filter', 'att_filter_id', 'att_filter_value', 'att_spec', 'spec_user'];
+foreach($keys as $key){
+	if(!array_key_exists($key, $input)){			
+		$input[$key] = array();
+	}
+}
 ?>
 <p style="text-align: center;">{!! $oratorio->nome !!}</p>
 <h2 style="text-align: center;">{!! $event->nome !!}</h2>
 <h3 style="text-align: center;">Report delle iscrizioni</h3>
+<h4>Filtri settimanali attivi: </h4>
+
+<?php
+$weeks = Week::where('id_event', Session::get('work_event'))->orderBy('from_date', 'ASC')->get();
+$w=0;
+echo "<ul>";
+foreach($weeks as $week){
+	$filters = $input['week_filter'][$w];
+	$filter_id = $input['week_filter_id'][$w];
+	$filter_values = $input['week_filter_value'][$w];
+	$f=0;
+	
+	foreach($filters as $filter){
+		if($filter==1){
+			$spec = EventSpec::findOrFail($filter_id[$f]);
+			echo "<li>Settimana ".($w+1)." - Specifica <b>". $spec->label."</b> con valore  ";
+			$valore = $filter_values[$f];
+			if($spec->id_type>0){
+				$val = TypeSelect::where('id', $valore)->get();
+				if(count($val)>0){
+					$val2 = $val[0];
+					echo $val2->option;
+				}else{
+					echo "";
+				}
+			}else{
+				switch($spec->id_type){
+					case -1:
+						echo "<b>".$valore."</b>";
+						break;
+					case -2:
+						$icon = "<i class='fa ";
+						if($valore==1){
+							$icon .= "fa-check-square-o";
+						}else{
+							$icon .= "fa-square-o";
+						}
+						$icon .= " fa-2x' aria-hidden='true'></i>";
+						echo $icon;
+						break;
+					case -3:
+						echo "<b>".$valore."</b>";
+						break;
+					case -4:
+						$val = Group::where('id', $valore)->get();
+						if(count($val)>0){
+							$val2 = $val[0];
+							echo "<b>".$val2->nome."</b>";
+						}else{
+							echo "";
+						}
+					break;
+				}
+			}
+			echo "</li>";
+		}
+		$f++;
+	}
+	$w++;
+}
+echo "</ul>";
+
+echo "<h4>Filtri generali attivi: </h4>";
+echo "<ul>";
+$f=0;
+foreach($input['spec_filter'] as $filter){
+	if($filter==1){
+		$spec = EventSpec::findOrFail($input['spec_filter_id'][$f]);
+		
+		echo "<li>Specifica <b>". $spec->label."</b> con valore  ";
+		$valore = $input['spec_filter_value'][$f];
+		if($spec->id_type>0){
+			$val = TypeSelect::where('id', $valore)->get();
+			if(count($val)>0){
+				$val2 = $val[0];
+				echo "<b>".$val2->option."</b>";
+			}else{
+				echo "";
+			}
+		}else{
+			switch($spec->id_type){
+				case -1:
+					echo "<b>".$valore."</b>";
+					break;
+				case -2:
+					$icon = "<i class='fa ";
+					if($valore==1){
+						$icon .= "fa-check-square-o";
+					}else{
+						$icon .= "fa-square-o";
+					}
+					$icon .= " fa-2x' aria-hidden='true'></i>";
+					echo $icon;
+					break;
+				case -3:
+					echo "<b>".$valore."</b>";
+					break;
+				case -4:
+					$val = Group::where('id', $valore)->get();
+					if(count($val)>0){
+						$val2 = $val[0];
+						echo "<b>".$val2->nome."</b>";
+					}else{
+						echo "";
+					}
+				break;
+			}
+		}
+		echo "</li>";
+		
+	}
+	$f++;
+}
+echo "</ul>";
+
+
+?>
 <?php
 function stampa_tabella($input, $whereRaw){
 	$event = Event::findOrFail(Session::get('work_event'));
@@ -53,19 +176,20 @@ function stampa_tabella($input, $whereRaw){
 			echo "<th>ID</th>";
 			echo "<th>Utente</th>";
 			//intestazione campi da inserire nel report
-			//$columCampi = Campo::select('campos.label', 'campos.id', 'campos.id_type as id_type')->whereIn('campos.id', $input['campo'][$w])->orderBy('campos.id', 'asc')->get();
 			$columnSpecs1 = (new EventSpec)
 				->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.valid_for')
 				->whereIn('event_specs.id', $input['week'][$w])
 				->get();
 			foreach($columnSpecs1 as $c){
 				echo "<th>".$c->label."</th>";
+				echo "<th>Pagato?</th>";
 			}
 
 			//inserimento colonne da specifiche 1
 			$columnSpecs2 = EventSpec::whereIn('id', $input['spec'])->orderBy('id', 'asc')->get();
 			foreach($columnSpecs2 as $c){
 				echo "<th>".$c->label."</th>";
+				echo "<th>Pagato?</th>";
 			}
 			
 			if(count($input['spec_user'])>0){ //stampo l'intestazione delle colonne con specifiche utente
@@ -154,8 +278,9 @@ function stampa_tabella($input, $whereRaw){
 					//get valore dei campi
 					foreach($columnSpecs1 as $c){
 						$specs = EventSpecValue::where([['id_subscription', $sub->id_sub],['id_week', $week->id], ['id_eventspec', $c->id]])->orderBy('id_eventspec')->first();
-						echo "<td>";
+						
 						if(count($specs)!=0){
+							echo "<td>";
 							if($c->id_type>0){
 								$val = TypeSelect::where('id', $specs->valore)->get();
 								if(count($val)>0){
@@ -193,14 +318,23 @@ function stampa_tabella($input, $whereRaw){
 									break;
 								}
 							}
+							echo "</td>";
+							echo "<td>";
+							if($specs->pagato==1){
+								echo "<i class='fa fa-check-square-o fa-2x' aria-hidden='true'></i>";
+							}else{
+								echo "<i class='fa fa-square-o fa-2x' aria-hidden='true'></i>";
+							}
+							echo "</td>";
 						}else{
-							echo "n.d.";
+							echo "<td>n.d.</td>";
+							echo "<td>n.d.</td>";
 						}
-               			echo "</td>";
+               				
                 		}
                 		
                 		//valori specs1
-                		$specs = EventSpecValue::select('event_specs.id_type', 'event_spec_values.valore')->leftJoin('event_specs', 'event_specs.id', 'event_spec_values.id_eventspec')->where('event_spec_values.id_subscription', $sub->id_sub)->whereIn('event_spec_values.id_eventspec', $input['spec'])->orderBy('event_spec_values.id_eventspec', 'asc')->get();
+                		$specs = EventSpecValue::select('event_specs.id_type', 'event_spec_values.valore', 'event_spec_values.pagato')->leftJoin('event_specs', 'event_specs.id', 'event_spec_values.id_eventspec')->where('event_spec_values.id_subscription', $sub->id_sub)->whereIn('event_spec_values.id_eventspec', $input['spec'])->orderBy('event_spec_values.id_eventspec', 'asc')->get();
                 		foreach($specs as $c){
 						echo "<td>";
 						if($c->id_type>0){
@@ -240,6 +374,13 @@ function stampa_tabella($input, $whereRaw){
 								break;
 							}
 						}						
+						echo "</td>";
+						echo "<td>";
+						if($c->pagato==1){
+							echo "<i class='fa fa-check-square-o fa-2x' aria-hidden='true'></i>";
+						}else{
+							echo "<i class='fa fa-square-o fa-2x' aria-hidden='true'></i>";
+						}
 						echo "</td>";
 					}
 					
@@ -307,6 +448,7 @@ function stampa_tabella($input, $whereRaw){
 					//aggiungo celle vuote per completare la riga
 					for($i=0; $i<count($input['spec'])-count($specs); $i++){
 						echo "<td>n.d.</td>";
+						echo "<td>n.d.</td>";
 					}
                 		echo "</tr>";
 				}
@@ -320,12 +462,7 @@ function stampa_tabella($input, $whereRaw){
 
 }
 
-$keys = ['week_filter', 'week_filter_id', 'week_filter_value', 'spec', 'spec_filter', 'spec_filter_id', 'spec_filter_value', 'att_filter', 'att_filter_id', 'att_filter_value', 'att_spec', 'spec_user'];
-foreach($keys as $key){
-	if(!array_key_exists($key, $input)){			
-		$input[$key] = array();
-	}
-}
+
 //$whereRaw = "sub.id_event = ".Session::get('work_event');
 $whereRaw = " 1 ";
 $i=0;
@@ -336,19 +473,10 @@ foreach($input['user_filter'] as $f){
 	$i++;
 }
 
-/* if($group>0){
-		$selects = TypeSelect::where('id_type', $group)->orderBy('ordine', 'asc')->get();
-		foreach($selects as $select){
-			echo "<h4>".$select->option."</h4>";
-			stampa_tabella($specs, $spec_users, $columSpecs, $select->id, $whereRaw, $filter_id, $filter_value, $filter, $att_filter, $att_filter_id, $att_filter_value, $att_spec );
-		}
+stampa_tabella($input, $whereRaw);
 
-}else{ */
-	stampa_tabella($input, $whereRaw);
 
-//}
-
-	?>
+?>
 <br>
 
 </div>

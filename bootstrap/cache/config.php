@@ -1,59 +1,60 @@
 <?php return array (
-  'event' => 
+  'entrust' => 
   array (
-    'name' => 'Event',
+    'role' => 'App\\Role',
+    'roles_table' => 'roles',
+    'permission' => 'App\\Permission',
+    'permissions_table' => 'permissions',
+    'permission_role_table' => 'permission_role',
+    'role_user_table' => 'role_user',
+    'user_foreign_key' => 'user_id',
+    'role_foreign_key' => 'role_id',
   ),
-  'image' => 
+  'laravel-cookie-consent' => 
   array (
-    'driver' => 'gd',
+    'enabled' => true,
+    'cookie_name' => 'laravel_cookie_consent',
   ),
-  'report' => 
+  'dompdf' => 
   array (
-    'name' => 'Report',
-  ),
-  'services' => 
-  array (
-    'mailgun' => 
+    'show_warnings' => false,
+    'orientation' => 'portrait',
+    'defines' => 
     array (
-      'domain' => 'mailgun.segresta.it',
-      'secret' => 'key-aef2f7c2269f25786a0d16a402e90ac6',
-    ),
-    'ses' => 
-    array (
-      'key' => NULL,
-      'secret' => NULL,
-      'region' => 'us-east-1',
-    ),
-    'sparkpost' => 
-    array (
-      'secret' => NULL,
-    ),
-    'stripe' => 
-    array (
-      'model' => 'App\\User',
-      'key' => NULL,
-      'secret' => NULL,
+      'DOMPDF_FONT_DIR' => '/var/www/segresta/storage/fonts/',
+      'DOMPDF_FONT_CACHE' => '/var/www/segresta/storage/fonts/',
+      'DOMPDF_TEMP_DIR' => '/tmp',
+      'DOMPDF_CHROOT' => '/var/www/segresta',
+      'DOMPDF_UNICODE_ENABLED' => true,
+      'DOMPDF_ENABLE_FONT_SUBSETTING' => false,
+      'DOMPDF_PDF_BACKEND' => 'CPDF',
+      'DOMPDF_DEFAULT_MEDIA_TYPE' => 'screen',
+      'DOMPDF_DEFAULT_PAPER_SIZE' => 'a4',
+      'DOMPDF_DEFAULT_FONT' => 'serif',
+      'DOMPDF_DPI' => 96,
+      'DOMPDF_ENABLE_PHP' => false,
+      'DOMPDF_ENABLE_JAVASCRIPT' => true,
+      'DOMPDF_ENABLE_REMOTE' => true,
+      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1000000000000001,
+      'DOMPDF_ENABLE_CSS_FLOAT' => false,
+      'DOMPDF_ENABLE_HTML5PARSER' => false,
     ),
   ),
-  'attributo' => 
+  'email' => 
   array (
-    'name' => 'Attributo',
+    'name' => 'Email',
   ),
-  'mail' => 
+  'sms' => 
   array (
-    'driver' => 'mailgun',
-    'host' => NULL,
-    'port' => 587,
-    'from' => 
-    array (
-      'address' => 'info@segresta.it',
-      'name' => 'Segresta',
-    ),
-    'encryption' => NULL,
-    'username' => NULL,
-    'password' => NULL,
-    'sendmail' => '/usr/sbin/sendmail -bs',
-    'pretend' => false,
+    'name' => 'Sms',
+  ),
+  'subscription' => 
+  array (
+    'name' => 'Subscription',
+  ),
+  'group' => 
+  array (
+    'name' => 'Group',
   ),
   'cache' => 
   array (
@@ -77,7 +78,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => '/var/www/segresta_admin/storage/framework/cache',
+        'path' => '/var/www/segresta/storage/framework/cache',
       ),
       'memcached' => 
       array (
@@ -109,416 +110,9 @@
     ),
     'prefix' => 'laravel',
   ),
-  'compile' => 
-  array (
-    'files' => 
-    array (
-    ),
-    'providers' => 
-    array (
-    ),
-  ),
-  'email' => 
-  array (
-    'name' => 'Email',
-  ),
-  'telegram' => 
-  array (
-    'bot_token' => '305880668:AAHY8PzersKLz2LD7yGxYtZ_12x3-eUiNQU',
-    'async_requests' => false,
-    'http_client_handler' => NULL,
-    'commands' => 
-    array (
-    ),
-    'name' => 'Telegram',
-  ),
   'elenco' => 
   array (
     'name' => 'Elenco',
-  ),
-  'app' => 
-  array (
-    'name' => 'Segresta 2.0',
-    'env' => 'local',
-    'debug' => true,
-    'url' => 'http://localhost/segresta_admin',
-    'timezone' => 'Europe/Rome',
-    'locale' => 'it',
-    'fallback_locale' => 'en',
-    'key' => 'base64:vCXs9qjoAWrzu9PTla8Ga2eCpDpjWVK0EAq7H3NEyMg=',
-    'cipher' => 'AES-256-CBC',
-    'log' => 'single',
-    'log_level' => 'debug',
-    'providers' => 
-    array (
-      0 => 'Illuminate\\Auth\\AuthServiceProvider',
-      1 => 'Illuminate\\Broadcasting\\BroadcastServiceProvider',
-      2 => 'Illuminate\\Bus\\BusServiceProvider',
-      3 => 'Illuminate\\Cache\\CacheServiceProvider',
-      4 => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
-      5 => 'Illuminate\\Cookie\\CookieServiceProvider',
-      6 => 'Illuminate\\Database\\DatabaseServiceProvider',
-      7 => 'Illuminate\\Encryption\\EncryptionServiceProvider',
-      8 => 'Illuminate\\Filesystem\\FilesystemServiceProvider',
-      9 => 'Illuminate\\Foundation\\Providers\\FoundationServiceProvider',
-      10 => 'Illuminate\\Hashing\\HashServiceProvider',
-      11 => 'Illuminate\\Mail\\MailServiceProvider',
-      12 => 'Illuminate\\Notifications\\NotificationServiceProvider',
-      13 => 'Illuminate\\Pagination\\PaginationServiceProvider',
-      14 => 'Illuminate\\Pipeline\\PipelineServiceProvider',
-      15 => 'Illuminate\\Queue\\QueueServiceProvider',
-      16 => 'Illuminate\\Redis\\RedisServiceProvider',
-      17 => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
-      18 => 'Illuminate\\Session\\SessionServiceProvider',
-      19 => 'Illuminate\\Translation\\TranslationServiceProvider',
-      20 => 'Illuminate\\Validation\\ValidationServiceProvider',
-      21 => 'Illuminate\\View\\ViewServiceProvider',
-      22 => 'Zizaco\\Entrust\\EntrustServiceProvider',
-      23 => 'Barryvdh\\DomPDF\\ServiceProvider',
-      24 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
-      25 => 'Intervention\\Image\\ImageServiceProvider',
-      26 => 'Telegram\\Bot\\Laravel\\TelegramServiceProvider',
-      27 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
-      28 => 'Spatie\\CookieConsent\\CookieConsentServiceProvider',
-      29 => 'Nayjest\\Grids\\ServiceProvider',
-      30 => 'Collective\\Html\\HtmlServiceProvider',
-      31 => 'Lavary\\Menu\\ServiceProvider',
-      32 => 'App\\Providers\\AppServiceProvider',
-      33 => 'App\\Providers\\AuthServiceProvider',
-      34 => 'App\\Providers\\EventServiceProvider',
-      35 => 'App\\Providers\\RouteServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'App' => 'Illuminate\\Support\\Facades\\App',
-      'Artisan' => 'Illuminate\\Support\\Facades\\Artisan',
-      'Auth' => 'Illuminate\\Support\\Facades\\Auth',
-      'Blade' => 'Illuminate\\Support\\Facades\\Blade',
-      'Cache' => 'Illuminate\\Support\\Facades\\Cache',
-      'Config' => 'Illuminate\\Support\\Facades\\Config',
-      'Cookie' => 'Illuminate\\Support\\Facades\\Cookie',
-      'Crypt' => 'Illuminate\\Support\\Facades\\Crypt',
-      'DB' => 'Illuminate\\Support\\Facades\\DB',
-      'Eloquent' => 'Illuminate\\Database\\Eloquent\\Model',
-      'Event' => 'Illuminate\\Support\\Facades\\Event',
-      'File' => 'Illuminate\\Support\\Facades\\File',
-      'Gate' => 'Illuminate\\Support\\Facades\\Gate',
-      'Hash' => 'Illuminate\\Support\\Facades\\Hash',
-      'Lang' => 'Illuminate\\Support\\Facades\\Lang',
-      'Log' => 'Illuminate\\Support\\Facades\\Log',
-      'Mail' => 'Illuminate\\Support\\Facades\\Mail',
-      'Notification' => 'Illuminate\\Support\\Facades\\Notification',
-      'Password' => 'Illuminate\\Support\\Facades\\Password',
-      'Queue' => 'Illuminate\\Support\\Facades\\Queue',
-      'Redirect' => 'Illuminate\\Support\\Facades\\Redirect',
-      'Redis' => 'Illuminate\\Support\\Facades\\Redis',
-      'Request' => 'Illuminate\\Support\\Facades\\Request',
-      'Response' => 'Illuminate\\Support\\Facades\\Response',
-      'Route' => 'Illuminate\\Support\\Facades\\Route',
-      'Schema' => 'Illuminate\\Support\\Facades\\Schema',
-      'Session' => 'Illuminate\\Support\\Facades\\Session',
-      'Storage' => 'Illuminate\\Support\\Facades\\Storage',
-      'URL' => 'Illuminate\\Support\\Facades\\URL',
-      'Validator' => 'Illuminate\\Support\\Facades\\Validator',
-      'View' => 'Illuminate\\Support\\Facades\\View',
-      'Form' => 'Collective\\Html\\FormFacade',
-      'Html' => 'Collective\\Html\\HtmlFacade',
-      'Grids' => 'Nayjest\\Grids\\Grids',
-      'Input' => 'Illuminate\\Support\\Facades\\Input',
-      'Entrust' => 'Zizaco\\Entrust\\EntrustFacade',
-      'PDF' => 'Barryvdh\\DomPDF\\Facade',
-      'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
-      'Image' => 'Intervention\\Image\\Facades\\Image',
-      'Telegram' => 'Telegram\\Bot\\Laravel\\Facades\\Telegram',
-      'Menu' => 'Lavary\\Menu\\Facade',
-      'Module' => 'Nwidart\\Modules\\Facades\\Module',
-    ),
-  ),
-  'session' => 
-  array (
-    'driver' => 'file',
-    'lifetime' => 120,
-    'expire_on_close' => false,
-    'encrypt' => false,
-    'files' => '/var/www/segresta_admin/storage/framework/sessions',
-    'connection' => NULL,
-    'table' => 'sessions',
-    'store' => NULL,
-    'lottery' => 
-    array (
-      0 => 2,
-      1 => 100,
-    ),
-    'cookie' => 'laravel_session',
-    'path' => '/',
-    'domain' => NULL,
-    'secure' => false,
-    'http_only' => true,
-  ),
-  'subscription' => 
-  array (
-    'name' => 'Subscription',
-  ),
-  'contabilita' => 
-  array (
-    'name' => 'Contabilita',
-  ),
-  'laravel-menu' => 
-  array (
-    'settings' => 
-    array (
-      'default' => 
-      array (
-        'auto_activate' => true,
-        'activate_parents' => true,
-        'active_class' => 'active',
-        'restful' => false,
-        'cascade_data' => true,
-        'rest_base' => '',
-        'active_element' => 'item',
-      ),
-    ),
-    'views' => 
-    array (
-      'bootstrap-items' => 'laravel-menu::bootstrap-navbar-items',
-    ),
-  ),
-  'modules' => 
-  array (
-    'namespace' => 'Modules',
-    'stubs' => 
-    array (
-      'enabled' => false,
-      'path' => '/var/www/segresta_admin/vendor/nwidart/laravel-modules/src/Commands/stubs',
-      'files' => 
-      array (
-        'start' => 'start.php',
-        'routes' => 'Http/routes.php',
-        'json' => 'module.json',
-        'views/index' => 'Resources/views/index.blade.php',
-        'views/master' => 'Resources/views/layouts/master.blade.php',
-        'scaffold/config' => 'Config/config.php',
-        'composer' => 'composer.json',
-      ),
-      'replacements' => 
-      array (
-        'start' => 
-        array (
-          0 => 'LOWER_NAME',
-        ),
-        'routes' => 
-        array (
-          0 => 'LOWER_NAME',
-          1 => 'STUDLY_NAME',
-          2 => 'MODULE_NAMESPACE',
-        ),
-        'json' => 
-        array (
-          0 => 'LOWER_NAME',
-          1 => 'STUDLY_NAME',
-          2 => 'MODULE_NAMESPACE',
-        ),
-        'views/index' => 
-        array (
-          0 => 'LOWER_NAME',
-        ),
-        'views/master' => 
-        array (
-          0 => 'STUDLY_NAME',
-        ),
-        'scaffold/config' => 
-        array (
-          0 => 'STUDLY_NAME',
-        ),
-        'composer' => 
-        array (
-          0 => 'LOWER_NAME',
-          1 => 'STUDLY_NAME',
-          2 => 'VENDOR',
-          3 => 'AUTHOR_NAME',
-          4 => 'AUTHOR_EMAIL',
-          5 => 'MODULE_NAMESPACE',
-        ),
-      ),
-    ),
-    'paths' => 
-    array (
-      'modules' => '/var/www/segresta_admin/Modules',
-      'assets' => '/var/www/segresta_admin/public/modules',
-      'migration' => '/var/www/segresta_admin/database/migrations',
-      'generator' => 
-      array (
-        'assets' => 'Assets',
-        'config' => 'Config',
-        'command' => 'Console',
-        'event' => 'Events',
-        'listener' => 'Events/Handlers',
-        'migration' => 'Database/Migrations',
-        'model' => 'Entities',
-        'repository' => 'Repositories',
-        'seeder' => 'Database/Seeders',
-        'controller' => 'Http/Controllers',
-        'filter' => 'Http/Middleware',
-        'request' => 'Http/Requests',
-        'provider' => 'Providers',
-        'lang' => 'Resources/lang',
-        'views' => 'Resources/views',
-        'test' => 'Tests',
-        'jobs' => 'Jobs',
-        'emails' => 'Emails',
-        'notifications' => 'Notifications',
-      ),
-    ),
-    'scan' => 
-    array (
-      'enabled' => false,
-      'paths' => 
-      array (
-        0 => '/var/www/segresta_admin/vendor/*/*',
-      ),
-    ),
-    'composer' => 
-    array (
-      'vendor' => 'nwidart',
-      'author' => 
-      array (
-        'name' => 'Nicolas Widart',
-        'email' => 'n.widart@gmail.com',
-      ),
-    ),
-    'cache' => 
-    array (
-      'enabled' => false,
-      'key' => 'laravel-modules',
-      'lifetime' => 60,
-    ),
-    'register' => 
-    array (
-      'translations' => true,
-    ),
-  ),
-  'filesystems' => 
-  array (
-    'default' => 'local',
-    'cloud' => 's3',
-    'disks' => 
-    array (
-      'local' => 
-      array (
-        'driver' => 'local',
-        'root' => '/var/www/segresta_admin/storage/app',
-      ),
-      'public' => 
-      array (
-        'driver' => 'local',
-        'root' => '/var/www/segresta_admin/storage/app/public',
-        'visibility' => 'public',
-        'url' => 'http://localhost/segresta_admin/storage',
-      ),
-      's3' => 
-      array (
-        'driver' => 's3',
-        'key' => 'your-key',
-        'secret' => 'your-secret',
-        'region' => 'your-region',
-        'bucket' => 'your-bucket',
-      ),
-    ),
-  ),
-  'broadcasting' => 
-  array (
-    'default' => 'log',
-    'connections' => 
-    array (
-      'pusher' => 
-      array (
-        'driver' => 'pusher',
-        'key' => '',
-        'secret' => '',
-        'app_id' => '',
-        'options' => 
-        array (
-        ),
-      ),
-      'redis' => 
-      array (
-        'driver' => 'redis',
-        'connection' => 'default',
-      ),
-      'log' => 
-      array (
-        'driver' => 'log',
-      ),
-      'null' => 
-      array (
-        'driver' => 'null',
-      ),
-    ),
-  ),
-  'sms' => 
-  array (
-    'name' => 'Sms',
-  ),
-  'database' => 
-  array (
-    'fetch' => 5,
-    'default' => 'mysql',
-    'connections' => 
-    array (
-      'sqlite' => 
-      array (
-        'driver' => 'sqlite',
-        'database' => 'segresta_admin',
-        'prefix' => '',
-      ),
-      'mysql' => 
-      array (
-        'driver' => 'mysql',
-        'host' => '127.0.0.1',
-        'port' => '3306',
-        'database' => 'segresta_admin',
-        'username' => 'root',
-        'password' => '19002JJeT89',
-        'charset' => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix' => '',
-        'strict' => true,
-        'engine' => 'innodb',
-      ),
-      'pgsql' => 
-      array (
-        'driver' => 'pgsql',
-        'host' => '127.0.0.1',
-        'port' => '3306',
-        'database' => 'segresta_admin',
-        'username' => 'root',
-        'password' => '19002JJeT89',
-        'charset' => 'utf8',
-        'prefix' => '',
-        'schema' => 'public',
-        'sslmode' => 'prefer',
-      ),
-    ),
-    'migrations' => 'migrations',
-    'redis' => 
-    array (
-      'cluster' => false,
-      'default' => 
-      array (
-        'host' => '127.0.0.1',
-        'password' => NULL,
-        'port' => '6379',
-        'database' => 0,
-      ),
-    ),
-  ),
-  'oratorio' => 
-  array (
-    'name' => 'Oratorio',
-  ),
-  'group' => 
-  array (
-    'name' => 'Group',
   ),
   'queue' => 
   array (
@@ -566,41 +160,45 @@
       'table' => 'failed_jobs',
     ),
   ),
-  'dompdf' => 
+  'mail' => 
   array (
-    'show_warnings' => false,
-    'orientation' => 'portrait',
-    'defines' => 
+    'driver' => 'mailgun',
+    'host' => NULL,
+    'port' => 587,
+    'from' => 
     array (
-      'DOMPDF_FONT_DIR' => '/var/www/segresta_admin/storage/fonts/',
-      'DOMPDF_FONT_CACHE' => '/var/www/segresta_admin/storage/fonts/',
-      'DOMPDF_TEMP_DIR' => '/tmp',
-      'DOMPDF_CHROOT' => '/var/www/segresta_admin',
-      'DOMPDF_UNICODE_ENABLED' => true,
-      'DOMPDF_ENABLE_FONT_SUBSETTING' => false,
-      'DOMPDF_PDF_BACKEND' => 'CPDF',
-      'DOMPDF_DEFAULT_MEDIA_TYPE' => 'screen',
-      'DOMPDF_DEFAULT_PAPER_SIZE' => 'a4',
-      'DOMPDF_DEFAULT_FONT' => 'serif',
-      'DOMPDF_DPI' => 96,
-      'DOMPDF_ENABLE_PHP' => false,
-      'DOMPDF_ENABLE_JAVASCRIPT' => true,
-      'DOMPDF_ENABLE_REMOTE' => true,
-      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1000000000000001,
-      'DOMPDF_ENABLE_CSS_FLOAT' => false,
-      'DOMPDF_ENABLE_HTML5PARSER' => false,
+      'address' => 'info@segresta.it',
+      'name' => 'Segresta',
     ),
+    'encryption' => NULL,
+    'username' => NULL,
+    'password' => NULL,
+    'sendmail' => '/usr/sbin/sendmail -bs',
+    'pretend' => false,
   ),
-  'entrust' => 
+  'oratorio' => 
   array (
-    'role' => 'App\\Role',
-    'roles_table' => 'roles',
-    'permission' => 'App\\Permission',
-    'permissions_table' => 'permissions',
-    'permission_role_table' => 'permission_role',
-    'role_user_table' => 'role_user',
-    'user_foreign_key' => 'user_id',
-    'role_foreign_key' => 'role_id',
+    'name' => 'Oratorio',
+  ),
+  'laravel-menu' => 
+  array (
+    'views' => 
+    array (
+      'bootstrap-items' => 'laravel-menu::bootstrap-navbar-items',
+    ),
+    'settings' => 
+    array (
+      'default' => 
+      array (
+        'auto_activate' => true,
+        'activate_parents' => true,
+        'active_class' => 'active',
+        'restful' => false,
+        'cascade_data' => true,
+        'rest_base' => '',
+        'active_element' => 'item',
+      ),
+    ),
   ),
   'auth' => 
   array (
@@ -640,6 +238,27 @@
       ),
     ),
   ),
+  'session' => 
+  array (
+    'driver' => 'file',
+    'lifetime' => 120,
+    'expire_on_close' => false,
+    'encrypt' => false,
+    'files' => '/var/www/segresta/storage/framework/sessions',
+    'connection' => NULL,
+    'table' => 'sessions',
+    'store' => NULL,
+    'lottery' => 
+    array (
+      0 => 2,
+      1 => 100,
+    ),
+    'cookie' => 'laravel_session',
+    'path' => '/',
+    'domain' => NULL,
+    'secure' => false,
+    'http_only' => true,
+  ),
   'excel' => 
   array (
     'cache' => 
@@ -656,7 +275,7 @@
         'host' => 'localhost',
         'port' => 11211,
       ),
-      'dir' => '/var/www/segresta_admin/storage/cache',
+      'dir' => '/var/www/segresta/storage/cache',
     ),
     'properties' => 
     array (
@@ -722,7 +341,7 @@
       ),
       'store' => 
       array (
-        'path' => '/var/www/segresta_admin/storage/exports',
+        'path' => '/var/www/segresta/storage/exports',
         'returnInfo' => false,
       ),
       'pdf' => 
@@ -732,15 +351,15 @@
         array (
           'DomPDF' => 
           array (
-            'path' => '/var/www/segresta_admin/vendor/dompdf/dompdf/',
+            'path' => '/var/www/segresta/vendor/dompdf/dompdf/',
           ),
           'tcPDF' => 
           array (
-            'path' => '/var/www/segresta_admin/vendor/tecnick.com/tcpdf/',
+            'path' => '/var/www/segresta/vendor/tecnick.com/tcpdf/',
           ),
           'mPDF' => 
           array (
-            'path' => '/var/www/segresta_admin/vendor/mpdf/mpdf/',
+            'path' => '/var/www/segresta/vendor/mpdf/mpdf/',
           ),
         ),
       ),
@@ -898,18 +517,399 @@
       ),
     ),
   ),
-  'laravel-cookie-consent' => 
+  'app' => 
   array (
-    'enabled' => true,
-    'cookie_name' => 'laravel_cookie_consent',
+    'name' => 'Segresta 2.0',
+    'env' => 'local',
+    'debug' => true,
+    'url' => 'http://localhost/segresta',
+    'timezone' => 'Europe/Rome',
+    'locale' => 'it',
+    'fallback_locale' => 'en',
+    'key' => 'base64:vCXs9qjoAWrzu9PTla8Ga2eCpDpjWVK0EAq7H3NEyMg=',
+    'cipher' => 'AES-256-CBC',
+    'log' => 'single',
+    'log_level' => 'debug',
+    'providers' => 
+    array (
+      0 => 'Illuminate\\Auth\\AuthServiceProvider',
+      1 => 'Illuminate\\Broadcasting\\BroadcastServiceProvider',
+      2 => 'Illuminate\\Bus\\BusServiceProvider',
+      3 => 'Illuminate\\Cache\\CacheServiceProvider',
+      4 => 'Illuminate\\Foundation\\Providers\\ConsoleSupportServiceProvider',
+      5 => 'Illuminate\\Cookie\\CookieServiceProvider',
+      6 => 'Illuminate\\Database\\DatabaseServiceProvider',
+      7 => 'Illuminate\\Encryption\\EncryptionServiceProvider',
+      8 => 'Illuminate\\Filesystem\\FilesystemServiceProvider',
+      9 => 'Illuminate\\Foundation\\Providers\\FoundationServiceProvider',
+      10 => 'Illuminate\\Hashing\\HashServiceProvider',
+      11 => 'Illuminate\\Mail\\MailServiceProvider',
+      12 => 'Illuminate\\Notifications\\NotificationServiceProvider',
+      13 => 'Illuminate\\Pagination\\PaginationServiceProvider',
+      14 => 'Illuminate\\Pipeline\\PipelineServiceProvider',
+      15 => 'Illuminate\\Queue\\QueueServiceProvider',
+      16 => 'Illuminate\\Redis\\RedisServiceProvider',
+      17 => 'Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider',
+      18 => 'Illuminate\\Session\\SessionServiceProvider',
+      19 => 'Illuminate\\Translation\\TranslationServiceProvider',
+      20 => 'Illuminate\\Validation\\ValidationServiceProvider',
+      21 => 'Illuminate\\View\\ViewServiceProvider',
+      22 => 'Zizaco\\Entrust\\EntrustServiceProvider',
+      23 => 'Barryvdh\\DomPDF\\ServiceProvider',
+      24 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+      25 => 'Intervention\\Image\\ImageServiceProvider',
+      26 => 'Telegram\\Bot\\Laravel\\TelegramServiceProvider',
+      27 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
+      28 => 'Spatie\\CookieConsent\\CookieConsentServiceProvider',
+      29 => 'Nayjest\\Grids\\ServiceProvider',
+      30 => 'Collective\\Html\\HtmlServiceProvider',
+      31 => 'Lavary\\Menu\\ServiceProvider',
+      32 => 'App\\Providers\\AppServiceProvider',
+      33 => 'App\\Providers\\AuthServiceProvider',
+      34 => 'App\\Providers\\EventServiceProvider',
+      35 => 'App\\Providers\\RouteServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'App' => 'Illuminate\\Support\\Facades\\App',
+      'Artisan' => 'Illuminate\\Support\\Facades\\Artisan',
+      'Auth' => 'Illuminate\\Support\\Facades\\Auth',
+      'Blade' => 'Illuminate\\Support\\Facades\\Blade',
+      'Cache' => 'Illuminate\\Support\\Facades\\Cache',
+      'Config' => 'Illuminate\\Support\\Facades\\Config',
+      'Cookie' => 'Illuminate\\Support\\Facades\\Cookie',
+      'Crypt' => 'Illuminate\\Support\\Facades\\Crypt',
+      'DB' => 'Illuminate\\Support\\Facades\\DB',
+      'Eloquent' => 'Illuminate\\Database\\Eloquent\\Model',
+      'Event' => 'Illuminate\\Support\\Facades\\Event',
+      'File' => 'Illuminate\\Support\\Facades\\File',
+      'Gate' => 'Illuminate\\Support\\Facades\\Gate',
+      'Hash' => 'Illuminate\\Support\\Facades\\Hash',
+      'Lang' => 'Illuminate\\Support\\Facades\\Lang',
+      'Log' => 'Illuminate\\Support\\Facades\\Log',
+      'Mail' => 'Illuminate\\Support\\Facades\\Mail',
+      'Notification' => 'Illuminate\\Support\\Facades\\Notification',
+      'Password' => 'Illuminate\\Support\\Facades\\Password',
+      'Queue' => 'Illuminate\\Support\\Facades\\Queue',
+      'Redirect' => 'Illuminate\\Support\\Facades\\Redirect',
+      'Redis' => 'Illuminate\\Support\\Facades\\Redis',
+      'Request' => 'Illuminate\\Support\\Facades\\Request',
+      'Response' => 'Illuminate\\Support\\Facades\\Response',
+      'Route' => 'Illuminate\\Support\\Facades\\Route',
+      'Schema' => 'Illuminate\\Support\\Facades\\Schema',
+      'Session' => 'Illuminate\\Support\\Facades\\Session',
+      'Storage' => 'Illuminate\\Support\\Facades\\Storage',
+      'URL' => 'Illuminate\\Support\\Facades\\URL',
+      'Validator' => 'Illuminate\\Support\\Facades\\Validator',
+      'View' => 'Illuminate\\Support\\Facades\\View',
+      'Form' => 'Collective\\Html\\FormFacade',
+      'Html' => 'Collective\\Html\\HtmlFacade',
+      'Grids' => 'Nayjest\\Grids\\Grids',
+      'Input' => 'Illuminate\\Support\\Facades\\Input',
+      'Entrust' => 'Zizaco\\Entrust\\EntrustFacade',
+      'PDF' => 'Barryvdh\\DomPDF\\Facade',
+      'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+      'Image' => 'Intervention\\Image\\Facades\\Image',
+      'Telegram' => 'Telegram\\Bot\\Laravel\\Facades\\Telegram',
+      'Menu' => 'Lavary\\Menu\\Facade',
+      'Module' => 'Nwidart\\Modules\\Facades\\Module',
+    ),
+  ),
+  'contabilita' => 
+  array (
+    'name' => 'Contabilita',
+  ),
+  'modules' => 
+  array (
+    'namespace' => 'Modules',
+    'stubs' => 
+    array (
+      'enabled' => false,
+      'path' => '/var/www/segresta/vendor/nwidart/laravel-modules/src/Commands/stubs',
+      'files' => 
+      array (
+        'start' => 'start.php',
+        'routes' => 'Http/routes.php',
+        'json' => 'module.json',
+        'views/index' => 'Resources/views/index.blade.php',
+        'views/master' => 'Resources/views/layouts/master.blade.php',
+        'scaffold/config' => 'Config/config.php',
+        'composer' => 'composer.json',
+      ),
+      'replacements' => 
+      array (
+        'start' => 
+        array (
+          0 => 'LOWER_NAME',
+        ),
+        'routes' => 
+        array (
+          0 => 'LOWER_NAME',
+          1 => 'STUDLY_NAME',
+          2 => 'MODULE_NAMESPACE',
+        ),
+        'json' => 
+        array (
+          0 => 'LOWER_NAME',
+          1 => 'STUDLY_NAME',
+          2 => 'MODULE_NAMESPACE',
+        ),
+        'views/index' => 
+        array (
+          0 => 'LOWER_NAME',
+        ),
+        'views/master' => 
+        array (
+          0 => 'STUDLY_NAME',
+        ),
+        'scaffold/config' => 
+        array (
+          0 => 'STUDLY_NAME',
+        ),
+        'composer' => 
+        array (
+          0 => 'LOWER_NAME',
+          1 => 'STUDLY_NAME',
+          2 => 'VENDOR',
+          3 => 'AUTHOR_NAME',
+          4 => 'AUTHOR_EMAIL',
+          5 => 'MODULE_NAMESPACE',
+        ),
+      ),
+    ),
+    'paths' => 
+    array (
+      'modules' => '/var/www/segresta/Modules',
+      'assets' => '/var/www/segresta/public/modules',
+      'migration' => '/var/www/segresta/database/migrations',
+      'generator' => 
+      array (
+        'assets' => 'Assets',
+        'config' => 'Config',
+        'command' => 'Console',
+        'event' => 'Events',
+        'listener' => 'Events/Handlers',
+        'migration' => 'Database/Migrations',
+        'model' => 'Entities',
+        'repository' => 'Repositories',
+        'seeder' => 'Database/Seeders',
+        'controller' => 'Http/Controllers',
+        'filter' => 'Http/Middleware',
+        'request' => 'Http/Requests',
+        'provider' => 'Providers',
+        'lang' => 'Resources/lang',
+        'views' => 'Resources/views',
+        'test' => 'Tests',
+        'jobs' => 'Jobs',
+        'emails' => 'Emails',
+        'notifications' => 'Notifications',
+      ),
+    ),
+    'scan' => 
+    array (
+      'enabled' => false,
+      'paths' => 
+      array (
+        0 => '/var/www/segresta/vendor/*/*',
+      ),
+    ),
+    'composer' => 
+    array (
+      'vendor' => 'nwidart',
+      'author' => 
+      array (
+        'name' => 'Nicolas Widart',
+        'email' => 'n.widart@gmail.com',
+      ),
+    ),
+    'cache' => 
+    array (
+      'enabled' => false,
+      'key' => 'laravel-modules',
+      'lifetime' => 60,
+    ),
+    'register' => 
+    array (
+      'translations' => true,
+    ),
+  ),
+  'attributo' => 
+  array (
+    'name' => 'Attributo',
+  ),
+  'event' => 
+  array (
+    'name' => 'Event',
+  ),
+  'database' => 
+  array (
+    'fetch' => 5,
+    'default' => 'mysql',
+    'connections' => 
+    array (
+      'sqlite' => 
+      array (
+        'driver' => 'sqlite',
+        'database' => 'segresta',
+        'prefix' => '',
+      ),
+      'mysql' => 
+      array (
+        'driver' => 'mysql',
+        'host' => '127.0.0.1',
+        'port' => '3306',
+        'database' => 'segresta',
+        'username' => 'root',
+        'password' => '19002JJeT89',
+        'charset' => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix' => '',
+        'strict' => true,
+        'engine' => 'innodb',
+      ),
+      'pgsql' => 
+      array (
+        'driver' => 'pgsql',
+        'host' => '127.0.0.1',
+        'port' => '3306',
+        'database' => 'segresta',
+        'username' => 'root',
+        'password' => '19002JJeT89',
+        'charset' => 'utf8',
+        'prefix' => '',
+        'schema' => 'public',
+        'sslmode' => 'prefer',
+      ),
+    ),
+    'migrations' => 'migrations',
+    'redis' => 
+    array (
+      'cluster' => false,
+      'default' => 
+      array (
+        'host' => '127.0.0.1',
+        'password' => NULL,
+        'port' => '6379',
+        'database' => 0,
+      ),
+    ),
+  ),
+  'image' => 
+  array (
+    'driver' => 'gd',
   ),
   'view' => 
   array (
     'paths' => 
     array (
-      0 => '/var/www/segresta_admin/resources/views',
+      0 => '/var/www/segresta/resources/views',
     ),
-    'compiled' => '/var/www/segresta_admin/storage/framework/views',
+    'compiled' => '/var/www/segresta/storage/framework/views',
+  ),
+  'broadcasting' => 
+  array (
+    'default' => 'log',
+    'connections' => 
+    array (
+      'pusher' => 
+      array (
+        'driver' => 'pusher',
+        'key' => '',
+        'secret' => '',
+        'app_id' => '',
+        'options' => 
+        array (
+        ),
+      ),
+      'redis' => 
+      array (
+        'driver' => 'redis',
+        'connection' => 'default',
+      ),
+      'log' => 
+      array (
+        'driver' => 'log',
+      ),
+      'null' => 
+      array (
+        'driver' => 'null',
+      ),
+    ),
+  ),
+  'compile' => 
+  array (
+    'files' => 
+    array (
+    ),
+    'providers' => 
+    array (
+    ),
+  ),
+  'telegram' => 
+  array (
+    'bot_token' => '305880668:AAHY8PzersKLz2LD7yGxYtZ_12x3-eUiNQU',
+    'async_requests' => false,
+    'http_client_handler' => NULL,
+    'commands' => 
+    array (
+    ),
+    'name' => 'Telegram',
+  ),
+  'filesystems' => 
+  array (
+    'default' => 'local',
+    'cloud' => 's3',
+    'disks' => 
+    array (
+      'local' => 
+      array (
+        'driver' => 'local',
+        'root' => '/var/www/segresta/storage/app',
+      ),
+      'public' => 
+      array (
+        'driver' => 'local',
+        'root' => '/var/www/segresta/storage/app/public',
+        'visibility' => 'public',
+        'url' => 'http://localhost/segresta/storage',
+      ),
+      's3' => 
+      array (
+        'driver' => 's3',
+        'key' => 'your-key',
+        'secret' => 'your-secret',
+        'region' => 'your-region',
+        'bucket' => 'your-bucket',
+      ),
+    ),
+  ),
+  'report' => 
+  array (
+    'name' => 'Report',
+  ),
+  'services' => 
+  array (
+    'mailgun' => 
+    array (
+      'domain' => 'mailgun.segresta.it',
+      'secret' => 'key-aef2f7c2269f25786a0d16a402e90ac6',
+    ),
+    'ses' => 
+    array (
+      'key' => NULL,
+      'secret' => NULL,
+      'region' => 'us-east-1',
+    ),
+    'sparkpost' => 
+    array (
+      'secret' => NULL,
+    ),
+    'stripe' => 
+    array (
+      'model' => 'App\\User',
+      'key' => NULL,
+      'secret' => NULL,
+    ),
   ),
   'user' => 
   array (

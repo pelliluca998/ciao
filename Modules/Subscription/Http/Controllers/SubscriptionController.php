@@ -122,6 +122,19 @@ class SubscriptionController extends Controller
 		$sub = Subscription::findOrFail($input['id_sub']);
 		$event = Event::findOrfail($sub->id_event);
 		if($event->id_oratorio == Session::get('session_oratorio')){
+			if($sub->confirmed==0 && $input['confirmed']==1){
+				//mando la mail all'utente
+				$user = User::findOrFail($sub->id_user);
+				$event = Event::findOrFail($sub->id_event);
+				Mail::send('subscription::confirmed_email', 
+					['html' => 'subscription::confirmed_email', 'event_name' => $event->nome, 'user' => $user->full_name], 
+					function ($message) use ($user){
+						$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
+						$message->from($oratorio->email, $oratorio->nome);
+						$message->subject("La tua iscrizione è stata approvata");
+						$message->to($user->email, $user->full_name);
+				});
+			}
 			$sub->fill($input)->save();
 			$query = Session::get('query_param');
 			Session::forget('query_param');
@@ -200,7 +213,8 @@ class SubscriptionController extends Controller
         	return view('subscription::subscribe.passo1', ['event' => $event, 'id_user' => $input['id_user']]);
 	}
     
-	public function savesubscribe(Request $request){   	
+	public function savesubscribe(Request $request){
+		  	
 		if(!Session::has('id_subscription')){
 			$input = $request->all();
 			$sub = Subscription::create($input);
@@ -410,14 +424,11 @@ class SubscriptionController extends Controller
 		}
 		$json = json_encode(array_unique($user_array));
 		if($type=='sms'){
-			Session::flash('check_user', $json);
-			return redirect()->route('sms.create');
+			return redirect()->route('sms.create', ['check' => $json]);
 		}else if($type=='email'){
-			Session::flash('check_user', $json);
-			return redirect()->route('email.create');
+			return redirect()->route('email.create', ['check' => $json]);
 		}else if($type=='telegram'){
-			Session::flash('check_user', $json);
-			return redirect()->route('telegram.create');
+			return redirect()->route('telegram.create', ['check' => $json]);
 		}
 	}
 	

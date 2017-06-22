@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use App\Http\Requests;
 use App\Oratorio;
 use App\License;
+use App\LicenseType;
 use App\OwnerMessage;
 use App\Role;
 use App\RoleUser;
@@ -172,6 +173,17 @@ class OratorioController extends Controller
 		$oratorio->fill($input)->save();
 		//salvo la licenza
 		$licenza = License::findOrFail($input['id_licenza']);
+		if($licenza->license_type!=$input['license_type']){
+			$licenza_old = LicenseType::findOrFail($licenza->license_type)->name;
+			$licenza_new = LicenseType::findOrFail($input['license_type'])->name;
+			Mail::send('oratorio::gestione.message_licenza', 
+			['html' => 'oratorio::gestione.message_licenza', 'oratorio' => $oratorio->nome, 'licenza_old' => $licenza_old, 'licenza_new' => $licenza_new], 
+			function ($message) use ($oratorio){
+				$message->from('info@segresta.it', 'Segresta');
+				$message->subject("Segresta - Aggiornamento licenza!");
+				$message->to($oratorio->email, $oratorio->nome);
+			});
+		}
 		$licenza->fill($input)->save();
 		Session::flash('flash_message', 'Impostazioni salvate!');
 		return redirect()->route('oratorio.showall');
