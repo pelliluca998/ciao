@@ -1,1 +1,0 @@
-{"update_id":520372998,"message":{"message_id":141,"from":{"id":187138693,"first_name":"Roberto","last_name":"Santini","username":"roberto_santini"},"chat":{"id":187138693,"first_name":"Roberto","last_name":"Santini","username":"roberto_santini","type":"private"},"date":1491912200,"text":"\/m","entities":[{"type":"bot_command","offset":0,"length":2}]}}
