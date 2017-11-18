@@ -44,9 +44,9 @@ $attributos = AttributoUser::select('attributos.id_type as id_type', 'types.labe
 	<?php
 		if($user->photo==''){
 			if($user->sesso=="M"){
-				echo "<img src='".url("upload/boy.png")."'>";
+				echo "<img src='".url("boy.png")."'>";
 			}else if($user->sesso=="F"){
-				echo "<img src='".url("upload/girl.png")."'>";
+				echo "<img src='".url("girl.png")."'>";
 			}
 
 		}else{
@@ -129,4 +129,3 @@ $attributos = AttributoUser::select('attributos.id_type as id_type', 'types.labe
 </div>
 </body>
 </html>
-

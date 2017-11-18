@@ -61,7 +61,7 @@ use Nayjest\Grids\ObjectDataRow;
                              "desc" => "",
                             "url" => "user.edit",
                             "class" => "btn-primary",
-                            "icon" => ""],                                                          
+                            "icon" => ""],
                             ["label" => "Stampa scheda",
                              "desc" => "",
                             "url" => "user.printprofile",
@@ -91,8 +91,8 @@ use Nayjest\Grids\ObjectDataRow;
                                 {{$button['desc']}}
                                 {!! Form::close() !!}
                                 </div>
-                            @endforeach                           
-                            		
+                            @endforeach
+
 
 						</div>
 						<div class="modal-footer">
@@ -103,7 +103,7 @@ use Nayjest\Grids\ObjectDataRow;
 					</div>
 				</div>
 			</div>
-			
+
 			<button onclick="redirect_check('{{route('user.create')}}', 'GET', false)" class="btn btn-primary"><i class='fa fa-plus'> Aggiungi Utente</i></button>
 			<button onclick="redirect_check('{{route('report.user')}}', 'GET', false)" class="btn btn-primary"><i class='fa fa-file-text'> Report</i></button>
 			Se selezionati:
@@ -111,11 +111,11 @@ use Nayjest\Grids\ObjectDataRow;
 			@if(Module::find('sms')!=null)
 				<button onclick="redirect_check('{{route('sms.create')}}')" class="btn btn-primary"><i class='fa fa-comment'> Invia SMS</i></button>
 			@endif
-			
+
 			@if(Module::find('email')!=null)
 				<button onclick="redirect_check('{{route('email.create')}}')" class="btn btn-primary"><i class='fa fa-envelope'> Invia Email</i></button>
 			@endif
-			
+
 			@if(Module::find('telegram')!=null)
 				<button onclick="redirect_check('{{route('telegram.create')}}')" class="btn btn-primary"><i class='fa fa-telegram'> Telegram</i></button>
 			@endif
@@ -136,7 +136,7 @@ use Nayjest\Grids\ObjectDataRow;
 			# See all supported data providers in sources
 			->setDataProvider(new EloquentDataProvider($query))
 			# Setup caching, value in minutes, turned off in debug mode
-			->setCachingTime(5) 
+			->setCachingTime(5)
 			# Setup table columns
 			->setColumns([
            			# simple results numbering, not related to table PK or any obtained data
@@ -152,9 +152,9 @@ use Nayjest\Grids\ObjectDataRow;
 							$user = $row->getSrc();
 							if($val==''){
 								if($user->sesso=="M"){
-									return "<img src='".url("upload/boy.png")."'>";
+									return "<img src='".url("boy.png")."'>";
 								}else if($user->sesso=="F"){
-									return "<img src='".url("upload/girl.png")."'>";
+									return "<img src='".url("girl.png")."'>";
 								}
 
 							}else{
@@ -165,14 +165,14 @@ use Nayjest\Grids\ObjectDataRow;
                 		->setName('name')
 				# will be displayed in table header
 				->setLabel('Nome')
-				# That's all what you need for filtering. 
-				# It will create controls, process input 
+				# That's all what you need for filtering.
+				# It will create controls, process input
 				# and filter results (in case of EloquentDataProvider -- modify SQL query)
 				->addFilter(
 				    (new FilterConfig)
 				        ->setName('name')
 				        ->setOperator(FilterConfig::OPERATOR_LIKE)
-				)				
+				)
 				# sorting buttons will be added to header, DB query will be modified
 				->setSortable(true),
 				(new FieldConfig)
@@ -182,7 +182,7 @@ use Nayjest\Grids\ObjectDataRow;
 				    (new FilterConfig)
 				        ->setName('cognome')
 				        ->setOperator(FilterConfig::OPERATOR_LIKE)
-				)				
+				)
 				# sorting buttons will be added to header, DB query will be modified
 				->setSortable(true),
 				(new FieldConfig)
@@ -248,14 +248,14 @@ use Nayjest\Grids\ObjectDataRow;
         		])
 			# Setup additional grid components
 			->setComponents([
-				# Renders table header (table>thead)				
+				# Renders table header (table>thead)
 				(new THead)
                 		# Setup inherited components
                			->setComponents([
                				(new ColumnHeadersRow),
 					# Add this if you have filters for automatic placing to this row
 					new FiltersRow,
-					# Row with additional controls					
+					# Row with additional controls
 					(new OneCellRow)
 				        ->setComponents([
 						# Control for specifying quantity of records displayed on page
@@ -272,7 +272,7 @@ use Nayjest\Grids\ObjectDataRow;
 						   	'remember_token',
 							])
 						,
-						# Submit button for filters. 
+						# Submit button for filters.
 						# Place it anywhere in the grid (grid is rendered inside form by default).
 						(new HtmlTag)
                                 			->setTagName('button')
@@ -286,7 +286,7 @@ use Nayjest\Grids\ObjectDataRow;
 					])
 					# Components may have some placeholders for rendering children there.
 					->setRenderSection(THead::SECTION_BEGIN),
-					
+
 
 				]),
 				# Renders table footer (table>tfoot)
