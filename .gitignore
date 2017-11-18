@@ -2,13 +2,19 @@ Modules/Sms
 Modules/Email
 Modules/Telegram
 Modules/Contabilita
-storage/app/public/attachments/*
-storage/app/public/oratorio/*
-storage/app/public/profile/*
-storage/framework/views/*
-storage/framework/cache/*
-/public/upload
 /vendor
-/storage/*.key
-resources/views/piwik.blade.php
+node_modules/
+npm-debug.log
+
+# Laravel 5 & Lumen specific
+public/storage
+!public/storage/template
+public/hot
+/public/upload
+storage/*.key
+.env.*.php
+.env.php
 .env
+Homestead.yaml
+Homestead.json
+resources/views/piwik.blade.php
