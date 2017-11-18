@@ -8,6 +8,6 @@ class ModoPagamento extends Model
 {
 	protected $table = 'modo_pagamento';
     protected $fillable = [
-        'id_oratorio', 'label', 'as_default'
+        'id_oratorio', 'label'
     ];
 }

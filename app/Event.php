@@ -13,7 +13,7 @@ class Event extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'anno', 'descrizione', 'id_oratorio', 'active', 'firma', 'image', 'color', 'more_subscriptions', 'stampa_anagrafica', 'spec_iscrizione', 'informativa', 'grazie'
+        'nome', 'anno', 'descrizione', 'id_oratorio', 'active', 'firma', 'image', 'color', 'more_subscriptions', 'stampa_anagrafica', 'spec_iscrizione', 'informativa', 'grazie', 'template_file'
     ];
 
     /**
@@ -22,6 +22,6 @@ class Event extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 }

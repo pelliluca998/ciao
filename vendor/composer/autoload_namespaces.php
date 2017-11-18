@@ -13,7 +13,5 @@ return array(
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'Maatwebsite\\Excel\\' => array($vendorDir . '/maatwebsite/excel/src'),
     'Lavary\\Menu\\' => array($vendorDir . '/lavary/laravel-menu/src'),
-    'Knp\\Snappy' => array($vendorDir . '/knplabs/knp-snappy/src'),
     'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
 );

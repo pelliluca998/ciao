@@ -45,7 +45,7 @@ use Nayjest\Grids\ObjectDataRow;
 		<div class="panel panel-default panel-left">
 		<div class="panel-heading">Iscrizioni all'evento</div>
 		<div class="panel-body">
-            
+
             <!-- Modal2 -->
 			<div class="modal fade" id="subOp" tabindex="-1" role="dialog" aria-labelledby="SubscriptionOperation">
 				<div class="modal-dialog" role="document">
@@ -103,16 +103,16 @@ use Nayjest\Grids\ObjectDataRow;
 			Se selezionati:
 			<button onclick="redirect_check('{{route('subscription.approve')}}')" class="btn btn-primary"><i class='fa fa-users'> Approva</i></button>
 			<button onclick="redirect_check('{{route('subscription.batch_delete')}}')" class="btn btn-danger"><i class='fa fa-trash'> Cancella</i></button>
-			
+
 			<?php
 			$query = Input::query(); //sono i parametri GET della tabella
 			Session::put('query_param', $query);
 			if(!isset($id_event) || $id_event==null){
 				$id_event=Session::get('work_event');
 			}
-			
+
 			$event = Event::findOrFail($id_event);
-			
+
 			if($event->stampa_anagrafica){
 				$query = (new Subscription)
 					->newQuery()
@@ -126,7 +126,7 @@ use Nayjest\Grids\ObjectDataRow;
 						->addFilter(
 							(new FilterConfig)
 								->setName('name')
-								->setOperator(FilterConfig::OPERATOR_LIKE))			
+								->setOperator(FilterConfig::OPERATOR_LIKE))
 						->setSortable(true)
 						->setCallback(function ($val, ObjectDataRow $row) use ($event){
 							$sub = $row->getSrc();
@@ -139,14 +139,14 @@ use Nayjest\Grids\ObjectDataRow;
 				      		->where('event_spec_values.id_eventspec', '=', $event->spec_iscrizione);
 			  		})
 			  		->where('subscriptions.id_event', $id_event);
-			  		
+
 			  	$field_valore = (new FieldConfig)
 				  	->setName('valore')
 					->setLabel('Utente')
 					->addFilter(
 						(new FilterConfig)
 							->setName('valore')
-							->setOperator(FilterConfig::OPERATOR_LIKE))			
+							->setOperator(FilterConfig::OPERATOR_LIKE))
 					->setSortable(true)
 					->setCallback(function ($val, ObjectDataRow $row) use ($event){
 						$sub = $row->getSrc();
@@ -156,11 +156,11 @@ use Nayjest\Grids\ObjectDataRow;
 						return $val;
 					});
 			}
-			
-			
-			
-			
-				
+
+
+
+
+
 			$components = [
 						(new HtmlTag)
                       			->setTagName('button')
@@ -182,7 +182,7 @@ use Nayjest\Grids\ObjectDataRow;
                             			'class' => 'btn btn-primary'
                      			 	])
                       			->setContent(" <i class='fa fa-file-text'>Report</i> "),
-										
+
 					(new HtmlTag)
                       			->setTagName('button')
                       			->setAttributes([
@@ -193,9 +193,9 @@ use Nayjest\Grids\ObjectDataRow;
                             			'class' => 'btn btn-primary'
                      			 	])
                       			->setContent("<i class='fa fa-users'> Aggiungi ad un gruppo</i>")
-					
+
 			];
-			
+
 			$grid = new Grid(
     			(new GridConfig)
 			# Grids name used as html id, caching key, filtering GET params prefix, etc
@@ -250,7 +250,7 @@ use Nayjest\Grids\ObjectDataRow;
 					$sub = $row->getSrc();
 					$icon = "<input name='check_sub[]' id='check_subs_".$sub->id."' type='checkbox' value='".$sub->id."'/>";
 					return $icon;
-				}),				
+				}),
 
 			(new FieldConfig)
 				->setName('edit')
@@ -261,6 +261,17 @@ use Nayjest\Grids\ObjectDataRow;
 					$icon = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#subOp' data-name='".$sub->name."' data-subid='".$sub->id."'><i class='fa fa-pencil fa-2x' aria-hidden='true'></i> </button>";
 					return $icon;
 				}),
+        (new FieldConfig)
+  				->setName('print')
+  				->setLabel('')
+  				->setSortable(false)
+  				->setCallback(function ($val, ObjectDataRow $row) {
+  					$sub = $row->getSrc();
+  					$icon = "<a href='".route('subscription.print', ['id_subscription'=>$sub->id])."' class='btn btn-primary btn-sm'>
+            <i class='fa fa-print fa-2x' aria-hidden='true'></i>
+            </a>";
+  					return $icon;
+  				}),
 			(new FieldConfig)
 				->setName('Vedi specifiche')
 				->setLabel('')
@@ -271,11 +282,11 @@ use Nayjest\Grids\ObjectDataRow;
 					$icon = "<i style= \"color:#3e93c3; cursor: pointer;\" onclick=\"$click\" class='fa fa-flag fa-2x' aria-hidden='true'></i>";
 					return $icon;
 				})
-                        	
+
         		])
 			# Setup additional grid components
 			->setComponents([
-				# Renders table header (table>thead)				
+				# Renders table header (table>thead)
 				(new THead)
                 		# Setup inherited components
                			->setComponents([
@@ -299,7 +310,7 @@ use Nayjest\Grids\ObjectDataRow;
 						   	'created_at',
 							])
 						,
-						# Submit button for filters. 
+						# Submit button for filters.
 						# Place it anywhere in the grid (grid is rendered inside form by default).
 						(new HtmlTag)
                                 			->setTagName('button')
@@ -316,7 +327,7 @@ use Nayjest\Grids\ObjectDataRow;
 				# Renders table footer (table>tfoot)
 				(new TFoot)
 				->addComponent(
-					# Renders row containing one cell 
+					# Renders row containing one cell
 					# with colspan attribute equal to the table columns count
 					(new OneCellRow)
 					# Pagination control
@@ -327,23 +338,23 @@ use Nayjest\Grids\ObjectDataRow;
 
 	echo $grid->render();
 			?>
-           		
-                   
+
+
                 </div>
             </div>
-            
+
 		<div class="panel-right">
 			<div class="panel panel-default">
 				<div class="panel-heading">Specifiche iscrizione</div>
 				<div id="spec1" class="panel-body">
-				 
+
 				</div>
-			</div>			
+			</div>
 		</div>
     </div>
 </div>
-       
-        
+
+
 <script>
 $(document).ready(function(){
 	$('#subOp').on('show.bs.modal', function (event) {

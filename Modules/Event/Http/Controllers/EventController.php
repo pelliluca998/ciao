@@ -17,7 +17,14 @@ use Storage;
 
 class EventController extends Controller
 {
-use ValidatesRequests;
+	use ValidatesRequests;
+	public $messages = [
+			'nome.required' => 'Inserisci un nome valido per l\'evento',
+			'descrizione.required'  => 'Inserisci una descrizione valida',
+			'anno.required'  => 'Inserisci un anno valido per l\'evento',
+			'template_file.mimes'  => 'Il file template deve avere estensione .docx.',
+			'image.mimes' => 'Il logo oratorio deve avere una di queste estensioni: jpeg,jpg,gif,png.'
+	];
 
 	/**
 	* Display a listing of the resource.
@@ -25,8 +32,8 @@ use ValidatesRequests;
 	*/
 	public function index(){
 		return view('event::show');
-	}	
-	
+	}
+
 
 	/**
 	* Salva l'id_evento nella sessione
@@ -60,8 +67,10 @@ use ValidatesRequests;
 		$this->validate($request, [
 			'nome' => 'required',
 			'descrizione' => 'required',
-			'anno' =>'required'
-		]);
+			'anno' =>'required',
+			'template_file' => 'mimes:docx',
+			'image' => 'mimes:jpeg,jpg,gif,png'
+		], $this->messages);
 		$input = $request->all();
 		$input['id_oratorio'] = Session::get('session_oratorio');
 		if(Input::hasFile('image')){
@@ -78,7 +87,7 @@ use ValidatesRequests;
 		Session::put('work_event', $event->id);
 		return redirect()->route('eventspecs.show');
 	}
-	
+
 	public function show($id){
 		$event = Event::findOrFail($id);
 		if($event->id_oratorio==Session::get('session_oratorio')){
@@ -86,7 +95,7 @@ use ValidatesRequests;
 		}else{
 			abort(403, 'Unauthorized action.');
 		}
-    		
+
 	}
 
 	/**
@@ -111,10 +120,17 @@ use ValidatesRequests;
 	*/
 	public function update(Request $request){
 		$input = $request->all();
-		$event = Event::findOrFail($input['id_event']);		
+		$this->validate($request, [
+			'nome' => 'required',
+			'descrizione' => 'required',
+			'anno' =>'required',
+			'template_file' => 'mimes:docx',
+			'image' => 'mimes:jpeg,jpg,gif,png'
+		], $this->messages);
+		$event = Event::findOrFail($input['id_event']);
 		//$input['active'] = (Input::has('active') && $input['active']) ? true : false;
-        	//$input['more_subscriptions'] = (Input::has('more_subscriptions') && $input['more_subscriptions']) ? true : false;
-        	//$input['stampa_anagrafica'] = (Input::has('stampa_anagrafica') && $input['stampa_anagrafica']) ? true : false;
+		//$input['more_subscriptions'] = (Input::has('more_subscriptions') && $input['more_subscriptions']) ? true : false;
+		//$input['stampa_anagrafica'] = (Input::has('stampa_anagrafica') && $input['stampa_anagrafica']) ? true : false;
 		if(Input::hasFile('image')){
 			$file = $request->image;
 			$filename = $request->image->store('oratorio', 'public');
@@ -128,6 +144,28 @@ use ValidatesRequests;
 				Storage::delete('public/'.$event->image);
 			}
 		}
+
+		if(Input::hasFile('template_file')){
+			$file = $request->template_file;
+			$filename = $request->template_file->store('template', 'public');
+			$path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
+			//$image = Image::make($path);
+			//$image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
+			//$image->save($path);
+			$input['template_file'] = $filename;
+			//cancello il vecchio template
+			if($event->template_file != null){
+				Storage::delete('public/'.$event->template_file);
+			}
+		}elseif($input['elimina_template'] == 1){
+			//se il checkbox "Elimina modulo caricato.." è selezionato, allora elimino il template caricato
+			$input['template_file'] = null;
+			if($event->template_file != null){
+				Storage::delete('public/'.$event->template_file);
+			}
+		}
+
+
 		$event->fill($input)->save();
 		Session::flash('flash_message', 'Evento salvato!');
 		return redirect()->route('events.index');
@@ -146,20 +184,20 @@ use ValidatesRequests;
 				Session::forget('work_event');
 			}
 			$sub->delete();
-	    		Session::flash("flash_message", "Evento '". $sub->nome."' cancellato!");
+			Session::flash("flash_message", "Evento '". $sub->nome."' cancellato!");
 			return redirect()->route('events.index');
 		}else{
 			abort(403, 'Unauthorized action.');
 		}
-	}		
-	
-	
+	}
+
+
 	public function strumenti(Request $request){
 		if(Session::has('work_event')){
-            return view('event::strumenti');
-        }else{
-            Session::flash('flash_message', 'Per vedere gli strumenti, devi prima selezionare un evento con cui lavorare!');
-            return redirect()->route('events.index');
-        }
+			return view('event::strumenti');
+		}else{
+			Session::flash('flash_message', 'Per vedere gli strumenti, devi prima selezionare un evento con cui lavorare!');
+			return redirect()->route('events.index');
+		}
 	}
 }

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class TelegramUserLogin extends Model{
 	protected $table = 'telegram_user_login';
-	protected $fillable = ['id', 'id_user', 'token', 'expiration'];
+	protected $fillable = ['id', 'id_user', 'id_oratorio', 'token', 'expiration'];
 }

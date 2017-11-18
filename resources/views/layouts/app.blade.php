@@ -36,7 +36,7 @@ use App\Oratorio;
 
 	<script src="{{ asset ('/js/tinymce/tinymce.min.js') }}" ></script>
 	<script src="https://use.fontawesome.com/390bf8aef1.js"></script>
-	
+
 	<script src="{{ asset('/js/jscolor.js') }}"></script>
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -65,10 +65,10 @@ use App\Oratorio;
 				}
 				?>
 				<h2>{{$oratorio->nome}}</h2>
-			</div>		
-	
-    		
-    		  
+			</div>
+
+
+
 	    			@if(Entrust::hasRole(['admin']) || Entrust::hasRole(['owner']))
 	    				<?php
 	    					$event=Event::where('id', Session::get('work_event'))->first();
@@ -84,7 +84,7 @@ use App\Oratorio;
 				                  "class" => "btn-primary",
 				                  "icon" => ""]
 				           );
-				           
+
 				           $buttons_2 = array(
 				                  ["label" => "Seleziona evento",
 				                   "desc" => "",
@@ -97,12 +97,12 @@ use App\Oratorio;
 	    				<div class='panel panel-default'>
 	    					<div class='panel-heading' style="height: 55px;">
 			    				@if(null!==Session::get('work_event'))
-			    					
+
 			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
 			    						<?php $buttons=$buttons_1; ?>
 			    				@else
 			    					@if($oratorio->last_id_event>0 && Event::findOrFail($oratorio->last_id_event)->count()>0)
-			    						<?php Session::put('work_event', $oratorio->last_id_event); 
+			    						<?php Session::put('work_event', $oratorio->last_id_event);
 			    						$event=Event::where('id', Session::get('work_event'))->first();
 			    						?>
 			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
@@ -110,9 +110,9 @@ use App\Oratorio;
 			    					@else
 			    						<div style="float:left; margin-right: 5px;">Non hai specificato nessun evento!</div>
 				    					<?php $buttons=$buttons_2; ?>
-			    					@endif		    				
-				    					
-				    				
+			    					@endif
+
+
 			    				@endif
 			    				<div style="float:left; margin-right: 5px;"> <i class="fa fa-star" aria-hidden="true"></i>
  Accesso rapido: </div>
@@ -128,16 +128,16 @@ use App\Oratorio;
 		    				</div>
 		    			</div>
 	    			@endif
-    			@endif  		
+    			@endif
 
-    		
+
     	@endif
 
 @yield('content')
 
-    <!-- Scripts -->	
+    <!-- Scripts -->
 	<script>
-	
+
 
 tinymce.init({
 	  selector: 'textarea',
@@ -162,7 +162,7 @@ tinymce.init({
 	    '//www.tinymce.com/css/codepen.min.css'
 	  ]
 });
-	 
+
 $(function() {
 	$.datepicker.setDefaults(
 		$.extend(
@@ -181,7 +181,7 @@ function add_eventspec(id_sub, id_event, admin){
 	var event_spec_text = $('#event_spec option:selected').text();
 	var id_type = $('#event_spec').find(':selected').data('type');
 	var price = $('#event_spec').find(':selected').data('price');
-	
+
 	var t = parseInt($('#contatore_e').val());
 	var row = "<tr style='background-color: #dff0d8;'>";
 	row += "<td>";
@@ -191,11 +191,11 @@ function add_eventspec(id_sub, id_event, admin){
 	row += "<input name='id_week["+t+"]' type='hidden' value='"+valid_for+"'/>";
 	row += event_spec_text+"</td>";
 	row += "<td>";
-	
+
 	if(id_type>0){
 		row += "<select id='valore"+t+"' name='valore["+t+"]' class='form-control'></select>";
 		$.get("{{ url('types/options')}}",
-			{id_type: id_type }, 
+			{id_type: id_type },
 		    	function(data2) {
 				var model = $("#valore"+t);
 				model.empty();
@@ -218,7 +218,7 @@ function add_eventspec(id_sub, id_event, admin){
 			case -4:
 				row += "<select id='valore"+t+"' name='valore["+t+"]' class='form-control'></select>";
 				$.get("{{ url('admin/groups/dropdown')}}",
-					{}, 
+					{},
 				    	function(data2) {
 						var model = $("#valore"+t);
 						model.empty();
@@ -229,10 +229,10 @@ function add_eventspec(id_sub, id_event, admin){
 				break;
 		}
 	}
-	
-	
-	
-	row += "</td>";		
+
+
+
+	row += "</td>";
 	if(admin){
 		row += "<td><input name='costo["+t+"]' type='number' value='"+price+"' class='form-control' style='width: 70px;' step='0.01'/></td>";
 		row += "<td>";
@@ -248,18 +248,18 @@ function add_eventspec(id_sub, id_event, admin){
 	row += "<td></td>"; //cestino
 	row += "</tr>";
 
-	
-	
+
+
 	if(valid_for==0){//inserisco una riga nella tabella delle specifiche generali
 		$('#showeventspecvalue tr:last').after(row);
 	}else{ //riga nelle tabelle settimanali
 		$('#weektable_'+valid_for+' tr:last').after(row);
 	}
 	$('#contatore_e').val((t+1));
-	
-	
-	
-	
+
+
+
+
 	$('#eventspecsOp').modal('hide');
 }
 
@@ -278,7 +278,7 @@ function change_eventspec(sel, id_event){
 }
 
 /**
-Funzione che viene richiamata quando un select cambia valore; viene popolato lo span (#span_type) 
+Funzione che viene richiamata quando un select cambia valore; viene popolato lo span (#span_type)
 con un input del tipo corretto (seelct, testo, checkbox).
 
 sel: il select
@@ -288,14 +288,14 @@ id: l'id da dare all'input generato
 **/
 function change_type(sel, multiple='', name='valore', id='valore', show_checkbox_hidden=true, span_id="span_type"){
 	$.get("{{ url('types/type')}}",
-		{id_eventspec: sel.value}, 
+		{id_eventspec: sel.value},
 	    	function(data) {
 			$.each(data, function(index, element) {
 				var row = "";
 				if(element.id>0){
 					row = "<select id='"+id+"' name='"+name+"' "+multiple+" class='form-control'></select>";
 					$.get("{{ url('types/options')}}",
-						{id_type: element.id }, 
+						{id_type: element.id },
 					    	function(data2) {
 							var model = $("#"+id+"");
 							model.empty();
@@ -320,7 +320,7 @@ function change_type(sel, multiple='', name='valore', id='valore', show_checkbox
 						case -4:
 							row = "<select id='"+id+"' name='"+name+"'></select>";
 							$.get("{{ url('admin/groups/dropdown')}}",
-								{}, 
+								{},
 							    	function(data2) {
 									var model = $("#"+id+"");
 									model.empty();
@@ -330,12 +330,12 @@ function change_type(sel, multiple='', name='valore', id='valore', show_checkbox
 							});
 							break;
 					}
-				}					
+				}
 				$("#"+span_id).html(row);
 			});
 	});
 }
-	
+
 function change_attrib(sel, t){
 	$.get("{{ url('types/type_attrib')}}",
 		{id_attrib: sel.value },
@@ -350,7 +350,7 @@ function change_attrib(sel, t){
 				}else{
 					row = "<select id='valore"+t+"' name='valore["+t+"]'></select>";
 					$.get("{{ url('types/options')}}",
-						{id_type: element.id }, 
+						{id_type: element.id },
 					    	function(data2) {
 							var model = $("#valore"+t);
 							model.empty();
@@ -367,7 +367,7 @@ function change_attrib(sel, t){
 
 function eventspecs_add(id_event){
 	var t = parseInt($('#contatore').val());
-	var row = "<tr>";	
+	var row = "<tr>";
 	row += "<input name='id_spec["+t+"]' type='hidden' value='0'/>";
 	row += "<input name='hidden["+t+"]' type='hidden' value='0'/>";
 	row += "<input name='event["+t+"]' type='hidden' value='"+id_event+"'/>";
@@ -381,7 +381,7 @@ function eventspecs_add(id_event){
 	row += "<td>"+form+"</td>";
 	//tipo
 	var select = ('{{ Form::select("id_type[]", Type::getTypes(), null, ["class" => "form-control"]) }}').replace(/"/g, '\'');
-	select = select.replace("id_type[]", "id_type["+t+"]");	
+	select = select.replace("id_type[]", "id_type["+t+"]");
 	row += "<td>"+select+"</td>";
 	//ordine
 	form = ('{{ Form::number("ordine[]", "0", ["class" => "form-control", "style" => "width: 100%","min" => "0", "step" => "1"]) }}').replace(/"/g, '\'');
@@ -390,9 +390,9 @@ function eventspecs_add(id_event){
 	//Generale
 	form = ('{{ Form::hidden("general[]", "0") }} {{ Form::checkbox("general[]", "1", false,  ["class" => "form-control"]) }}').replace(/"/g, '\'');
 	form = form.replace("general[]", "general["+t+"]");
-	row += "<td>"+form+"</td>";	
+	row += "<td>"+form+"</td>";
 	row += "<td>";
-	
+
 	row += "</td>";
 	row += "<td></td>";
 	row += "</tr>";
@@ -424,8 +424,8 @@ function add_cassa(){
 	var row = "<tr>";
 	row += "<td>#<input type='hidden' value='0' name='id["+t+"]'></td>";
 	row += "<td><input type='text' name='label["+t+"]' class='form-control'/></td>";
-	row += "<td></td>";		
-	row += "<td>E</td>";
+	// row += "<td></td>";
+	row += "<td></td>";
 	row += "</tr>";
 
 	$('#table_casse tr:last').after(row);
@@ -438,8 +438,8 @@ function add_modo_pagamento(){
 	var row = "<tr>";
 	row += "<td>#<input type='hidden' value='0' name='id["+t+"]'></td>";
 	row += "<td><input type='text' name='label["+t+"]' class='form-control'/></td>";
-	row += "<td></td>";		
-	row += "<td>E</td>";
+	// row += "<td></td>";
+	row += "<td></td>";
 	row += "</tr>";
 
 	$('#table_modo tr:last').after(row);
@@ -452,8 +452,8 @@ function add_tipo_pagamento(){
 	var row = "<tr>";
 	row += "<td>#<input type='hidden' value='0' name='id["+t+"]'></td>";
 	row += "<td><input type='text' name='label["+t+"]' class='form-control'/></td>";
-	row += "<td></td>";		
-	row += "<td>E</td>";
+	// row += "<td></td>";
+	row += "<td></td>";
 	row += "</tr>";
 
 	$('#table_tipo tr:last').after(row);
@@ -471,11 +471,11 @@ function change_attributo_type(sel){
            if(data.length>0){
                var row = "";
                $.each(data, function(index, element) {
-               	
+
                	if(element.id_type>0){
 					row = "<select id='valore' name='valore' class='form-control'></select>";
 					$.get("{{ url('types/options')}}",
-						{id_type: element.id_type }, 
+						{id_type: element.id_type },
 					    	function(data2) {
 							var model = $("#valore");
 							model.empty();
@@ -498,7 +498,7 @@ function change_attributo_type(sel){
 						case -4:
 							row = "<select id='valore' name='valore' class='form-control'></select>";
 							$.get("{{ url('admin/groups/dropdown')}}",
-								{}, 
+								{},
 							    	function(data2) {
 									var model = $("#valore");
 									model.empty();
@@ -521,7 +521,7 @@ function change_attributo_type(sel){
 function load_attrib_registration(sel){
 	var body = "";
 	$.get("{{ url('attributos/dropdown')}}",
-		{id_oratorio: sel.value }, 
+		{id_oratorio: sel.value },
 	    	function(data) {
 	    	if(data.length>0){
                var t = 0;
@@ -532,8 +532,8 @@ function load_attrib_registration(sel){
 				body += "<div class='col-md-6'>";
 				body += "<input type='hidden' name='id_attributo["+t+"]' value='"+element.id+"'>";
 
-				var row = "";				
-			
+				var row = "";
+
 				if(element.id_type>0){
 					body += "<select class='form-control' id='valore"+t+"' name='attributo["+t+"]'>";
 					$.ajax({
@@ -585,9 +585,9 @@ function load_attrib_registration(sel){
 			$("#attributes").html(body);
 	});
 	//t++;
-	
-	
-	
+
+
+
 }
 function load_spec_subscription(id_subscription){
 	$('#spec1').load("eventspecvalues/"+id_subscription);
@@ -668,7 +668,7 @@ function elencovalues_add(num_colonne, keys){
        select += "</select>";
 		}
 	});
-	
+
 	row += "<td>"+select+"</td>";
 	for(var i=0; i<num_colonne; i++){
 		row += "<td>";
@@ -693,7 +693,7 @@ function redirect_check(route, method='POST', send_param=true){
 	}else{
 		$.redirect(route, {}, method);
 	}
-	
+
 }
 
 function disable_select(checkbox, id_select, inverse=false){
@@ -702,10 +702,10 @@ function disable_select(checkbox, id_select, inverse=false){
 	}else{
 		$('#'+id_select).prop('disabled', checkbox.checked);
 	}
-	
+
 }
-	
+
 	</script>
-    
+
 </body>
 </html>

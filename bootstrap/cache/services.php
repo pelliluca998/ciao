@@ -30,13 +30,14 @@
     26 => 'Telegram\\Bot\\Laravel\\TelegramServiceProvider',
     27 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
     28 => 'Spatie\\CookieConsent\\CookieConsentServiceProvider',
-    29 => 'Nayjest\\Grids\\ServiceProvider',
-    30 => 'Collective\\Html\\HtmlServiceProvider',
-    31 => 'Lavary\\Menu\\ServiceProvider',
-    32 => 'App\\Providers\\AppServiceProvider',
-    33 => 'App\\Providers\\AuthServiceProvider',
-    34 => 'App\\Providers\\EventServiceProvider',
-    35 => 'App\\Providers\\RouteServiceProvider',
+    29 => 'Jimmyjs\\ReportGenerator\\ServiceProvider',
+    30 => 'Nayjest\\Grids\\ServiceProvider',
+    31 => 'Collective\\Html\\HtmlServiceProvider',
+    32 => 'Lavary\\Menu\\ServiceProvider',
+    33 => 'App\\Providers\\AppServiceProvider',
+    34 => 'App\\Providers\\AuthServiceProvider',
+    35 => 'App\\Providers\\EventServiceProvider',
+    36 => 'App\\Providers\\RouteServiceProvider',
   ),
   'eager' => 
   array (
@@ -56,11 +57,12 @@
     13 => 'Intervention\\Image\\ImageServiceProvider',
     14 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
     15 => 'Spatie\\CookieConsent\\CookieConsentServiceProvider',
-    16 => 'Nayjest\\Grids\\ServiceProvider',
-    17 => 'App\\Providers\\AppServiceProvider',
-    18 => 'App\\Providers\\AuthServiceProvider',
-    19 => 'App\\Providers\\EventServiceProvider',
-    20 => 'App\\Providers\\RouteServiceProvider',
+    16 => 'Jimmyjs\\ReportGenerator\\ServiceProvider',
+    17 => 'Nayjest\\Grids\\ServiceProvider',
+    18 => 'App\\Providers\\AppServiceProvider',
+    19 => 'App\\Providers\\AuthServiceProvider',
+    20 => 'App\\Providers\\EventServiceProvider',
+    21 => 'App\\Providers\\RouteServiceProvider',
   ),
   'deferred' => 
   array (
@@ -159,7 +161,7 @@
     'form' => 'Collective\\Html\\HtmlServiceProvider',
     'Collective\\Html\\HtmlBuilder' => 'Collective\\Html\\HtmlServiceProvider',
     'Collective\\Html\\FormBuilder' => 'Collective\\Html\\HtmlServiceProvider',
-    'menu' => 'Lavary\\Menu\\ServiceProvider',
+    'Lavary\\Menu\\Menu' => 'Lavary\\Menu\\ServiceProvider',
   ),
   'when' => 
   array (

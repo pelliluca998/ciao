@@ -28,8 +28,8 @@ use App\License;
 		<div class="panel-body">
 		{!! Form::open(['route' => 'eventspecs.save']) !!}
 		<table class="testgrid" id="showeventspecs">
-		
-		<?php			
+
+		<?php
 		$specs = (new EventSpec)->where('id_event', $id_event)->orderBy('ordine', 'ASC')->get();
 		$weeks = Week::where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
 		$contabilita = License::leftJoin('license_types', 'licenses.license_type', 'license_types.id')->where([['licenses.id_oratorio', Session::get('session_oratorio')], ["modules", "like", "%contabilita%"]])->orWhere([['licenses.data_fine', '>=', date("Y-m-d")], ['licenses.data_fine', 'null']])->get();
@@ -60,7 +60,7 @@ use App\License;
 				if(isset($price[0])){
 					$price_0 = $price[0];
 				}
-				
+
 				?>
 			<tr id="row_{{$loop->index}}">
 			{!! Form::hidden('id_spec['.$loop->index.']', $a->id) !!}
@@ -74,11 +74,11 @@ use App\License;
 			<td>
 				{!! Form::select("id_type[".$loop->index."]", Type::getTypes(), $a->id_type, ['class' => 'form-control']) !!}
 			</td>
-			
+
 			<td>
 				{!! Form::number("ordine[".$loop->index."]", $a->ordine, ['class' => 'form-control', 'style' => 'width: 70px', 'min' => '0', 'step' => '1']) !!}
 			</td>
-			
+
 			<td>
 				{!! Form::hidden('general['.$loop->index.']', 0) !!}
 				{!! Form::checkbox("general[".$loop->index."]", 1, $a->general, ['id' => "general_".$a->id, 'class' => 'form-control', "onclick" => "check_week($a->id, 0, true)"]) !!}
@@ -87,7 +87,7 @@ use App\License;
 			</td>
 			@foreach($weeks as $w)
 				<td>
-				
+
 				{!! Form::hidden("valid_for[".$a->id."][".$w->id."]", 0) !!}
 				@if(isset($valid[$w->id]))
 					{!! Form::checkbox("valid_for[".$a->id."][".$w->id."]", 1, $valid[$w->id], ['id' => "check_".$a->id."_".$w->id, 'class' => 'form-control', "onclick" => "check_week($a->id, $w->id, false)"]) !!}
@@ -104,9 +104,9 @@ use App\License;
 				Prezzo: {!! Form::number("price[".$a->id."][".$w->id."]", $price_w, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
 				</td>
 			@endforeach
-			
-			
-			
+
+
+
 			<td>
 				{!! Form::hidden('hidden['.$loop->index.']', 0) !!}
 				{!! Form::checkbox("hidden[".$loop->index."]", 1, $a->hidden, ['class' => 'form-control']) !!}
@@ -116,7 +116,7 @@ use App\License;
 			</td>
 			@if(count($contabilita)>0)
 				<td>
-					
+
 					<?php
 						$cassa = Cassa::where('id_oratorio', Session::get('session_oratorio'))->orderBy('id', 'ASC')->pluck('label', 'id');
 						$modo = ModoPagamento::where('id_oratorio', Session::get('session_oratorio'))->orderBy('id', 'ASC')->pluck('label', 'id');
@@ -158,18 +158,21 @@ use App\License;
 				{!! Form::hidden('modo_pagamento['.$loop->index.']', 0) !!}
 				{!! Form::hidden('tipo_pagamento['.$loop->index.']', 0) !!}
 			@endif
-			
+
 			</tr>
 			@php
 				$index=$loop->index+1
 			@endphp
 		@endforeach
-		
+
 		</table><br><br>
 		<input id='contatore' type='hidden' value="{{$index}}" />
-		{!! Form::submit('Salva', ['class' => 'btn btn-primary form-control', 'style' => 'width: 45%']) !!}
-		<i onclick='eventspecs_add({{$id_event}});' class='btn btn-primary' style='width: 45%'><i class='fa fa-plus' aria-hidden='true'></i> Aggiungi specifica</i>
-		{!! Form::close() !!}           		
+		{!! Form::submit('Salva', ['class' => 'btn btn-primary form-control', 'style' => 'width: 33%']) !!}
+		<i onclick='eventspecs_add({{$id_event}});' class='btn btn-primary' style='width: 33%'>
+      <i class='fa fa-plus' aria-hidden='true'></i>Aggiungi specifica
+    </i>
+    <a href="{{ route('subscription.print', ['id_subscription' => 'preview'])}}" class='btn btn-primary' style='width: 33%'>Anteprima modulo d'iscrizione</a>
+		{!! Form::close() !!}
 
                 </div>
             </div>
@@ -179,7 +182,7 @@ use App\License;
 
 <script>
 	function check_week(a, w, general){
-		if(general && $('#general_'+a).is(':checked')){	
+		if(general && $('#general_'+a).is(':checked')){
 				//setto tutte le settimane !check
 				var weeks = $('[id^=check_'+a+']').prop('checked', false);
 		}else{
