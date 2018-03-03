@@ -1,18 +1,18 @@
 <?php
 
-namespace App;
+namespace Modules\User\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attributo extends Model
+class GroupUser extends Model
 {
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'nome', 'ordine', 'id_oratorio', 'note', 'id_type', 'hidden'
+        'id_user', 'id_group'
     ];
 
     /**

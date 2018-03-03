@@ -1,15 +1,15 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Role;
 use App\Permission;
-use App\EventSpecValue;
-use App\EventSpec;
-use App\Group;
-use App\Week;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Event\Entities\EventSpec;
+use Modules\User\Entities\Group;
+use Modules\Event\Entities\Week;
 
 use App\SpecSubscription;
 use App\TypeSelect;
-use App\Subscription;
+use Modules\Subscription\Entities\Subscription;
 
 ?>
 <html lang="en">

@@ -1,10 +1,10 @@
 <?php
-use App\Week;
+use Modules\Event\Entities\Week;
 use App\License;
-use App\Event;
-use App\Subscription;
+use Modules\Event\Entities\Event;
+use Modules\Subscription\Entities\Subscription;
 use App\SpecSubscription;
-use App\User;
+use Modules\User\Entities\User;
 use App\CampoWeek;
 use App\OwnerMessage;
 use Modules\Sms\Http\Controllers\SmsController;

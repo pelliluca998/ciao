@@ -1,8 +1,8 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Role;
 use App\Permission;
-use App\Week;
+use Modules\Event\Entities\Week;
 use App\CampoWeek;
 use App\Campo;
 use App\SpecSubscription;

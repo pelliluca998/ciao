@@ -1,12 +1,12 @@
 <?php
-use App\Week;
-use App\Event;
+use Modules\Event\Entities\Week;
+use Modules\Event\Entities\Event;
 use App\SpecSubscription;
-use App\User;
+use Modules\User\Entities\User;
 use App\CampoWeek;
-use App\Oratorio;
+use Modules\Oratorio\Entities\Oratorio;
 use App\LicenseType;
-use App\UserOratorio;
+use Modules\Oratorio\Entities\UserOratorio;
 ?>
 
 @extends('layouts.app')

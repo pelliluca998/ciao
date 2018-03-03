@@ -7,20 +7,20 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-use App\Subscription;
-use App\EventSpec;
-use App\Oratorio;
+use Modules\Subscription\Entities\Subscription;
+use Modules\Event\Entities\EventSpec;
+use Modules\Oratorio\Entities\Oratorio;
 use App\SpecSubscription;
-use App\EventSpecValue;
-use App\Event;
-use App\UserOratorio;
-use App\User;
-use App\Bilancio;
-use App\Cassa;
-use App\ModoPagamento;
-use App\TipoPagamento;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Event\Entities\Event;
+use Modules\Oratorio\Entities\UserOratorio;
+use Modules\User\Entities\User;
+use Modules\Contabilita\Entities\Bilancio;
+use Modules\Contabilita\Entities\Cassa;
+use Modules\Contabilita\Entities\ModoPagamento;
+use Modules\Contabilita\Entities\TipoPagamento;
 use App\License;
-use App\Week;
+use Modules\Event\Entities\Week;
 use Module;
 use Session;
 use Entrust;
@@ -627,21 +627,30 @@ class SubscriptionController extends Controller
 				foreach($specs as $spec){
 					$template->setValue('specifica_g#'.$i, $spec->label);
 					$template->setValue('valore_g#'.$i, EventSpec::getPrintableValue($spec->id_type, $spec->valore));
-					$template->setValue('costo_g#'.$i, $spec->costo);
-					$importo_totale += $spec->costo;
-					if($spec->costo == 0){
-						$template->setValue('pagato_g#'.$i, '');
-					}else{
-						if($spec->pagato == 1){
-							$template->setValue('pagato_g#'.$i, 'SI');
+					if(($spec->id_type==-2 && $spec->valore == 1) || $spec->id_type!=-2){
+						$template->setValue('costo_g#'.$i, $spec->costo);
+						$importo_totale += $spec->costo;
+						if($spec->costo == 0){
+							$template->setValue('pagato_g#'.$i, '');
 						}else{
-							$template->setValue('pagato_g#'.$i, 'NO');
-						}
+							if($spec->pagato == 1){
+								$template->setValue('pagato_g#'.$i, 'SI');
+							}else{
+								$template->setValue('pagato_g#'.$i, 'NO');
+							}
 
+						}
+						if($spec->pagato == false){
+							$da_pagare += $spec->costo;
+						}
+					}else{
+						$template->setValue('costo_g#'.$i, '');
+						$template->setValue('pagato_g#'.$i, '');
 					}
-					if($spec->pagato == false){
-						$da_pagare += $spec->costo;
-					}
+
+
+
+
 
 					$i++;
 				}
@@ -664,27 +673,35 @@ class SubscriptionController extends Controller
 						foreach($specs as $spec){
 							$template->setValue('specifica_w#'.$w.'#'.$i, $spec->label);
 							$template->setValue('valore_w#'.$w.'#'.$i, EventSpec::getPrintableValue($spec->id_type, $spec->valore));
-							$template->setValue('costo_w#'.$w.'#'.$i, $spec->costo);
-							$importo_totale += $spec->costo;
-							if($spec->costo == 0){
-								$template->setValue('pagato_w#'.$w.'#'.$i, '');
-							}else{
-								if($spec->pagato == 1){
-									$template->setValue('pagato_w#'.$w.'#'.$i, 'SI');
+							if(($spec->id_type==-2 && $spec->valore == 1) || $spec->id_type!=-2){
+								$template->setValue('costo_w#'.$w.'#'.$i, $spec->costo);
+								$importo_totale += $spec->costo;
+								if($spec->costo == 0){
+									$template->setValue('pagato_w#'.$w.'#'.$i, '');
 								}else{
-									$template->setValue('pagato_w#'.$w.'#'.$i, 'NO');
+									if($spec->pagato == 1){
+										$template->setValue('pagato_w#'.$w.'#'.$i, 'SI');
+									}else{
+										$template->setValue('pagato_w#'.$w.'#'.$i, 'NO');
+									}
 								}
+
+								if($spec->pagato == false){
+									$da_pagare += $spec->costo;
+								}
+							}else{
+								$template->setValue('pagato_w#'.$w.'#'.$i, '');
+								$template->setValue('costo_w#'.$w.'#'.$i, '');
 							}
 
-							if($spec->pagato == false){
-								$da_pagare += $spec->costo;
-							}
 
 							$i++;
 						}
 					}
 					$w++;
 				}
+			}else{
+				$template->deleteBlock('settimana');
 			}
 
 			$template->setValue('importo_totale', number_format($importo_totale,2));
@@ -699,7 +716,7 @@ class SubscriptionController extends Controller
 		$path = sys_get_temp_dir().$filename.".docx";
 		$output = sys_get_temp_dir();
 		$template->saveAs($path);
-		shell_exec("libreoffice --headless --convert-to pdf ".$path." --outdir ".$output);
+		shell_exec("unoconv -f pdf ".$path." --outdir ".$output);
 		return response()->file($output.$filename.".pdf");
 	}
 }

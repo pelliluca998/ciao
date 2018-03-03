@@ -10,9 +10,9 @@ use Session;
 use Entrust;
 use Auth;
 use Input;
-use App\Week;
+use Modules\Event\Entities\Week;
 use App\Campo;
-use App\Event;
+use Modules\Event\Entities\Event;
 use App\CampoWeek;
 use Carbon;
 

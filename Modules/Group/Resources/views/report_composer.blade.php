@@ -1,5 +1,5 @@
 <?php
-use App\EventSpec;
+use Modules\Event\Entities\EventSpec;
 use App\Type;
 ?>
 

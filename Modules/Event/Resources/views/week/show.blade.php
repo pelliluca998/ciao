@@ -1,7 +1,7 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Role;
-use App\Week;
+use Modules\Event\Entities\Week;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;
 use Nayjest\Grids\Components\ColumnHeadersRow;

@@ -1,5 +1,5 @@
 <?php
-use App\Event;
+use Modules\Event\Entities\Event;
 ?>
 
 @extends('layouts.app')

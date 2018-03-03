@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace Modules\Event\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Group extends Model
+class EventSpecValue extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class Group extends Model
      * @var array
      */
     protected $fillable = [
-        'nome', 'descrizione', 'id_oratorio'
+        'id_eventspec', 'valore', 'id_subscription', 'id_week', 'costo', 'pagato'
     ];
 
     /**

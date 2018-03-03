@@ -1,6 +1,6 @@
 <?php
-use App\User;
-use App\Event;
+use Modules\User\Entities\User;
+use Modules\Event\Entities\Event;
 ?>
 
 @extends('layouts.app')

@@ -1,8 +1,8 @@
 <?php
-use App\Event;
+use Modules\Event\Entities\Event;
 use App\TypeSelect;
-use App\EventSpec;
-use App\Group;
+use Modules\Event\Entities\EventSpec;
+use Modules\User\Entities\Group;
 ?>
 
 @extends('layouts.app')
@@ -18,7 +18,7 @@ use App\Group;
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 		<div class="panel panel-default">
-		<div class="panel-body">	
+		<div class="panel-body">
 			{!! Form::open(['route' => 'subscribe.savesubscribe']) !!}
 
 				@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('owner'))
@@ -30,8 +30,8 @@ use App\Group;
 				@endif
 				{!! Form::hidden('id_user', $id_user) !!}
 				{!! Form::hidden('id_event', $event->id) !!}
-				
-				
+
+
 				<?php
 				//specifiche dell'evento
 				$specs = (new EventSpec)
@@ -58,12 +58,12 @@ use App\Group;
 							@else
 								<tr><td style="width: 100%;"></td></tr>
 							@endif
-							<tr><td>					
+							<tr><td>
 							{!! Form::label($spec->id, $spec->label) !!}
 							@if(strlen($spec->descrizione)>0)
 								- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
-							@endif						
-							
+							@endif
+
 							@if(floatval($price[0])>0)
 								(Prezzo: {{number_format(floatval($price[0]), 2, ',', '')}}€)
 							@endif
@@ -78,13 +78,13 @@ use App\Group;
 								@elseif($spec->id_type==-3)
 									{!! Form::number('specs['.$loop->index.']', '', ['class' => 'form-control']) !!}
 								@elseif($spec->id_type==-4)
-									{!! Form::select('specs['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}				
+									{!! Form::select('specs['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), '', ['class' => 'form-control'])!!}
 								@endif
 							@endif
 							</td>
 							@if(!Auth::user()->hasRole('user'))
 								<td>
-									
+
 									{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
 									@if(floatval($price[0])>0)
 										{!! Form::label($spec->id, 'Pagato') !!}
@@ -94,13 +94,13 @@ use App\Group;
 							@else
 								{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
 							@endif
-							
+
 							</tr>
 							</table>
 						</div>
 					@endif
-				@endforeach				
-				
+				@endforeach
+
 				<div class="form-group">
 					@if(count($specs)>0)
 						{!! Form::submit('Prosegui!', ['class' => 'btn btn-primary form-control']) !!}
@@ -108,8 +108,8 @@ use App\Group;
 						{!! Form::submit('Questo evento non prevede delle specifiche generali, vai al passo 2!', ['class' => 'btn btn-primary form-control']) !!}
 					@endif
 				</div>
-           		{!! Form::close() !!}           		
-                   
+           		{!! Form::close() !!}
+
                 </div>
             </div>
         </div>

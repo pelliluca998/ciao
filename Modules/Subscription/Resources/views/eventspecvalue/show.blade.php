@@ -1,21 +1,21 @@
 <?php
-use App\User;
-use App\Week;
+use Modules\User\Entities\User;
+use Modules\Event\Entities\Week;
 use App\Role;
-use App\Group;
+use Modules\User\Entities\Group;
 use App\Permission;
-use App\EventSpecValue;
-use App\EventSpec;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Event\Entities\EventSpec;
 use App\SpecSubscription;
-use App\Subscription;
-use App\Event;
+use Modules\Subscription\Entities\Subscription;
+use Modules\Event\Entities\Event;
 use App\TypeSelect;
 use Modules\Oratorio\Http\Controllers\TypeController;
 
 ?>
 <html lang="en">
-<head>    
-    
+<head>
+
 </head>
 <?php
 $id_event=Session::get('work_event');
@@ -41,11 +41,11 @@ $event = Event::findOrfail($id_event);
 				<select id="valid_for" onchange="change_eventspec(this, {{$id_event}})" class="form-control"><?php echo $options; ?></select>
 				<p>2) Quale specifica?</p>
 				<select id="event_spec" class="form-control"></select><br>
-				
-				<i onclick="add_eventspec({{$id_subscription}}, {{$id_event}}, true)" class="btn btn-primary" style="width: 45%"><i class="fa fa-plus" aria-hidden="true"></i>Inserisci</i>
-			</div>         
 
-			<div class="modal-body">				
+				<i onclick="add_eventspec({{$id_subscription}}, {{$id_event}}, true)" class="btn btn-primary" style="width: 45%"><i class="fa fa-plus" aria-hidden="true"></i>Inserisci</i>
+			</div>
+
+			<div class="modal-body">
 
 			</div>
 			<div class="modal-footer">
@@ -55,7 +55,7 @@ $event = Event::findOrfail($id_event);
 		</div>
 	</div>
 </div>
-			
+
 <?php
 echo Form::open(['route' => 'eventspecvalues.save']);
 $index=0;
@@ -120,8 +120,8 @@ $specs = (new EventSpecValue)
 						{!! Form::select('valore['.$loop->index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control']) !!}
 					@else
 						<i style="font-size: 12px;">Nessun gruppo disponibile!</i>{!! Form::hidden('valore['.$loop->index.']', 0) !!}
-					@endif						
-					 				
+					@endif
+
 				@endif
 			@endif
 			</td>
@@ -131,8 +131,8 @@ $specs = (new EventSpecValue)
 			<td>
 				{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
 				@if($spec->costo>0)
-		               {!! Form::checkbox('pagato['.$loop->index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
-		          @endif
+             {!! Form::checkbox('pagato['.$loop->index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
+        @endif
 			</td>
 			<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
 		</tr>
@@ -159,7 +159,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 			->orderBy('event_specs.ordine', 'asc')
 			->get();
 	?>
-	
+
 	<p><b>Settimana {{$loop->index+1}} - dal {{$w->from_date}} al {{$w->to_date}}</b></p>
 	<table class='testgrid' id="weektable_{{$w->id}}">
 	<thead><tr>
@@ -169,12 +169,12 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 	<th>Pagato</th>
 	<th></th>
 	</tr></thead>
-	
+
 	@foreach($specs as $spec)
 		<?php
 		$valid = json_decode($spec->valid_for, true);
 		?>
-		@if($valid[$w->id]==1)		
+		@if($valid[$w->id]==1)
 			<tr>
 				<input type="hidden" name="id_eventspecvalue[{{$index}}]" value="{{$spec->id}}" />
 				<input type="hidden" name="id_eventspec[{{$index}}]" value="{{$spec->id_eventspec}}" />
@@ -192,7 +192,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 					@elseif($spec->id_type==-3)
 						{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
 					@elseif($spec->id_type==-4)
-						{!! Form::select('valore['.$index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control'])!!}				
+						{!! Form::select('valore['.$index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control'])!!}
 					@endif
 				@endif
 				</td>
@@ -207,14 +207,14 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 				</td>
 				<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
 			</tr>
-		
+
 		@php
 			$index++
 		@endphp
 		@endif
 	@endforeach
 	</table><br>
-	
+
 @endforeach
 @else
 	<i>Nessuna settimana inserita!</i><br><br>

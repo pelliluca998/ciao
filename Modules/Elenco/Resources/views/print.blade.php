@@ -1,10 +1,10 @@
 <?php
-use App\EventSpec;
-use App\Week;
-use App\Group;
+use Modules\Event\Entities\EventSpec;
+use Modules\Event\Entities\Week;
+use Modules\User\Entities\Group;
 use App\Type;
 use App\TypeSelect;
-use App\Attributo;
+use Modules\Attributo\Entities\Attributo;
 ?>
 
 @extends('layouts.app')

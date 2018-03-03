@@ -1,8 +1,8 @@
 <?php
-use App\Event;
+use Modules\Event\Entities\Event;
 use App\Role;
 use App\Permission;
-use App\EventSpec;
+use Modules\Event\Entities\EventSpec;
 use Nayjest\Grids\Components\Base\RenderableRegistry;
 use Nayjest\Grids\Components\ColumnHeadersRow;
 use Nayjest\Grids\Components\ColumnsHider;

@@ -7,9 +7,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
-use App\AttributoUser;
-use App\Attributo;
-use App\User;
+use Modules\Attributo\Entities\AttributoUser;
+use Modules\Attributo\Entities\Attributo;
+use Modules\User\Entities\User;
 use Input;
 use Auth;
 use Session;

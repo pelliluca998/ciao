@@ -1,6 +1,6 @@
 <?php
-use App\Event;
-use App\EventSpec;
+use Modules\Event\Entities\Event;
+use Modules\Event\Entities\EventSpec;
 ?>
 
 @extends('layouts.app')
@@ -24,7 +24,7 @@ use App\EventSpec;
 						@endforeach
 					</div>
 					@endif
-					
+
 					{!! Form::model($event, ['method' => 'PATCH','files' => true, 'route' => ['events.update', $event->id]]) !!}
 					{!! Form::hidden('id_event', $event->id) !!}
 					<div class="form-group">
@@ -113,11 +113,11 @@ use App\EventSpec;
 
 				<div class="form-group" style="width: 48%; float: left; margin-left: 4px">
 					<a href="{{ url(Storage::url('public/template/subscription_template.docx')) }}">Scarica il modulo di default.</a><br>
+					{!! Form::hidden('elimina_template', 0) !!}
 					@if($event->template_file == null)
 						<p>Nessun modulo personalizzato caricato!</p><br>
 					@else
 						<a href="{{ url(Storage::url('public/'.$event->template_file.'')) }}">Scarica il modulo che hai caricato.</a><br>
-						{!! Form::hidden('elimina_template', 0) !!}
 						{!! Form::checkbox('elimina_template', 1, 0, []) !!} Elimina modulo caricato e usa quello di default
 					@endif
 				</div>

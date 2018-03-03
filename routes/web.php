@@ -1,9 +1,9 @@
 <?php
-use App\EventSpec;
+use Modules\Event\Entities\EventSpec;
 use App\Type;
 use App\TypeSelect;
-use App\Attributo;
-use App\Group;
+use Modules\Attributo\Entities\Attributo;
+use Modules\User\Entities\Group;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

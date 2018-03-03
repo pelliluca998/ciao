@@ -1,6 +1,6 @@
 <?php
 use App\LicenseType;
-use App\User;
+use Modules\User\Entities\User;
 ?>
 
 @extends('layouts.app')

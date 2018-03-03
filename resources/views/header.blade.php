@@ -14,28 +14,28 @@
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">               
+            <ul class="nav navbar-nav">
                 @if (!Auth::guest())
 		           <?php
-				//Menu::make('MyNavBar', function($menu){});	
+				//Menu::make('MyNavBar', function($menu){});
 				$menuList = Menu::get('SegrestaNavBar');
 				$menuList->add("Help", "http://doc.segresta.it")
 				   		->prepend("<i class='fa fa-life-ring' aria-hidden='true'></i> ")
 				   		->data('permissions', ['usermodule', 'all'])->data('order', 70);
-	
+
 				//filtro il menu popolato dai vari moduli in base al ruolo
-				$seg = Menu::get('SegrestaNavBar');				
+				$seg = Menu::get('SegrestaNavBar');
 				$seg->filter(function($item){
 					return Auth::user()->can($item->data('permissions')) ? : false;
 				});
-				$seg->sortBy('order');	
+				$seg->sortBy('order');
 
 				?>
 				@include('custom-menu-items', array('items' => $SegrestaNavBar->roots()))
 			@endif
-                
-                
-                
+
+
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -46,7 +46,7 @@
                                 href="{{ url('register') }}">Registrati</a></li>
                 @else
                     <li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> 
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 						<?php
 							if(Session::get('session_oratorio')!=null){
 								$user = Auth::user();
@@ -63,7 +63,7 @@
 							}
 
 							?>
-						{{ Auth::user()->name }} 
+						{{ Auth::user()->name }}
 						<i class="fa fa-caret-down"></i>
 					</a>
 					<ul class="dropdown-menu" role="menu">
@@ -86,7 +86,7 @@
 						@endif
 						@if(Auth::user()->hasRole('owner'))
 							<li class="{{ (Request::is('oratorio/showall') ? 'active' : '') }}"><a href="{{route('oratorio.showall')}}">Gestione oratori</a></li>
-						@endif                        	
+						@endif
 
 					</ul>
                     </li>
@@ -95,4 +95,3 @@
         </div>
     </div>
 </nav>
-

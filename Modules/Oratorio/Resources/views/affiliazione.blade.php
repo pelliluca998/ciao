@@ -1,6 +1,6 @@
 <?php
-use App\Oratorio;
-use App\UserOratorio;
+use Modules\Oratorio\Entities\Oratorio;
+use Modules\Oratorio\Entities\UserOratorio;
 ?>
 
 @extends('layouts.app')

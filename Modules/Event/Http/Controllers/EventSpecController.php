@@ -8,12 +8,12 @@ use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
-use App\EventSpec;
-use App\EventSpecValue;
-use App\Subscription;
-use App\Event;
+use Modules\Event\Entities\EventSpec;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Subscription\Entities\Subscription;
+use Modules\Event\Entities\Event;
 use App\TypeSelect;
-use App\Week;
+use Modules\Event\Entities\Week;
 use Auth;
 use Input;
 use Session;
@@ -27,8 +27,8 @@ class EventSpecController extends Controller
 	*/
 	public function index(){
 		//return view('groups.show');
-	}   
-    
+	}
+
 
 	/**
 	* Show the form for creating a new resource.
@@ -39,7 +39,7 @@ class EventSpecController extends Controller
 	//	return view('groups.create');
 	//}
 
-	
+
 
 	/**
 	* Display the specified resource.
@@ -57,7 +57,7 @@ class EventSpecController extends Controller
         		Session::flash("flash_message", "Devi specificare un evento per compiere questa azione!");
 			return redirect()->route('events.index');
         	}
-		
+
 		$event = Event::findOrFail($id);
 
 		if($event->id_oratorio==Session::get('session_oratorio')){
@@ -65,10 +65,10 @@ class EventSpecController extends Controller
 		}else{
 			abort(403, 'Unauthorized action.');
 		}
-		
+
 	}
 
-	
+
 
 	/**
 	* Remove the specified resource from storage.
@@ -81,7 +81,7 @@ class EventSpecController extends Controller
 		$id = $input['id_spec'];
 		$sub = EventSpec::findOrFail($id);
 		$event = Event::findOrFail($sub->id_event);
-		if($event->id_oratorio==Session::get('session_oratorio')){		
+		if($event->id_oratorio==Session::get('session_oratorio')){
 			$sub->delete();
 			//Session::flash("flash_message", "Specifica $id cancellata!");
 			//return redirect()->route('eventspecs.show', ['id_event' => $sub->id_event]);
@@ -91,15 +91,15 @@ class EventSpecController extends Controller
 			echo false;
 		}
 	}
-    
+
 	public function save(Request $request){
 		$input = $request->all();
 		$id_spec = Input::get('id_spec');
 		$event = Input::get('event');
 		$label = Input::get('label');
 		$descrizione = Input::get('descrizione');
-		$hidden = Input::get('hidden');
-		$ordine = Input::get('ordine');
+		//$hidden = Input::get('hidden');
+		$ordine = 1;
 		$id_type = Input::get('id_type');
 		$id_cassa = Input::get('cassa');
 		$id_modo_pagamento = Input::get('modo_pagamento');
@@ -112,12 +112,26 @@ class EventSpecController extends Controller
 				$spec->label = $label[$key];
 				$spec->descrizione = $descrizione[$key];
 				$spec->id_type = $id_type[$key];
-				$spec->hidden = $hidden[$key];
-				$spec->ordine = $ordine[$key];
+				//$spec->hidden = $hidden[$key];
+				$spec->ordine = $ordine;
 				$spec->id_cassa = $id_cassa[$key];
 				$spec->id_modopagamento = $id_modo_pagamento[$key];
 				$spec->id_tipopagamento = $id_tipo_pagamento[$key];
-				$spec->general = $input['general'][$key];
+				$spec->hidden = false;
+				$spec->general = false;
+				foreach($input['hidden'] as $hidden){
+					if($hidden == $id_spec[$key]){
+						$spec->hidden = true;
+						break;
+					}
+				}
+				foreach($input['general'] as $general){
+					if($general == $id_spec[$key]){
+						$spec->general = true;
+						break;
+					}
+				}
+				//$spec->general = $input['general'][$key];
 				//Specifica valida per le settimane...
 				if(isset($input['valid_for'][$id_spec[$key]])){
 					$weeks = $input['valid_for'][$id_spec[$key]];
@@ -127,15 +141,16 @@ class EventSpecController extends Controller
 				}
 				$spec->price = json_encode($input['price'][$id_spec[$key]]);
 				$spec->save();
-		
+
 			}else{
 				$spec = new EventSpec;
 				$spec->label = $label[$key];
 				$spec->descrizione = $descrizione[$key];
 				$spec->id_type = $id_type[$key];
 				$spec->id_event = $event[$key];
-				$spec->hidden = $hidden[$key];
-				$spec->ordine = $ordine[$key];
+				$spec->hidden = false;
+				$spec->general = true;
+				$spec->ordine = $ordine;
 				$spec->id_cassa = null;
 				$spec->id_modopagamento = null;
 				$spec->id_tipopagamento = null;
@@ -148,14 +163,15 @@ class EventSpecController extends Controller
 				$spec->price = json_encode(array());
 				$spec->save();
 			}
+			$ordine++;
 		}
 		Session::flash("flash_message", "Specifiche evento aggiornate!");
 		return redirect()->route('eventspecs.show');
 	}
-	
+
 	public function show_eventspecvalues($id_sub){
 		return view('subscription::eventspecvalue.show', ['id_sub' => $id_sub]);
 	}
-	
-	
+
+
 }

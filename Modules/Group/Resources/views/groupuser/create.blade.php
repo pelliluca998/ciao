@@ -1,6 +1,6 @@
 <?php
-use App\User;
-use App\Group;
+use Modules\User\Entities\User;
+use Modules\User\Entities\Group;
 ?>
 
 @extends('layouts.app')

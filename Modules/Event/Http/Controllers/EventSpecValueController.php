@@ -8,22 +8,22 @@ use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
-use App\EventSpecValue;
-use App\EventSpec;
-use App\Event;
-use App\Subscription;
-use App\Bilancio;
-use App\User;
-use App\Cassa;
-use App\ModoPagamento;
-use App\TipoPagamento;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Event\Entities\EventSpec;
+use Modules\Event\Entities\Event;
+use Modules\Subscription\Entities\Subscription;
+use Modules\Contabilita\Entities\Bilancio;
+use Modules\User\Entities\User;
+use Modules\Contabilita\Entities\Cassa;
+use Modules\Contabilita\Entities\ModoPagamento;
+use Modules\Contabilita\Entities\TipoPagamento;
 use App\License;
 use Module;
 use Input;
 use Session;
 use Auth;
 use App\TypeSelect;
-use App\Week;
+use Modules\Event\Entities\Week;
 
 class EventSpecValueController extends Controller
 {

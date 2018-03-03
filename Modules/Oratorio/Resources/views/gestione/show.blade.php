@@ -1,5 +1,5 @@
 <?php
-use App\Oratorio;
+use Modules\Oratorio\Entities\Oratorio;
 use App\Role;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;

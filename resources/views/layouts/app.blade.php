@@ -1,9 +1,9 @@
 <?php
-use App\Attributo;
+use Modules\Attributo\Entities\Attributo;
 use App\Type;
-use App\EventSpec;
-use App\Event;
-use App\Oratorio;
+use Modules\Event\Entities\EventSpec;
+use Modules\Event\Entities\Event;
+use Modules\Oratorio\Entities\Oratorio;
 ?>
 
 <!DOCTYPE html>
@@ -96,9 +96,8 @@ use App\Oratorio;
 	    				?>
 	    				<div class='panel panel-default'>
 	    					<div class='panel-heading' style="height: 55px;">
-			    				@if(null!==Session::get('work_event'))
-
-			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
+			    				@if(null!==Session::get('work_event') && Event::find(Session::get('work_event'))->id_oratorio == Session::get('session_oratorio'))
+			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{str_limit(strip_tags($event->descrizione), 30, ' ...')}}</i></div>
 			    						<?php $buttons=$buttons_1; ?>
 			    				@else
 			    					@if($oratorio->last_id_event>0 && Event::findOrFail($oratorio->last_id_event)->count()>0)
@@ -366,31 +365,29 @@ function change_attrib(sel, t){
 
 
 function eventspecs_add(id_event){
-	var t = parseInt($('#contatore').val());
+	//var t = parseInt($('#contatore').val());
 	var row = "<tr>";
-	row += "<input name='id_spec["+t+"]' type='hidden' value='0'/>";
-	row += "<input name='hidden["+t+"]' type='hidden' value='0'/>";
-	row += "<input name='event["+t+"]' type='hidden' value='"+id_event+"'/>";
+	row += "<input name='id_spec[]' type='hidden' value='0'/>";
+	row += "<input name='hidden[]' type='hidden' value='0'/>";
+	row += "<input name='event[]' type='hidden' value='"+id_event+"'/>";
+  //Sposta
+  row += "<td><i class='fa fa-arrows fa-2x'></td>";
 	//Nome
 	var form = ('{{ Form::text("label[]", "", ["class" => "form-control", "style" => "width: 100%"]) }}').replace(/"/g, '\'');
-	form = form.replace("label[]", "label["+t+"]");
+	//form = form.replace("label[]", "label["+t+"]");
 	row += "<td>"+form+"</td>";
 	//Descrizione
 	form = ('{{ Form::text("descrizione[]", "", ["class" => "form-control", "style" => "width: 100%"]) }}').replace(/"/g, '\'');
-	form = form.replace("descrizione[]", "descrizione["+t+"]");
+	//form = form.replace("descrizione[]", "descrizione["+t+"]");
 	row += "<td>"+form+"</td>";
 	//tipo
 	var select = ('{{ Form::select("id_type[]", Type::getTypes(), null, ["class" => "form-control"]) }}').replace(/"/g, '\'');
-	select = select.replace("id_type[]", "id_type["+t+"]");
+	//select = select.replace("id_type[]", "id_type["+t+"]");
 	row += "<td>"+select+"</td>";
-	//ordine
-	form = ('{{ Form::number("ordine[]", "0", ["class" => "form-control", "style" => "width: 100%","min" => "0", "step" => "1"]) }}').replace(/"/g, '\'');
-	form = form.replace("ordine[]", "ordine["+t+"]");
-	row += "<td>"+form+"</td>";
 	//Generale
-	form = ('{{ Form::hidden("general[]", "0") }} {{ Form::checkbox("general[]", "1", false,  ["class" => "form-control"]) }}').replace(/"/g, '\'');
-	form = form.replace("general[]", "general["+t+"]");
-	row += "<td>"+form+"</td>";
+	//form = ('{{ Form::hidden("general[]", "0") }} {{ Form::checkbox("general[]", "1", false,  ["class" => "form-control"]) }}').replace(/"/g, '\'');
+	//form = form.replace("general[]", "general["+t+"]");
+	row += "<td></td>";
 	row += "<td>";
 
 	row += "</td>";
@@ -398,7 +395,7 @@ function eventspecs_add(id_event){
 	row += "</tr>";
 
 	$('#showeventspecs tr:last').after(row);
-	$('#contatore').val((t+1));
+	//$('#contatore').val((t+1));
 
 }
 

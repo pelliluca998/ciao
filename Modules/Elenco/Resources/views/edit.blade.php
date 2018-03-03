@@ -1,6 +1,6 @@
 <?php
-use App\Event;
-use App\EventSpec;
+use Modules\Event\Entities\Event;
+use Modules\Event\Entities\EventSpec;
 ?>
 
 @extends('layouts.app')

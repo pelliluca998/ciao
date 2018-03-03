@@ -1,5 +1,5 @@
 <?php
-use App\Elenco;
+use Modules\Elenco\Entities\Elenco;
 use App\Role;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;

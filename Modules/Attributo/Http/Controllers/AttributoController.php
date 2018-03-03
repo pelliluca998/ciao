@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
-use App\Attributo;
+use Modules\Attributo\Entities\Attributo;
 use Session;
 use Input;
 

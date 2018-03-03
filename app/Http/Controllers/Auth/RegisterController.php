@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use Modules\User\Entities\User;
 use App\Role;
 use App\RoleUser;
-use App\AttributoUser;
-use App\UserOratorio;
+use Modules\Attributo\Entities\AttributoUser;
+use Modules\Oratorio\Entities\UserOratorio;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;

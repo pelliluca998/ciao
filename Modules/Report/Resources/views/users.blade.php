@@ -1,18 +1,18 @@
 <?php
-use App\Week;
-use App\Group;
-use App\Event;
+use Modules\Event\Entities\Week;
+use Modules\User\Entities\Group;
+use Modules\Event\Entities\Event;
 use App\SpecSubscription;
-use App\User;
+use Modules\User\Entities\User;
 use App\CampoWeek;
-use App\Subscription;
-use App\Oratorio;
+use Modules\Subscription\Entities\Subscription;
+use Modules\Oratorio\Entities\Oratorio;
 use App\Classe;
-use App\EventSpecValue;
-use App\EventSpec;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Event\Entities\EventSpec;
 use App\TypeSelect;
-use App\Attributo;
-use App\AttributoUser;
+use Modules\Attributo\Entities\Attributo;
+use Modules\Attributo\Entities\AttributoUser;
 ?>
 
 <html>

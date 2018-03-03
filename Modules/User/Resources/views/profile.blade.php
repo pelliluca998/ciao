@@ -1,10 +1,10 @@
 <?php
-use App\User;
-use App\Group;
+use Modules\User\Entities\User;
+use Modules\User\Entities\Group;
 use App\Role;
 use App\RoleUser;
-use App\Attributo;
-use App\AttributoUser;
+use Modules\Attributo\Entities\Attributo;
+use Modules\Attributo\Entities\AttributoUser;
 use App\TypeSelect;
 use App\Type;
 ?>

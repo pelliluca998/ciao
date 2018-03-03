@@ -1,6 +1,6 @@
 <?php
-use App\Attributo;
-use App\AttributoUser;
+use Modules\Attributo\Entities\Attributo;
+use Modules\Attributo\Entities\AttributoUser;
 use App\Type;
 ?>
 

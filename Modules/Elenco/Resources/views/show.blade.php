@@ -1,6 +1,6 @@
 <?php
-use App\Elenco;
-use App\ElencoValue;
+use Modules\Elenco\Entities\Elenco;
+use Modules\Elenco\Entities\ElencoValue;
 use App\Role;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;

@@ -1,5 +1,5 @@
 <?php
-use App\Elenco;
+use Modules\Elenco\Entities\Elenco;
 ?>
 
 @extends('layouts.app')

@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace Modules\User\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Subscription extends Model
+class Group extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,7 +12,7 @@ class Subscription extends Model
      * @var array
      */
     protected $fillable = [
-        'id_user', 'id_event', 'confirmed', 'type'
+        'nome', 'descrizione', 'id_oratorio'
     ];
 
     /**

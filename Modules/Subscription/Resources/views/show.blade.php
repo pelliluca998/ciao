@@ -1,7 +1,7 @@
 <?php
-use App\Subscription;
-use App\Event;
-use App\EventSpecValue;
+use Modules\Subscription\Entities\Subscription;
+use Modules\Event\Entities\Event;
+use Modules\Event\Entities\EventSpecValue;
 use App\Role;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;

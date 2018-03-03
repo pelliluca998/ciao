@@ -1,11 +1,11 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Role;
 use App\RoleUser;
-use App\Attributo;
-use App\AttributoUser;
+use Modules\Attributo\Entities\Attributo;
+use Modules\Attributo\Entities\AttributoUser;
 use App\TypeSelect;
-use App\Group;
+use Modules\User\Entities\Group;
 ?>
 
 @extends('layouts.app')

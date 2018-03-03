@@ -1,5 +1,5 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 Route::group(['middleware' => ['web', 'role:admin|owner', 'license:user'], 'prefix' => 'admin', 'namespace' => 'Modules\User\Http\Controllers'], function()
 {
     Route::resource('user', 'UserController', ['except' => ['edit', 'show']]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Modules\Event\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;

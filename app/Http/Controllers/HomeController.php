@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Entrust;
 use Session;
-use App\UserOratorio;
-use App\Oratorio;
+use Modules\Oratorio\Entities\UserOratorio;
+use Modules\Oratorio\Entities\Oratorio;
 use Auth;
 use Input;
 

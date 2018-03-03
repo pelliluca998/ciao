@@ -5,11 +5,11 @@ namespace Modules\Elenco\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use App\Elenco;
-use App\ElencoValue;
-use App\Event;
-use App\EventSpecValue;
-use App\Subscription;
+use Modules\Elenco\Entities\Elenco;
+use Modules\Elenco\Entities\ElencoValue;
+use Modules\Event\Entities\Event;
+use Modules\Event\Entities\EventSpecValue;
+use Modules\Subscription\Entities\Subscription;
 use Session;
 
 class ElencoController extends Controller

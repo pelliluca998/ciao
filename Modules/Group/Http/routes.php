@@ -1,5 +1,5 @@
 <?php
-use App\Group;
+use Modules\User\Entities\Group;
 
 Route::group(['middleware' => ['web', 'role:admin|owner', 'license:group'], 'prefix' => 'admin', 'namespace' => 'Modules\Group\Http\Controllers'], function()
 {

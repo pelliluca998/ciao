@@ -1,9 +1,9 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Type;
-use App\Group;
-use App\Attributo;
-use App\AttributoUser;
+use Modules\User\Entities\Group;
+use Modules\Attributo\Entities\Attributo;
+use Modules\Attributo\Entities\AttributoUser;
 use App\TypeSelect;
 //use Session;
 ?>

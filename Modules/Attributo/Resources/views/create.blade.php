@@ -1,5 +1,5 @@
 <?php
-use App\Attributo;
+use Modules\Attributo\Entities\Attributo;
 use App\Type;
 ?>
 

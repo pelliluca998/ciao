@@ -1,7 +1,7 @@
 <?php
-use App\User;
-use App\Group;
-use App\Attributo;
+use Modules\User\Entities\User;
+use Modules\User\Entities\Group;
+use Modules\Attributo\Entities\Attributo;
 use App\TypeSelect;
 ?>
 

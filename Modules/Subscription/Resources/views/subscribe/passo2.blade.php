@@ -1,8 +1,8 @@
 <?php
-use App\Event;
-use App\EventSpec;
-use App\Week;
-use App\Group;
+use Modules\Event\Entities\Event;
+use Modules\Event\Entities\EventSpec;
+use Modules\Event\Entities\Week;
+use Modules\User\Entities\Group;
 use App\TypeSelect;
 ?>
 
@@ -19,7 +19,7 @@ use App\TypeSelect;
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
 		<div class="panel panel-default">
-		<div class="panel-body">	
+		<div class="panel-body">
 			{!! Form::open(['route' => 'subscribe.savespec']) !!}
 				{!! Form::hidden('id_subscription', $id_subscription) !!}
 				{!! Form::hidden('id_event', $id_event) !!}
@@ -48,69 +48,69 @@ use App\TypeSelect;
 						<th>Pagato</th>
 					@endif
 					</tr></thead>
-	
+
 					@foreach($specs as $spec)
 						<?php
 						$valid = json_decode($spec->valid_for, true);
 						?>
-						@if($valid[$w->id]==1)		
-							<tr>
-								{!! Form::hidden('id_eventspec['.$index.']', $spec->id) !!}
-								{!! Form::hidden('id_week['.$index.']', $w->id) !!}
-								<td>{{$spec->label}}</td>
-								<td>
-								@if($spec->id_type>0)
-									{!! Form::select('valore['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
-								@else
-									@if($spec->id_type==-1)
-										{!! Form::text('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
-									@elseif($spec->id_type==-2)
-										{!! Form::hidden('valore['.$index.']', 0) !!}
-										{!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
-									@elseif($spec->id_type==-3)
-										{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
-									@elseif($spec->id_type==-4)
-										{!! Form::select('valore['.$index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control'])!!}				
-									@endif
-								@endif
-								</td>
-								<td>
-									<?php
-										$price = json_decode($spec->price, true);
-										if(count($price)==0) $price[$w->id]=0;
-									?>
-									{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
-									{!! Form::hidden('costo_2['.$index.']', $price[$w->id]) !!}
-								</td>
-								@if(!Auth::user()->hasRole('user'))
+						@if($valid[$w->id]==1)
+							{!! Form::hidden('id_eventspec['.$index.']', $spec->id) !!}
+							{!! Form::hidden('id_week['.$index.']', $w->id) !!}
+								<tr style="{!! ($spec->hidden?'display:none':'display:') !!}">
+									<td>{{$spec->label}}</td>
 									<td>
-										{!! Form::hidden('pagato_2['.$index.']', 0) !!}
-										@if($price[$w->id]>0)
-											<input type="checkbox" name="pagato_2[{{$index}}]" value="1" class="form-control" />
+									@if($spec->id_type>0)
+										{!! Form::select('valore['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
+									@else
+										@if($spec->id_type==-1)
+											{!! Form::text('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
+										@elseif($spec->id_type==-2)
+											{!! Form::hidden('valore['.$index.']', 0) !!}
+											{!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
+										@elseif($spec->id_type==-3)
+											{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
+										@elseif($spec->id_type==-4)
+											{!! Form::select('valore['.$index.']', Group::where('id_oratorio', Session::get('session_oratorio'))->orderBy('nome', 'ASC')->pluck('nome', 'id'), $spec->valore, ['class' => 'form-control'])!!}
 										@endif
+									@endif
 									</td>
-								@else
-									{!! Form::hidden('pagato_2['.$index.']', 0) !!}
-								@endif
-								
-							</tr>	
+									<td>
+										<?php
+											$price = json_decode($spec->price, true);
+											if(count($price)==0) $price[$w->id]=0;
+										?>
+										{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
+										{!! Form::hidden('costo_2['.$index.']', $price[$w->id]) !!}
+									</td>
+									@if(!Auth::user()->hasRole('user'))
+										<td>
+											{!! Form::hidden('pagato_2['.$index.']', 0) !!}
+											@if($price[$w->id]>0)
+												<input type="checkbox" name="pagato_2[{{$index}}]" value="1" class="form-control" />
+											@endif
+										</td>
+									@else
+										{!! Form::hidden('pagato_2['.$index.']', 0) !!}
+									@endif
+
+								</tr>
 						@php
 						$index++
 						@endphp
 						@endif
-						
+
 					@endforeach
 					</table><br>
 					@endif
 				@endforeach
 				@else
 					<i>Nessuna settimana inserita!</i>
-				@endif		
+				@endif
 			<div class="form-group">
 				{!! Form::submit('Salva e Concludi!', ['class' => 'btn btn-primary form-control']) !!}
 			</div>
-           		{!! Form::close() !!}           		
-                   
+           		{!! Form::close() !!}
+
                 </div>
             </div>
         </div>

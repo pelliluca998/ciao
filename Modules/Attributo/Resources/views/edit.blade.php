@@ -1,5 +1,5 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Type;
 //use Session;
 ?>

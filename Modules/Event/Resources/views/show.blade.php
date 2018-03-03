@@ -1,5 +1,5 @@
 <?php
-use App\Event;
+use Modules\Event\Entities\Event;
 use App\Role;
 use App\Permission;
 use Nayjest\Grids\Components\Base\RenderableRegistry;

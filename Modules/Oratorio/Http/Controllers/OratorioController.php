@@ -8,15 +8,15 @@ use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Http\Requests;
-use App\Oratorio;
+use Modules\Oratorio\Entities\Oratorio;
 use App\License;
 use App\LicenseType;
 use App\OwnerMessage;
 use App\Role;
 use App\RoleUser;
 use App\Permission;
-use App\User;
-use App\UserOratorio;
+use Modules\User\Entities\User;
+use Modules\Oratorio\Entities\UserOratorio;
 use Auth;
 use Input;
 use File;

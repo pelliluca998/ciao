@@ -1,5 +1,5 @@
 <?php
-use App\Oratorio;
+use Modules\Oratorio\Entities\Oratorio;
 use App\License;
 use App\LicenseType;
 ?>

@@ -1,7 +1,7 @@
 <?php
-use App\User;
+use Modules\User\Entities\User;
 use App\Role;
-use App\Group;
+use Modules\User\Entities\Group;
 use App\Permission;
 use App\TypeSelect;
 ?>

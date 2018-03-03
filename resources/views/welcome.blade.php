@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Segresta 2.0</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -47,7 +47,7 @@
                 text-align: center;
                 background-color: rgba(255, 255, 255, 0.80);
                 padding: 5px;
-                
+
             }
 
             .title {
@@ -71,7 +71,7 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))                
+            @if (Route::has('login'))
                 <div class="top-right links">
                     @if (Auth::check())
                         <a href="{{ url('/home') }}">Entra!</a>
@@ -86,9 +86,9 @@
                 <div class="title m-b-md">
                     Benvenuto in Segresta 2.0
                 </div>
-                
+
                 <p style="color: black;">Un nuovo modo di gestire il tuo oratorio</p>
-                
+
             </div>
         </div>
     </body>

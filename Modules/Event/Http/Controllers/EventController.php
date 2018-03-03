@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use App\Event;
-use App\Oratorio;
+use Modules\Event\Entities\Event;
+use Modules\Oratorio\Entities\Oratorio;
 use Session;
 use Input;
 use Entrust;
@@ -127,6 +127,7 @@ class EventController extends Controller
 			'template_file' => 'mimes:docx',
 			'image' => 'mimes:jpeg,jpg,gif,png'
 		], $this->messages);
+		
 		$event = Event::findOrFail($input['id_event']);
 		//$input['active'] = (Input::has('active') && $input['active']) ? true : false;
 		//$input['more_subscriptions'] = (Input::has('more_subscriptions') && $input['more_subscriptions']) ? true : false;
