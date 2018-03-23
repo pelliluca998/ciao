@@ -4,7 +4,7 @@ use App\Role;
 use Modules\Attributo\Entities\Attributo;
 use Modules\Attributo\Entities\AttributoUser;
 use App\Permission;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\User\Entities\Group;
 use Nayjest\Grids\Components\Base\RenderableRegistry;
 use Nayjest\Grids\Components\ColumnHeadersRow;

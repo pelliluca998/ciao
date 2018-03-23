@@ -1,6 +1,6 @@
 <?php
 use Modules\User\Entities\User;
-use App\Type;
+use Modules\Oratorio\Entities\Type;
 //use Session;
 ?>
 

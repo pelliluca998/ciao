@@ -9,8 +9,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use Input;
 use Auth;
-use App\TypeSelect;
-use App\Type;
+use Modules\Oratorio\Entities\TypeSelect;
+use Modules\Oratorio\Entities\Type;
 use Session;
 class TypeSelectController extends Controller
 {

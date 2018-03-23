@@ -2,8 +2,8 @@
 use Modules\Event\Entities\EventSpec;
 use Modules\Event\Entities\Week;
 use Modules\User\Entities\Group;
-use App\Type;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\Type;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Attributo\Entities\Attributo;
 ?>
 

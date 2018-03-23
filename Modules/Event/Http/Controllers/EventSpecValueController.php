@@ -22,7 +22,7 @@ use Module;
 use Input;
 use Session;
 use Auth;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Event\Entities\Week;
 
 class EventSpecValueController extends Controller

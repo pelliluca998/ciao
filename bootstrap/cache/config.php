@@ -1,6 +1,7 @@
 <?php return array (
   'app' => 
   array (
+    'owner_email' => 'roberto.santini89@gmail.com',
     'name' => 'Segresta 2.0',
     'env' => 'local',
     'debug' => true,

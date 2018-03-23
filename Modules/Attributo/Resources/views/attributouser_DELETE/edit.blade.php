@@ -1,10 +1,10 @@
 <?php
 use Modules\User\Entities\User;
-use App\Type;
+use Modules\Oratorio\Entities\Type;
 use Modules\User\Entities\Group;
 use Modules\Attributo\Entities\Attributo;
 use Modules\Attributo\Entities\AttributoUser;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 //use Session;
 ?>
 

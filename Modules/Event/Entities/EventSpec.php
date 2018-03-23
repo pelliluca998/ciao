@@ -3,7 +3,7 @@
 namespace Modules\Event\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 
 class EventSpec extends Model
 {

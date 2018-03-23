@@ -1,6 +1,6 @@
 <?php
 use Modules\Attributo\Entities\Attributo;
-use App\Type;
+use Modules\Oratorio\Entities\Type;
 ?>
 
 @extends('layouts.app')

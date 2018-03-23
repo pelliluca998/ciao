@@ -8,7 +8,7 @@ use Modules\User\Entities\Group;
 use Modules\Event\Entities\Week;
 
 use App\SpecSubscription;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Subscription\Entities\Subscription;
 
 ?>

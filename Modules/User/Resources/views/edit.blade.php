@@ -4,7 +4,7 @@ use App\Role;
 use App\RoleUser;
 use Modules\Attributo\Entities\Attributo;
 use Modules\Attributo\Entities\AttributoUser;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\User\Entities\Group;
 ?>
 

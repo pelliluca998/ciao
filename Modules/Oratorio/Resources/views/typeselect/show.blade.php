@@ -3,7 +3,7 @@ use Modules\User\Entities\User;
 use App\Role;
 use Modules\User\Entities\Group;
 use App\Permission;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 ?>
 
 <?php

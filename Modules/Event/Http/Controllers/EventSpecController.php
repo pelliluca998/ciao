@@ -12,7 +12,7 @@ use Modules\Event\Entities\EventSpec;
 use Modules\Event\Entities\EventSpecValue;
 use Modules\Subscription\Entities\Subscription;
 use Modules\Event\Entities\Event;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Event\Entities\Week;
 use Auth;
 use Input;

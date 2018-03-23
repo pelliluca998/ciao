@@ -2,7 +2,7 @@
 use Modules\User\Entities\User;
 use Modules\User\Entities\Group;
 use Modules\Attributo\Entities\Attributo;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 ?>
 
 @extends('layouts.app')

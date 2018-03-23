@@ -9,7 +9,7 @@ use Modules\Subscription\Entities\Subscription;
 use Modules\Oratorio\Entities\Oratorio;
 use App\Classe;
 use Modules\Event\Entities\EventSpecValue;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Attributo\Entities\AttributoUser;
 ?>
 

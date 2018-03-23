@@ -11,7 +11,7 @@ use App\Classe;
 use Modules\Event\Entities\EventSpecValue;
 use Modules\Event\Entities\EventSpec;
 use Modules\Elenco\Entities\ElencoValue;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Attributo\Entities\Attributo;
 use Modules\Attributo\Entities\AttributoUser;
 ?>

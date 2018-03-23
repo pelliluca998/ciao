@@ -2,9 +2,9 @@
 use Modules\User\Entities\User;
 use App\Role;
 use Modules\User\Entities\Group;
-use App\Type;
+use Modules\Oratorio\Entities\Type;
 use App\Permission;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Nayjest\Grids\Components\Base\RenderableRegistry;
 use Nayjest\Grids\Components\ColumnHeadersRow;
 use Nayjest\Grids\Components\ColumnsHider;

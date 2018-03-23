@@ -9,7 +9,7 @@ use Modules\Event\Entities\EventSpec;
 use App\SpecSubscription;
 use Modules\Subscription\Entities\Subscription;
 use Modules\Event\Entities\Event;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 use Modules\Oratorio\Http\Controllers\TypeController;
 
 ?>

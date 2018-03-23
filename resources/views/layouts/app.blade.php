@@ -1,6 +1,6 @@
 <?php
 use Modules\Attributo\Entities\Attributo;
-use App\Type;
+use Modules\Oratorio\Entities\Type;
 use Modules\Event\Entities\EventSpec;
 use Modules\Event\Entities\Event;
 use Modules\Oratorio\Entities\Oratorio;
@@ -104,7 +104,7 @@ use Modules\Oratorio\Entities\Oratorio;
 			    						<?php Session::put('work_event', $oratorio->last_id_event);
 			    						$event=Event::where('id', Session::get('work_event'))->first();
 			    						?>
-			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{{strip_tags($event->descrizione)}}</i></div>
+			    						<div style="padding: 5px; float:left; margin-right: 5px; background-color: #FF6347;" ><b>{{$event->nome}}</b> - <i>{!! strip_tags($event->descrizione) !!}</i></div>
 			    						<?php $buttons=$buttons_1; ?>
 			    					@else
 			    						<div style="float:left; margin-right: 5px;">Non hai specificato nessun evento!</div>

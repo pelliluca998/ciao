@@ -3,7 +3,7 @@ use Modules\Event\Entities\Event;
 use Modules\Event\Entities\EventSpec;
 use Modules\Event\Entities\Week;
 use Modules\User\Entities\Group;
-use App\TypeSelect;
+use Modules\Oratorio\Entities\TypeSelect;
 ?>
 
 @extends('layouts.app')
