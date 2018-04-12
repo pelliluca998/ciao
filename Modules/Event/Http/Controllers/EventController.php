@@ -7,7 +7,10 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Modules\Event\Entities\Event;
+use Modules\Event\Entities\Week;
+use Modules\Event\Entities\EventSpec;
 use Modules\Oratorio\Entities\Oratorio;
+use Modules\Elenco\Entities\Elenco;
 use Session;
 use Input;
 use Entrust;
@@ -48,6 +51,57 @@ class EventController extends Controller
 		$oratorio->save();
 		Session::put('work_event', $id_event);
 		return redirect()->route('subscription.index');
+	}
+
+	/**
+	** Clona un'evento in un nuovo evento, comprese tutte le specifiche
+	**/
+
+	public function clone(Request $request){
+		$input = $request->all();
+		$id_event = $input['id_event'];
+		$event = Event::find($id_event);
+		$newEvent = $event->replicate();
+		$newEvent->nome = "Copia di ".$event->nome;
+		$newEvent->save();
+		//specs
+		$event_specs = EventSpec::where('id_event', $event->id)->get();
+		foreach($event_specs as $spec){
+			$newSpec = $spec->replicate();
+			$newSpec->id_event = $newEvent->id;
+			$newSpec->save();
+		}
+		//weeks
+		$weeks = Week::where('id_event', $event->id)->get();
+		foreach($weeks as $week){
+			$newWeek = $week->replicate();
+			$newWeek->id_event = $newEvent->id;
+			$newWeek->save();
+			//aggiorno l'id delle settimane
+			$event_specs = EventSpec::where('id_event', $newEvent->id)->get();
+			foreach($event_specs as $spec){
+				$pattern = '/"'.$week->id.'"/';
+				$sostitution = '"'.$newWeek->id.'"';
+				$spec->valid_for = preg_replace($pattern, $sostitution, $spec->valid_for);
+				$spec->price = preg_replace($pattern, $sostitution, $spec->price);
+				$spec->save();
+			}
+		}
+
+		//elenco
+		$elencos = Elenco::where('id_event', $event->id)->get();
+			if(count($elencos)>0){
+			foreach($elencos as $elenco){
+				$newElenco = $elenco->replicate();
+				$newElenco->id_event = $newEvent->id;
+				$newElenco->save();
+			}
+		}
+
+		Session::put('work_event', $newEvent->id);
+		Session::flash('flash_message', 'Evento clonato correttamente!');
+		return redirect()->route('events.index');
+
 	}
 
 	/**
@@ -127,7 +181,7 @@ class EventController extends Controller
 			'template_file' => 'mimes:docx',
 			'image' => 'mimes:jpeg,jpg,gif,png'
 		], $this->messages);
-		
+
 		$event = Event::findOrFail($input['id_event']);
 		//$input['active'] = (Input::has('active') && $input['active']) ? true : false;
 		//$input['more_subscriptions'] = (Input::has('more_subscriptions') && $input['more_subscriptions']) ? true : false;

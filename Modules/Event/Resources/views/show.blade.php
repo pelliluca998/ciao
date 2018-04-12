@@ -77,6 +77,12 @@ use Nayjest\Grids\ObjectDataRow;
                             "toggle" => "",
                             "class" => "btn-primary",
                              "icon" => ""],
+                             ["label" => "Clona",
+                              "desc" => "",
+                             "url" => "events.clone",
+                             "class" => "btn-primary",
+                             "toggle" => "",
+                             "icon" => ""],
                             ["label" => "Elimina evento",
                              "desc" => "L'operazione è irreversibile!",
                             "url" => "events.destroy",
@@ -110,7 +116,7 @@ use Nayjest\Grids\ObjectDataRow;
 			</div>
 
 		<a href='events/create' class="btn btn-primary">Aggiungi nuovo evento</a>
-			<?php			
+			<?php
 			$query = (new Event)
 			    ->newQuery()
 			    ->where('id_oratorio', '=', Session::get('session_oratorio'));
@@ -123,7 +129,7 @@ use Nayjest\Grids\ObjectDataRow;
 			# See all supported data providers in sources
 			->setDataProvider(new EloquentDataProvider($query))
 			# Setup caching, value in minutes, turned off in debug mode
-			->setCachingTime(5) 
+			->setCachingTime(5)
 			# Setup table columns
 			->setColumns([
            			# simple results numbering, not related to table PK or any obtained data
@@ -138,7 +144,7 @@ use Nayjest\Grids\ObjectDataRow;
 				    (new FilterConfig)
 				        ->setName('nome')
 				        ->setOperator(FilterConfig::OPERATOR_LIKE)
-				)				
+				)
 				# sorting buttons will be added to header, DB query will be modified
 				->setSortable(true),
 				(new FieldConfig)
@@ -148,7 +154,7 @@ use Nayjest\Grids\ObjectDataRow;
 				    (new FilterConfig)
 				        ->setName('anno')
 				        ->setOperator(FilterConfig::OPERATOR_LIKE)
-				)				
+				)
 				# sorting buttons will be added to header, DB query will be modified
 				->setSortable(true),
 				(new FieldConfig)
@@ -182,7 +188,7 @@ use Nayjest\Grids\ObjectDataRow;
         		])
 			# Setup additional grid components
 			->setComponents([
-				# Renders table header (table>thead)				
+				# Renders table header (table>thead)
 				(new THead)
                 		# Setup inherited components
                			->setComponents([
@@ -206,7 +212,7 @@ use Nayjest\Grids\ObjectDataRow;
 						   	'created_at',
 							])
 						,
-						# Submit button for filters. 
+						# Submit button for filters.
 						# Place it anywhere in the grid (grid is rendered inside form by default).
 						(new HtmlTag)
                                 			->setTagName('button')
@@ -223,7 +229,7 @@ use Nayjest\Grids\ObjectDataRow;
 				# Renders table footer (table>tfoot)
 				(new TFoot)
 				->addComponent(
-					# Renders row containing one cell 
+					# Renders row containing one cell
 					# with colspan attribute equal to the table columns count
 					(new OneCellRow)
 					# Pagination control
@@ -234,8 +240,8 @@ use Nayjest\Grids\ObjectDataRow;
 
 	echo $grid->render();
 			?>
-           		
-                   
+
+
                 </div>
             </div>
         </div>
@@ -254,7 +260,7 @@ $(document).ready(function(){
 	modal.find('#name').text(name);
 	modal.find("[id*='id_event']").val(eventid);
 	});
-	
+
 	$('[data-toggle=confirmation]').confirmation({
 		rootSelector: '[data-toggle=confirmation]',
 		title: 'Sicuro di eliminare l\'evento selezionato?',

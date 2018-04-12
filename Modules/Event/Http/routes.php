@@ -4,6 +4,7 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:events'], 'pr
 {
 	Route::resource('events', 'EventController', ['only' => ['index', 'update', 'create', 'store']]);
 	Route::get('events/edit', ['as' => 'events.edit', 'uses' => 'EventController@edit']);
+	Route::get('events/clone', ['as' => 'events.clone', 'uses' => 'EventController@clone']);
 	Route::get('events/work', ['as' => 'events.work', 'uses' => 'EventController@work']);
 	Route::get('events/destroy', ['as' => 'events.destroy', 'uses' => 'EventController@destroy']);
 	Route::resource('week', 'WeekController', ['only' => ['index', 'update', 'create', 'store']]);
