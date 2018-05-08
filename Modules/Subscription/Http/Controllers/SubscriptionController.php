@@ -32,6 +32,7 @@ use DB;
 use URL;
 use Mail;
 use Storage;
+use Yajra\DataTables\DataTables;
 
 class SubscriptionController extends Controller
 {
@@ -46,6 +47,80 @@ class SubscriptionController extends Controller
 		Session::put('work_event', $id_event);
 		return redirect()->route('subscription.index');
 	}
+
+	public function action(Request $request){
+    $input = $request->all();
+    if(!$request->has('check_user')){
+      Session::flash("flash_message", "Devi selezionare almeno un utente!");
+      return redirect()->route('subscription.index');
+    }
+    $check_user = $input['check_user'];
+    $json = json_encode($check_user);
+    switch($input['action']){
+      case 'approva':
+      return redirect()->route('subscription.approve', ['check' => $json]);
+      break;
+      case 'cancella':
+      return redirect()->route('subscription.batch_delete', ['check' => $json]);
+      break;
+    }
+  }
+
+	public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
+
+    $builder = Subscription::query()
+    ->select('subscriptions.*')
+		->where('id_event', Session::get('work_event'))
+    ->orderBy('created_at', 'DESC');
+
+		$event = Event::find(Session::get('work_event'));
+
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($sub){
+      $action = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#subOp' data-name='".$sub->name."' data-subid='".$sub->id."'><i class='fas fa-cogs fa-2x' aria-hidden='true'></i> </button>";
+      return $action;
+    })
+    ->addColumn('check', function ($sub){
+      $check = "<input name='check_user[]' id='check_users_".$sub->id."' type='checkbox' value='".$sub->id."' class='form-control'/>";
+      return $check;
+    })
+		->addColumn('id_user', function ($sub) use ($event){
+			if($event->stampa_anagrafica==0){
+				$array_specifiche = json_decode($event->spec_iscrizione);
+				$anagrafica = EventSpecValue::where(['id_subscription' => $sub->id])->whereIn('id_eventspec', $array_specifiche)->get();
+				if(count($anagrafica)>0){
+					$val = "";
+					foreach($anagrafica as $a){
+						$val .= $a->valore." ";
+					}
+					return $val;
+				}else{
+					return "<i style='font-size:12px;'>Specifica non esistente!</i>";
+				}
+			}else{
+				try{
+					return User::findOrFail($sub->id_user)->full_name;
+				}catch(\Exception $e){
+					return "Utente non esistente";
+				}
+			}
+    })
+		->addColumn('specs', function ($sub){
+			$click = "load_spec_subscription(".$sub->id.")";
+      $check = "<i style= \"color:#3e93c3; cursor: pointer;\" onclick=\"$click\" class='fa fa-flag fa-2x' aria-hidden='true'></i>";
+      return $check;
+    })
+		->addColumn('confirmed', function ($sub){
+			if($sub->confirmed==1){
+        return "<i class='far fa-check-circle fa-2x'></i>";
+      }else{
+        return "<i class='far fa-circle fa-2x'></i>";
+      }
+    })
+    ->rawColumns(['specs', 'action', 'check', 'id_user', 'confirmed'])
+    ->toJson();
+  }
 
 	public function usersubscription(){
 		return view('subscription::usersubscriptions');
@@ -102,7 +177,7 @@ class SubscriptionController extends Controller
 	*/
 	public function edit(Request $request){
 		$input = $request->all();
-		$id = $input['id_sub'];
+		$id = $input['id_subscription'];
 		$subscription = Subscription::findOrFail($id);
 		$event = Event::findOrfail($subscription->id_event);
 		if($event->id_oratorio == Session::get('session_oratorio')){
@@ -156,7 +231,7 @@ class SubscriptionController extends Controller
 	*/
 	public function destroy(Request $request){
 		$input = $request->all();
-		$id = $input['id_sub'];
+		$id = $input['id_subscription'];
 
 		$this->delete_subscription($id);
 
@@ -422,12 +497,19 @@ class SubscriptionController extends Controller
 		}
 
 		$json = json_encode(array_values(array_unique($user_array)));
-		if($type=='sms'){
-			return redirect()->route('sms.create', ['check' => $json]);
-		}else if($type=='email'){
-			return redirect()->route('email.create', ['check' => $json]);
-		}else if($type=='telegram'){
-			return redirect()->route('telegram.create', ['check' => $json]);
+		switch($type){
+			case "sms":
+			return redirect()->route('sms.create', ['users' => $json]);
+			break;
+			case "email":
+			return redirect()->route('email.create', ['users' => $json]);
+			break;
+			case "telegram":
+			return redirect()->route('telegram.create', ['users' => $json]);
+			break;
+			case "whatsapp":
+			return redirect()->route('whatsapp.create', ['users' => $json]);
+			break;
 		}
 	}
 
@@ -596,10 +678,15 @@ class SubscriptionController extends Controller
 				$template->cloneBlock('dati_anagrafici');
 			}else{
 				$template->replaceBlock('dati_anagrafici', 'dati2');
-				$spec = EventSpecValue::where('id_eventspec', $event->spec_iscrizione)->where('id_subscription', $sub->id)->get();
-		    if(count($spec)>0){
-		       $template->setValue('nominativo', $spec[0]->valore);
-		    }else{
+				$array_specifiche = json_decode($event->spec_iscrizione);
+				$anagrafica = EventSpecValue::where(['id_subscription' => $sub->id])->whereIn('id_eventspec', $array_specifiche)->get();
+				if(count($anagrafica)>0){
+					$nominativo = "";
+					foreach($anagrafica as $a){
+						$nominativo .= $a->valore." ";
+					}
+					$template->setValue('nominativo', $nominativo);
+				}else{
 					$template->setValue('nominativo', 'Valore non valido!');
 				}
 			}

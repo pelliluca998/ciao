@@ -8,7 +8,7 @@ use Session;
 class Type extends Model
 {
 	protected $fillable = ['label', 'description', 'id_oratorio'];
-	
+
 	public static function getTypesBase(){
 		$type_base = array();
 		//text type
@@ -30,11 +30,11 @@ class Type extends Model
 		$type->description = "Numero";
 		array_push($type_base, $type);
 		//Group type
-		$type = new Type();
-		$type->id = -4;
-		$type->label = "Gruppo";
-		$type->description = "Gruppo";
-		array_push($type_base, $type);
+		// $type = new Type();
+		// $type->id = -4;
+		// $type->label = "Gruppo";
+		// $type->description = "Gruppo";
+		// array_push($type_base, $type);
 		return $type_base;
 	}
 

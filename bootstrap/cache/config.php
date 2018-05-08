@@ -44,14 +44,13 @@
       26 => 'Telegram\\Bot\\Laravel\\TelegramServiceProvider',
       27 => 'Nwidart\\Modules\\LaravelModulesServiceProvider',
       28 => 'Spatie\\CookieConsent\\CookieConsentServiceProvider',
-      29 => 'Jimmyjs\\ReportGenerator\\ServiceProvider',
-      30 => 'Nayjest\\Grids\\ServiceProvider',
-      31 => 'Collective\\Html\\HtmlServiceProvider',
-      32 => 'Lavary\\Menu\\ServiceProvider',
-      33 => 'App\\Providers\\AppServiceProvider',
-      34 => 'App\\Providers\\AuthServiceProvider',
-      35 => 'App\\Providers\\EventServiceProvider',
-      36 => 'App\\Providers\\RouteServiceProvider',
+      29 => 'Nayjest\\Grids\\ServiceProvider',
+      30 => 'Collective\\Html\\HtmlServiceProvider',
+      31 => 'Lavary\\Menu\\ServiceProvider',
+      32 => 'App\\Providers\\AppServiceProvider',
+      33 => 'App\\Providers\\AuthServiceProvider',
+      34 => 'App\\Providers\\EventServiceProvider',
+      35 => 'App\\Providers\\RouteServiceProvider',
     ),
     'aliases' => 
     array (
@@ -149,9 +148,9 @@
       'pusher' => 
       array (
         'driver' => 'pusher',
-        'key' => '',
-        'secret' => '',
-        'app_id' => '',
+        'key' => NULL,
+        'secret' => NULL,
+        'app_id' => NULL,
         'options' => 
         array (
         ),
@@ -238,6 +237,11 @@
   array (
     'name' => 'Contabilita',
   ),
+  'cookie-consent' => 
+  array (
+    'enabled' => true,
+    'cookie_name' => 'laravel_cookie_consent',
+  ),
   'database' => 
   array (
     'fetch' => 5,
@@ -291,6 +295,109 @@
       ),
     ),
   ),
+  'datatables' => 
+  array (
+    'search' => 
+    array (
+      'smart' => true,
+      'multi_term' => true,
+      'case_insensitive' => true,
+      'use_wildcards' => false,
+    ),
+    'index_column' => 'DT_Row_Index',
+    'engines' => 
+    array (
+      'eloquent' => 'Yajra\\DataTables\\EloquentDataTable',
+      'query' => 'Yajra\\DataTables\\QueryDataTable',
+      'collection' => 'Yajra\\DataTables\\CollectionDataTable',
+    ),
+    'builders' => 
+    array (
+    ),
+    'nulls_last_sql' => '%s %s NULLS LAST',
+    'error' => NULL,
+    'columns' => 
+    array (
+      'excess' => 
+      array (
+        0 => 'rn',
+        1 => 'row_num',
+      ),
+      'escape' => '*',
+      'raw' => 
+      array (
+        0 => 'action',
+      ),
+      'blacklist' => 
+      array (
+        0 => 'password',
+        1 => 'remember_token',
+      ),
+      'whitelist' => '*',
+    ),
+    'json' => 
+    array (
+      'header' => 
+      array (
+      ),
+      'options' => 0,
+    ),
+  ),
+  'datatables-buttons' => 
+  array (
+    'namespace' => 
+    array (
+      'base' => 'DataTables',
+      'model' => '',
+    ),
+    'pdf_generator' => 'snappy',
+    'snappy' => 
+    array (
+      'options' => 
+      array (
+        'no-outline' => true,
+        'margin-left' => '0',
+        'margin-right' => '0',
+        'margin-top' => '10mm',
+        'margin-bottom' => '10mm',
+      ),
+      'orientation' => 'landscape',
+    ),
+    'parameters' => 
+    array (
+      'dom' => 'Bfrtip',
+      'order' => 
+      array (
+        0 => 
+        array (
+          0 => 0,
+          1 => 'desc',
+        ),
+      ),
+      'buttons' => 
+      array (
+        0 => 'create',
+        1 => 'export',
+        2 => 'print',
+        3 => 'reset',
+        4 => 'reload',
+      ),
+    ),
+  ),
+  'datatables-html' => 
+  array (
+    'table' => 
+    array (
+      'class' => 'table',
+      'id' => 'dataTableBuilder',
+    ),
+    'callback' => 
+    array (
+      0 => '$',
+      1 => '$.',
+      2 => 'function',
+    ),
+  ),
   'dompdf' => 
   array (
     'show_warnings' => false,
@@ -311,7 +418,7 @@
       'DOMPDF_ENABLE_PHP' => false,
       'DOMPDF_ENABLE_JAVASCRIPT' => true,
       'DOMPDF_ENABLE_REMOTE' => true,
-      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1,
+      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1000000000000001,
       'DOMPDF_ENABLE_CSS_FLOAT' => false,
       'DOMPDF_ENABLE_HTML5PARSER' => false,
     ),
@@ -341,6 +448,39 @@
   ),
   'excel' => 
   array (
+    'exports' => 
+    array (
+      'chunk_size' => 1000,
+      'temp_path' => '/tmp',
+      'csv' => 
+      array (
+        'delimiter' => ',',
+        'enclosure' => '"',
+        'line_ending' => '
+',
+        'use_bom' => false,
+        'include_separator_line' => false,
+        'excel_compatibility' => false,
+      ),
+    ),
+    'extension_detector' => 
+    array (
+      'xlsx' => 'Xlsx',
+      'xlsm' => 'Xlsx',
+      'xltx' => 'Xlsx',
+      'xltm' => 'Xlsx',
+      'xls' => 'Xls',
+      'xlt' => 'Xls',
+      'ods' => 'Ods',
+      'ots' => 'Ods',
+      'slk' => 'Slk',
+      'xml' => 'Xml',
+      'gnumeric' => 'Gnumeric',
+      'htm' => 'Html',
+      'html' => 'Html',
+      'csv' => 'Csv',
+      'pdf' => 'Dompdf',
+    ),
     'cache' => 
     array (
       'enable' => true,
@@ -407,7 +547,6 @@
     'export' => 
     array (
       'autosize' => true,
-      'autosize-method' => 'approx',
       'generate_heading_by_indices' => true,
       'merged_cell_alignment' => 'left',
       'calculate' => false,
@@ -623,6 +762,24 @@
         'region' => 'your-region',
         'bucket' => 'your-bucket',
       ),
+    ),
+  ),
+  'generators' => 
+  array (
+    'config' => 
+    array (
+      'model_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/model.txt',
+      'scaffold_model_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/scaffolding/model.txt',
+      'controller_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/controller.txt',
+      'scaffold_controller_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/scaffolding/controller.txt',
+      'migration_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/migration.txt',
+      'seed_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/seed.txt',
+      'view_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/view.txt',
+      'model_target_path' => '/var/www/segresta/app',
+      'controller_target_path' => '/var/www/segresta/app/Http/Controllers',
+      'migration_target_path' => '/var/www/segresta/database/migrations',
+      'seed_target_path' => '/var/www/segresta/database/seeds',
+      'view_target_path' => '/var/www/segresta/resources/views',
     ),
   ),
   'group' => 
@@ -917,13 +1074,10 @@
     ),
     'compiled' => '/var/www/segresta/storage/framework/views',
   ),
-  'report-generator' => 
+  'whatsapp' => 
   array (
-    'flush' => false,
-  ),
-  'cookie-consent' => 
-  array (
-    'enabled' => true,
-    'cookie_name' => 'laravel_cookie_consent',
+    'name' => 'Whatsapp',
+    'waboxapp_key' => '531a1d356dad6427164434d9c034bcb85aed838e9dbb2',
+    'waboxapp_phone' => '393662294145',
   ),
 );

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-
 use Modules\User\Entities\User;
 use Modules\Event\Entities\Week;
 use Modules\Event\Entities\Event;
@@ -24,8 +23,8 @@ use Entrust;
 use Carbon;
 use Input;
 use Excel;
-use PdfReport;
 use Storage;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -51,13 +50,30 @@ class ReportController extends Controller
 
 	public function gen_eventspec(Request $request){
 		$input = $request->all();
-		return view('report::eventspecreport', ['input' => $input]);
+		switch($input['format']){
+			case 'pdf':
+			$pdf = PDF::loadView('report::eventspecreport', compact('input'))->setPaper('a4', 'landscape');
+	    return $pdf->download(camel_case("Report").".pdf");
+			break;
+			case 'excel': return Excel::download(new ReportExport($input), 'report.xlsx');
+			break;
+			case 'html': return view('report::eventspecreport', ['input' => $input]);
+			break;
+		}
 	}
 
 	public function gen_weekspec(Request $request){
 		$input = $request->all();
-		return view ('report::weekreport', ['input' => $input]);
-		//var_dump($input);
+		switch($input['format']){
+			case 'pdf':
+			$pdf = PDF::loadView('report::weekreport', compact('input'))->setPaper('a4', 'landscape');
+	    return $pdf->download(camel_case("Report").".pdf");
+			break;
+			case 'excel': return Excel::download(new ReportExport($input), 'report.xlsx');
+			break;
+			case 'html': return view('report::weekreport', ['input' => $input]);
+			break;
+		}
 	}
 
 	public function gen_user(Request $request){

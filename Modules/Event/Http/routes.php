@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'role:admin|owner', 'license:events'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:event'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
 {
 	Route::resource('events', 'EventController', ['only' => ['index', 'update', 'create', 'store']]);
 	Route::get('events/edit', ['as' => 'events.edit', 'uses' => 'EventController@edit']);
@@ -14,9 +14,11 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:events'], 'pr
 	Route::post('week/savecampos',['as' => 'week.savecampos', 'uses' => 'WeekController@savecampos']);
 	Route::get('eventspecvalues/{id_sub}', ['as' => 'subscription.show_eventspecvalues', 'uses' => 'EventSpecController@show_eventspecvalues']);
 	Route::get('events/strumenti', ['as' => 'events.strumenti', 'uses' => 'EventController@strumenti']);
+	Route::get('events/getData', ['as' =>'events.data', 'uses' => 'EventController@data']);
+	Route::get('week/getData', ['as' =>'week.data', 'uses' => 'WeekController@data']);
 });
 
-Route::group(['middleware' => ['web', 'role:admin|owner', 'license:events'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:event'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
 {
 	Route::get('eventspecs/show', ['as' => 'eventspecs.show', 'uses' => 'EventSpecController@show']);
 	Route::post('eventspecs/save',['as' => 'eventspecs.save', 'uses' => 'EventSpecController@save']);

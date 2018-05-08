@@ -1,0 +1,373 @@
+[21-Apr-2018 17:05:27 Europe/Rome] PHP Parse error:  syntax error, unexpected '?' in /var/www/segresta/vendor/symfony/http-foundation/Response.php on line 499
+[21-Apr-2018 17:05:27 Europe/Rome] PHP Fatal error:  Exception thrown without a stack frame in Unknown on line 0
+[21-Apr-2018 17:05:34 Europe/Rome] PHP Parse error:  syntax error, unexpected '?' in /var/www/segresta/vendor/symfony/http-foundation/Response.php on line 499
+[21-Apr-2018 17:05:34 Europe/Rome] PHP Fatal error:  Exception thrown without a stack frame in Unknown on line 0
+[04-May-2018 10:00:14 Europe/Rome] PHP Fatal error:  Class Modules\Report\Http\Controllers\ReportController contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (Maatwebsite\Excel\Concerns\FromView::view) in /var/www/segresta/Modules/Report/Http/Controllers/ReportController.php on line 32
+[04-May-2018 10:00:14 Europe/Rome] PHP Stack trace:
+[04-May-2018 10:00:14 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[04-May-2018 10:00:14 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[04-May-2018 10:00:14 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[04-May-2018 10:00:14 Europe/Rome] PHP   4. Illuminate\Routing\Pipeline->then() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:151
+[04-May-2018 10:00:14 Europe/Rome] PHP   5. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:102
+[04-May-2018 10:00:14 Europe/Rome] PHP   6. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:00:14 Europe/Rome] PHP   7. Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:00:14 Europe/Rome] PHP   8. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/CheckForMaintenanceMode.php:46
+[04-May-2018 10:00:14 Europe/Rome] PHP   9. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:00:14 Europe/Rome] PHP  10. Spatie\CookieConsent\CookieConsentMiddleware->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:00:14 Europe/Rome] PHP  11. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/spatie/laravel-cookie-consent/src/CookieConsentMiddleware.php:21
+[04-May-2018 10:00:14 Europe/Rome] PHP  12. App\Http\Kernel->Illuminate\Foundation\Http\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:30
+[04-May-2018 10:00:14 Europe/Rome] PHP  13. Illuminate\Routing\Router->dispatch() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:176
+[04-May-2018 10:00:14 Europe/Rome] PHP  14. Illuminate\Routing\Router->dispatchToRoute() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:590
+[04-May-2018 10:00:14 Europe/Rome] PHP  15. Illuminate\Routing\Router->runRoute() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:601
+[04-May-2018 10:00:14 Europe/Rome] PHP  16. Illuminate\Routing\Router->runRouteWithinStack() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:635
+[04-May-2018 10:00:14 Europe/Rome] PHP  17. Illuminate\Routing\Router->gatherRouteMiddleware() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:651
+[04-May-2018 10:00:14 Europe/Rome] PHP  18. Illuminate\Routing\Route->gatherMiddleware() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:671
+[04-May-2018 10:00:14 Europe/Rome] PHP  19. Illuminate\Routing\Route->controllerMiddleware() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:757
+[04-May-2018 10:00:14 Europe/Rome] PHP  20. Illuminate\Routing\Route->getController() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:796
+[04-May-2018 10:00:14 Europe/Rome] PHP  21. Illuminate\Foundation\Application->make() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:226
+[04-May-2018 10:00:14 Europe/Rome] PHP  22. Illuminate\Foundation\Application->make() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:732
+[04-May-2018 10:00:14 Europe/Rome] PHP  23. Illuminate\Foundation\Application->resolve() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:586
+[04-May-2018 10:00:14 Europe/Rome] PHP  24. Illuminate\Foundation\Application->build() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:631
+[04-May-2018 10:00:14 Europe/Rome] PHP  25. ReflectionClass->__construct() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:752
+[04-May-2018 10:00:14 Europe/Rome] PHP  26. spl_autoload_call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:752
+[04-May-2018 10:00:14 Europe/Rome] PHP  27. Composer\Autoload\ClassLoader->loadClass() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:752
+[04-May-2018 10:00:14 Europe/Rome] PHP  28. Composer\Autoload\includeFile() /var/www/segresta/vendor/composer/ClassLoader.php:301
+[04-May-2018 10:00:14 Europe/Rome] PHP  29. include() /var/www/segresta/vendor/composer/ClassLoader.php:412
+[04-May-2018 10:01:26 Europe/Rome] PHP Fatal error:  Declaration of Modules\Report\Http\Controllers\ReportController::view(Illuminate\Http\Request $request): Illuminate\Contracts\View\View must be compatible with Maatwebsite\Excel\Concerns\FromView::view(): Illuminate\Contracts\View\View in /var/www/segresta/Modules/Report/Http/Controllers/ReportController.php on line 32
+[04-May-2018 10:01:26 Europe/Rome] PHP Stack trace:
+[04-May-2018 10:01:26 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[04-May-2018 10:01:26 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[04-May-2018 10:01:26 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[04-May-2018 10:01:26 Europe/Rome] PHP   4. Illuminate\Routing\Pipeline->then() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:151
+[04-May-2018 10:01:26 Europe/Rome] PHP   5. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:102
+[04-May-2018 10:01:26 Europe/Rome] PHP   6. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:01:26 Europe/Rome] PHP   7. Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:01:26 Europe/Rome] PHP   8. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/CheckForMaintenanceMode.php:46
+[04-May-2018 10:01:26 Europe/Rome] PHP   9. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:01:26 Europe/Rome] PHP  10. Spatie\CookieConsent\CookieConsentMiddleware->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:01:26 Europe/Rome] PHP  11. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/spatie/laravel-cookie-consent/src/CookieConsentMiddleware.php:21
+[04-May-2018 10:01:26 Europe/Rome] PHP  12. App\Http\Kernel->Illuminate\Foundation\Http\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:30
+[04-May-2018 10:01:26 Europe/Rome] PHP  13. Illuminate\Routing\Router->dispatch() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:176
+[04-May-2018 10:01:26 Europe/Rome] PHP  14. Illuminate\Routing\Router->dispatchToRoute() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:590
+[04-May-2018 10:01:26 Europe/Rome] PHP  15. Illuminate\Routing\Router->runRoute() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:601
+[04-May-2018 10:01:26 Europe/Rome] PHP  16. Illuminate\Routing\Router->runRouteWithinStack() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:635
+[04-May-2018 10:01:26 Europe/Rome] PHP  17. Illuminate\Routing\Router->gatherRouteMiddleware() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:651
+[04-May-2018 10:01:26 Europe/Rome] PHP  18. Illuminate\Routing\Route->gatherMiddleware() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:671
+[04-May-2018 10:01:26 Europe/Rome] PHP  19. Illuminate\Routing\Route->controllerMiddleware() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:757
+[04-May-2018 10:01:26 Europe/Rome] PHP  20. Illuminate\Routing\Route->getController() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:796
+[04-May-2018 10:01:26 Europe/Rome] PHP  21. Illuminate\Foundation\Application->make() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:226
+[04-May-2018 10:01:26 Europe/Rome] PHP  22. Illuminate\Foundation\Application->make() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:732
+[04-May-2018 10:01:26 Europe/Rome] PHP  23. Illuminate\Foundation\Application->resolve() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:586
+[04-May-2018 10:01:26 Europe/Rome] PHP  24. Illuminate\Foundation\Application->build() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:631
+[04-May-2018 10:01:26 Europe/Rome] PHP  25. ReflectionClass->__construct() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:752
+[04-May-2018 10:01:26 Europe/Rome] PHP  26. spl_autoload_call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:752
+[04-May-2018 10:01:26 Europe/Rome] PHP  27. Composer\Autoload\ClassLoader->loadClass() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:752
+[04-May-2018 10:01:26 Europe/Rome] PHP  28. Composer\Autoload\includeFile() /var/www/segresta/vendor/composer/ClassLoader.php:301
+[04-May-2018 10:01:26 Europe/Rome] PHP  29. include() /var/www/segresta/vendor/composer/ClassLoader.php:412
+[04-May-2018 10:13:38 Europe/Rome] PHP Fatal error:  Declaration of Modules\Report\Http\Controllers\ReportExport::view(): Modules\Report\Http\Controllers\View must be compatible with Maatwebsite\Excel\Concerns\FromView::view(): Illuminate\Contracts\View\View in /var/www/segresta/Modules/Report/Http/Controllers/ReportExport.php on line 7
+[04-May-2018 10:13:38 Europe/Rome] PHP Stack trace:
+[04-May-2018 10:13:38 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[04-May-2018 10:13:38 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[04-May-2018 10:13:38 Europe/Rome] PHP   4. Illuminate\Routing\Pipeline->then() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:151
+[04-May-2018 10:13:38 Europe/Rome] PHP   5. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:102
+[04-May-2018 10:13:38 Europe/Rome] PHP   6. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP   7. Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP   8. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/CheckForMaintenanceMode.php:46
+[04-May-2018 10:13:38 Europe/Rome] PHP   9. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  10. Spatie\CookieConsent\CookieConsentMiddleware->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  11. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/spatie/laravel-cookie-consent/src/CookieConsentMiddleware.php:21
+[04-May-2018 10:13:38 Europe/Rome] PHP  12. App\Http\Kernel->Illuminate\Foundation\Http\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:30
+[04-May-2018 10:13:38 Europe/Rome] PHP  13. Illuminate\Routing\Router->dispatch() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:176
+[04-May-2018 10:13:38 Europe/Rome] PHP  14. Illuminate\Routing\Router->dispatchToRoute() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:590
+[04-May-2018 10:13:38 Europe/Rome] PHP  15. Illuminate\Routing\Router->runRoute() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:601
+[04-May-2018 10:13:38 Europe/Rome] PHP  16. Illuminate\Routing\Router->runRouteWithinStack() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:635
+[04-May-2018 10:13:38 Europe/Rome] PHP  17. Illuminate\Routing\Pipeline->then() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:660
+[04-May-2018 10:13:38 Europe/Rome] PHP  18. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:102
+[04-May-2018 10:13:38 Europe/Rome] PHP  19. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  20. App\Http\Middleware\EncryptCookies->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  21. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/EncryptCookies.php:59
+[04-May-2018 10:13:38 Europe/Rome] PHP  22. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  23. Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  24. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Cookie/Middleware/AddQueuedCookiesToResponse.php:37
+[04-May-2018 10:13:38 Europe/Rome] PHP  25. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  26. Illuminate\Session\Middleware\StartSession->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  27. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Session/Middleware/StartSession.php:63
+[04-May-2018 10:13:38 Europe/Rome] PHP  28. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  29. Illuminate\View\Middleware\ShareErrorsFromSession->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  30. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/View/Middleware/ShareErrorsFromSession.php:49
+[04-May-2018 10:13:38 Europe/Rome] PHP  31. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  32. App\Http\Middleware\VerifyCsrfToken->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  33. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Middleware/VerifyCsrfToken.php:67
+[04-May-2018 10:13:38 Europe/Rome] PHP  34. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  35. Illuminate\Routing\Middleware\SubstituteBindings->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  36. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Middleware/SubstituteBindings.php:41
+[04-May-2018 10:13:38 Europe/Rome] PHP  37. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  38. Zizaco\Entrust\Middleware\EntrustRole->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  39. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/vendor/zizaco/entrust/src/Entrust/Middleware/EntrustRole.php:42
+[04-May-2018 10:13:38 Europe/Rome] PHP  40. Illuminate\Routing\Pipeline->Illuminate\Pipeline\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:53
+[04-May-2018 10:13:38 Europe/Rome] PHP  41. App\Http\Middleware\CheckLicense->handle() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Pipeline/Pipeline.php:149
+[04-May-2018 10:13:38 Europe/Rome] PHP  42. Illuminate\Routing\Pipeline->Illuminate\Routing\{closure}() /var/www/segresta/app/Http/Middleware/CheckLicense.php:23
+[04-May-2018 10:13:38 Europe/Rome] PHP  43. Illuminate\Routing\Router->Illuminate\Routing\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Pipeline.php:30
+[04-May-2018 10:13:38 Europe/Rome] PHP  44. Illuminate\Routing\Route->run() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Router.php:658
+[04-May-2018 10:13:38 Europe/Rome] PHP  45. Illuminate\Routing\Route->runController() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:169
+[04-May-2018 10:13:38 Europe/Rome] PHP  46. Illuminate\Routing\ControllerDispatcher->dispatch() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Route.php:212
+[04-May-2018 10:13:38 Europe/Rome] PHP  47. Modules\Report\Http\Controllers\ReportController->callAction() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php:45
+[04-May-2018 10:13:38 Europe/Rome] PHP  48. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Controller.php:54}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Controller.php:54
+[04-May-2018 10:13:38 Europe/Rome] PHP  49. Modules\Report\Http\Controllers\ReportController->gen_eventspec() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Routing/Controller.php:54
+[04-May-2018 10:13:38 Europe/Rome] PHP  50. spl_autoload_call() /var/www/segresta/Modules/Report/Http/Controllers/ReportController.php:54
+[04-May-2018 10:13:38 Europe/Rome] PHP  51. Composer\Autoload\ClassLoader->loadClass() /var/www/segresta/Modules/Report/Http/Controllers/ReportController.php:54
+[04-May-2018 10:13:38 Europe/Rome] PHP  52. Composer\Autoload\includeFile() /var/www/segresta/vendor/composer/ClassLoader.php:301
+[04-May-2018 10:13:38 Europe/Rome] PHP  53. include() /var/www/segresta/vendor/composer/ClassLoader.php:412
+[05-May-2018 14:29:48 Europe/Rome] PHP Warning:  Uncaught ErrorException: require(/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$): failed to open stream: No such file or directory in /var/www/segresta/Modules/Whatsapp/start.php:16
+Stack trace:
+#0 /var/www/segresta/Modules/Whatsapp/start.php(16): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'require(/var/ww...', '/var/www/segres...', 16, Array)
+#1 /var/www/segresta/Modules/Whatsapp/start.php(16): require()
+#2 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(292): include('/var/www/segres...')
+#3 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(254): Nwidart\Modules\Module->registerFiles()
+#4 /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php(312): Nwidart\Modules\Module->register()
+#5 /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php(22): Nwidart\Modules\Repository->register()
+#6 /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(586): Nwidart\Modules\Providers\B in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:29:48 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:29:48 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:29:48 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:29:48 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:29:48 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:29:48 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:29:48 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:29:48 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:29:48 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:29:48 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:29:48 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:29:48 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:29:48 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:29:48 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:29:48 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:29:48 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:29:48 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:29:48 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:29:48 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:29:48 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:29:48 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:29:48 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:29:48 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:29:48 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:29:48 Europe/Rome] PHP Fatal error:  Nwidart\Modules\Module::main(): Failed opening required '/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$' (include_path='.:/usr/share/php') in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:29:48 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:29:48 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:29:48 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:29:48 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:29:48 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:29:48 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:29:48 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:29:48 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:29:48 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:29:48 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:29:48 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:29:48 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:29:48 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:29:48 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:29:48 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:29:48 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:29:48 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:29:48 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:29:48 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:29:48 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:29:48 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:29:48 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:29:48 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:29:48 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:34:57 Europe/Rome] PHP Warning:  Uncaught ErrorException: require(/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$): failed to open stream: No such file or directory in /var/www/segresta/Modules/Whatsapp/start.php:16
+Stack trace:
+#0 /var/www/segresta/Modules/Whatsapp/start.php(16): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'require(/var/ww...', '/var/www/segres...', 16, Array)
+#1 /var/www/segresta/Modules/Whatsapp/start.php(16): require()
+#2 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(292): include('/var/www/segres...')
+#3 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(254): Nwidart\Modules\Module->registerFiles()
+#4 /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php(312): Nwidart\Modules\Module->register()
+#5 /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php(22): Nwidart\Modules\Repository->register()
+#6 /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(586): Nwidart\Modules\Providers\B in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:34:57 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:34:57 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:34:57 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:34:57 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:34:57 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:34:57 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:34:57 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:34:57 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:34:57 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:57 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:57 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:34:57 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:34:57 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:34:57 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:34:57 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:34:57 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:57 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:57 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:34:57 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:34:57 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:34:57 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:34:57 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:34:57 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:34:57 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:34:57 Europe/Rome] PHP Fatal error:  Nwidart\Modules\Module::main(): Failed opening required '/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$' (include_path='.:/usr/share/php') in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:34:57 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:34:57 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:34:57 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:34:57 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:34:57 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:34:57 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:34:57 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:34:57 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:34:57 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:57 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:57 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:34:57 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:34:57 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:34:57 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:34:57 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:34:57 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:57 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:57 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:34:57 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:34:57 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:34:57 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:34:57 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:34:57 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:34:57 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:34:58 Europe/Rome] PHP Warning:  Uncaught ErrorException: require(/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$): failed to open stream: No such file or directory in /var/www/segresta/Modules/Whatsapp/start.php:16
+Stack trace:
+#0 /var/www/segresta/Modules/Whatsapp/start.php(16): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'require(/var/ww...', '/var/www/segres...', 16, Array)
+#1 /var/www/segresta/Modules/Whatsapp/start.php(16): require()
+#2 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(292): include('/var/www/segres...')
+#3 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(254): Nwidart\Modules\Module->registerFiles()
+#4 /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php(312): Nwidart\Modules\Module->register()
+#5 /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php(22): Nwidart\Modules\Repository->register()
+#6 /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(586): Nwidart\Modules\Providers\B in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:34:58 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:34:58 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:34:58 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:34:58 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:34:58 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:34:58 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:34:58 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:34:58 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:34:58 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:58 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:58 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:34:58 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:34:58 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:34:58 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:34:58 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:34:58 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:58 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:58 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:34:58 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:34:58 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:34:58 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:34:58 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:34:58 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:34:58 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:34:58 Europe/Rome] PHP Fatal error:  Nwidart\Modules\Module::main(): Failed opening required '/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$' (include_path='.:/usr/share/php') in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:34:58 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:34:58 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:34:58 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:34:58 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:34:58 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:34:58 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:34:58 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:34:58 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:34:58 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:58 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:34:58 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:34:58 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:34:58 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:34:58 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:34:58 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:34:58 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:58 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:34:58 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:34:58 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:34:58 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:34:58 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:34:58 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:34:58 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:34:58 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:35:13 Europe/Rome] PHP Warning:  Uncaught ErrorException: require(/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$): failed to open stream: No such file or directory in /var/www/segresta/Modules/Whatsapp/start.php:16
+Stack trace:
+#0 /var/www/segresta/Modules/Whatsapp/start.php(16): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'require(/var/ww...', '/var/www/segres...', 16, Array)
+#1 /var/www/segresta/Modules/Whatsapp/start.php(16): require()
+#2 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(292): include('/var/www/segres...')
+#3 /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php(254): Nwidart\Modules\Module->registerFiles()
+#4 /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php(312): Nwidart\Modules\Module->register()
+#5 /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php(22): Nwidart\Modules\Repository->register()
+#6 /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(586): Nwidart\Modules\Providers\B in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:35:13 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:35:13 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:35:13 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:35:13 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:35:13 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:35:13 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:35:13 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:35:13 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:35:13 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:35:13 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:35:13 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:35:13 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:35:13 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:35:13 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:35:13 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:35:13 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:35:13 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:35:13 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:35:13 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:35:13 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:35:13 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:35:13 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:35:13 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:35:13 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:35:13 Europe/Rome] PHP Fatal error:  Nwidart\Modules\Module::main(): Failed opening required '/var/www/segresta/Modules/Whatsapp$ROUTES_LOCATION$' (include_path='.:/usr/share/php') in /var/www/segresta/Modules/Whatsapp/start.php on line 16
+[05-May-2018 14:35:13 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:35:13 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:35:13 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:35:13 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:35:13 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:35:13 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:35:13 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:35:13 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:35:13 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:35:13 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:35:13 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:35:13 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:35:13 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:35:13 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:35:13 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:35:13 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:35:13 Europe/Rome] PHP  16. Nwidart\Modules\LaravelModulesServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:35:13 Europe/Rome] PHP  17. Nwidart\Modules\LaravelModulesServiceProvider->registerModules() /var/www/segresta/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php:15
+[05-May-2018 14:35:13 Europe/Rome] PHP  18. Illuminate\Foundation\Application->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/ModulesServiceProvider.php:38
+[05-May-2018 14:35:13 Europe/Rome] PHP  19. Nwidart\Modules\Providers\BootstrapServiceProvider->register() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:586
+[05-May-2018 14:35:13 Europe/Rome] PHP  20. Nwidart\Modules\Laravel\Repository->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Providers/BootstrapServiceProvider.php:22
+[05-May-2018 14:35:13 Europe/Rome] PHP  21. Nwidart\Modules\Laravel\Module->register() /var/www/segresta/vendor/nwidart/laravel-modules/src/Repository.php:312
+[05-May-2018 14:35:13 Europe/Rome] PHP  22. Nwidart\Modules\Laravel\Module->registerFiles() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:254
+[05-May-2018 14:35:13 Europe/Rome] PHP  23. include() /var/www/segresta/vendor/nwidart/laravel-modules/src/Module.php:292
+[05-May-2018 14:36:30 Europe/Rome] PHP Fatal error:  Cannot declare class Modules\Whatsapp\Providers\WhatsappServiceProvider, because the name is already in use in /var/www/segresta/Modules/Whatsapp/Providers/WhatsappServiceProvider.php on line 0
+[05-May-2018 14:36:30 Europe/Rome] PHP Stack trace:
+[05-May-2018 14:36:30 Europe/Rome] PHP   1. {main}() /var/www/segresta/public/index.php:0
+[05-May-2018 14:36:30 Europe/Rome] PHP   2. App\Http\Kernel->handle() /var/www/segresta/public/index.php:53
+[05-May-2018 14:36:30 Europe/Rome] PHP   3. App\Http\Kernel->sendRequestThroughRouter() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:116
+[05-May-2018 14:36:30 Europe/Rome] PHP   4. App\Http\Kernel->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:146
+[05-May-2018 14:36:30 Europe/Rome] PHP   5. Illuminate\Foundation\Application->bootstrapWith() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php:162
+[05-May-2018 14:36:30 Europe/Rome] PHP   6. Illuminate\Foundation\Bootstrap\BootProviders->bootstrap() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:213
+[05-May-2018 14:36:30 Europe/Rome] PHP   7. Illuminate\Foundation\Application->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php:17
+[05-May-2018 14:36:30 Europe/Rome] PHP   8. array_walk() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:36:30 Europe/Rome] PHP   9. Illuminate\Foundation\Application->Illuminate\Foundation\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:776
+[05-May-2018 14:36:30 Europe/Rome] PHP  10. Illuminate\Foundation\Application->bootProvider() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:775
+[05-May-2018 14:36:30 Europe/Rome] PHP  11. Illuminate\Foundation\Application->call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Foundation/Application.php:792
+[05-May-2018 14:36:30 Europe/Rome] PHP  12. Illuminate\Container\BoundMethod::call() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/Container.php:549
+[05-May-2018 14:36:30 Europe/Rome] PHP  13. Illuminate\Container\BoundMethod::callBoundMethod() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:31
+[05-May-2018 14:36:30 Europe/Rome] PHP  14. Illuminate\Container\BoundMethod::Illuminate\Container\{closure}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:87
+[05-May-2018 14:36:30 Europe/Rome] PHP  15. call_user_func_array:{/var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29}() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:36:30 Europe/Rome] PHP  16. Modules\Whatsapp\Providers\WhatsappServiceProvider->boot() /var/www/segresta/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:29
+[05-May-2018 14:36:30 Europe/Rome] PHP  17. Modules\Whatsapp\Providers\WhatsappServiceProvider->registerFactories() /var/www/segresta/Modules/Whatsapp/Providers/WhatsappServiceProvider.php:27
+[05-May-2018 14:36:30 Europe/Rome] PHP  18. Illuminate\Database\Eloquent\Factory->load() /var/www/segresta/Modules/Whatsapp/Providers/WhatsappServiceProvider.php:99

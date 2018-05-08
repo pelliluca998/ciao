@@ -9,12 +9,14 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:subscription'
 	Route::post('subscription/contact_send', ['as' => 'subscription.contact_send', 'uses' => 'SubscriptionController@contact_send']);
 	Route::get('subscription/event', ['as' => 'subscription.event', 'uses' => 'SubscriptionController@index'] );
 
-	Route::post('subscription/approve', ['as' => 'subscription.approve', 'uses' => 'SubscriptionController@approve']);
-	Route::post('subscription/batch_delete', ['as' => 'subscription.batch_delete', 'uses' => 'SubscriptionController@batch_delete']);
+	Route::get('subscription/approve', ['as' => 'subscription.approve', 'uses' => 'SubscriptionController@approve']);
+	Route::get('subscription/batch_delete', ['as' => 'subscription.batch_delete', 'uses' => 'SubscriptionController@batch_delete']);
 
 	Route::get('subscription/edit', ['as' => 'subscription.edit', 'uses' => 'SubscriptionController@edit']);
 	//Route::get('subscription/print', ['as' => 'subscription.print', 'uses' => 'SubscriptionController@print']);
 	Route::put('subscription/update/{id_subscription}',['as' => 'subscription.update', 'uses' => 'SubscriptionController@update']);
+	Route::get('subscription/getData', ['as' =>'subscription.data', 'uses' => 'SubscriptionController@data']);
+	Route::post('subscription/action', ['as' =>'subscription.action', 'uses' => 'SubscriptionController@action']);
 
 	//Route::get('specsubscriptions/{id_subscription}', ['as' => 'subscription.show_specsubscriptions', 'uses' => 'SpecSubscriptionController@show_specsubscriptions']);
 

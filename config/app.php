@@ -171,7 +171,6 @@ return [
     Telegram\Bot\Laravel\TelegramServiceProvider::class,
     Nwidart\Modules\LaravelModulesServiceProvider::class,
     Spatie\CookieConsent\CookieConsentServiceProvider::class,
-    Jimmyjs\ReportGenerator\ServiceProvider::class,
 
 
     /*

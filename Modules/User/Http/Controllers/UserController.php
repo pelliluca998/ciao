@@ -20,6 +20,8 @@ use Modules\Oratorio\Entities\UserOratorio;
 use Modules\Attributo\Entities\AttributoUser;
 use Auth;
 use Storage;
+use Excel;
+use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
@@ -32,33 +34,65 @@ class UserController extends Controller
   */
   public function index()
   {
-    $check_user = Input::get('check_user');
-    $json = json_encode($check_user);
-    if(isset($_GET['new_user']) && $_GET['new_user']=='new_user'){
-      return redirect()->route('user.create');
-    }
-    if(isset($_GET['email']) && $_GET['email']=='email'){
-      Session::flash('check_user', $json);
-      return redirect()->route('email.create');
-    }
-    if(isset($_GET['sms']) && $_GET['sms']=='sms'){
-      Session::flash('check_user', $json);
-      return redirect()->route('sms.create');
-    }
-    if(isset($_GET['telegram']) && $_GET['telegram']=='telegram'){
-      Session::flash('check_user', $json);
-      return redirect()->route('telegram.create');
-    }
-    if(isset($_GET['group']) && $_GET['group']=='group'){
-      Session::flash('check_user', $json);
-      return redirect()->route('groupusers.select');
-    }
-
-    if(isset($_GET['report']) && $_GET['report']=='report'){
-      return view('report::composer_user');
-    }
-
     return view('user::show');
+  }
+
+  public function action(Request $request){
+    $input = $request->all();
+    if(!$request->has('check_user')){
+      Session::flash("flash_message", "Devi selezionare almeno un utente!");
+      return redirect()->route('user.index');
+    }
+    $check_user = $input['check_user'];
+    $json = json_encode($check_user);
+    switch($input['action']){
+      case 'email':
+      return redirect()->route('email.create', ['users' => $json]);
+      break;
+      case 'sms':
+      return redirect()->route('sms.create', ['users' => $json]);
+      break;
+      case 'telegram':
+      return redirect()->route('telegram.create', ['users' => $json]);
+      break;
+      case 'group':
+      return redirect()->route('groupusers.select', ['users' => $json]);
+      break;
+      case 'whatsapp':
+      return redirect()->route('whatsapp.create', ['users' => $json]);
+      break;
+    }
+  }
+
+  public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
+
+    $builder = User::query()
+    ->select('users.*')
+    ->orderBy('cognome', 'ASC');
+
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($user){
+      $action = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#userOp' data-username='".$user->name." ".$user->cognome."' data-userid='".$user->id."'><i class='fas fa-cogs fa-2x'></i> </button>";
+      return $action;
+    })
+    ->addColumn('check', function ($user){
+      $check = "<input name='check_user[]' id='check_users_".$user->id."' type='checkbox' value='".$user->id."' class='form-control'/>";
+      return $check;
+    })
+    ->addColumn('photo', function ($user){
+      if($user->photo==null){
+        if($user->sesso=="M"){
+          return "<img src='".url("boy.png")."'>";
+        }else if($user->sesso=="F"){
+          return "<img src='".url("girl.png")."'>";
+        }
+      }else{
+        return "<img src='".url(Storage::url('public/'.$user->photo))."' width=48px/>";
+      }
+    })
+    ->rawColumns(['photo', 'action', 'check'])
+    ->toJson();
   }
 
   /**
@@ -356,4 +390,6 @@ class UserController extends Controller
       }
     }
   }
+
+
 }

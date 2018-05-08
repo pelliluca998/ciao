@@ -1,7 +1,7 @@
 {
     "name": "Subscription",
     "alias": "subscription",
-    "description": "",
+    "description": "Gestione iscrizioni agli eventi",
     "keywords": [],
     "active": 1,
     "order": 4,

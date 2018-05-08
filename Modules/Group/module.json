@@ -1,7 +1,7 @@
 {
     "name": "Group",
     "alias": "group",
-    "description": "",
+    "description": "Gruppi di utenti",
     "keywords": [],
     "active": 1,
     "order": 1,

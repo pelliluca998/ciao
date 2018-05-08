@@ -17,6 +17,11 @@ class AddForeignKeysToSubscriptionsTable extends Migration {
 			$table->foreign('id_event')->references('id')->on('events')->onUpdate('RESTRICT')->onDelete('CASCADE');
 			$table->foreign('id_user')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('CASCADE');
 		});
+
+		Schema::table('event_spec_values', function(Blueprint $table)
+		{
+			$table->foreign('id_subscription', 'subscription_id')->references('id')->on('subscriptions')->onUpdate('RESTRICT')->onDelete('CASCADE');
+		});
 	}
 
 

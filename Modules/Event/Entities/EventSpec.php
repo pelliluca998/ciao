@@ -34,14 +34,6 @@ class EventSpec extends Model
     }elseif($id_type==-3){
       //spec di tipo numero, torno il valore così come è
       return $value;
-    }elseif($id_type==-4){
-      //gruppo
-      $group = Group::where('id', $value)->get();
-      if(count($group)>0){
-        return $group[0]->nome;
-      }else{
-        return "n/a";
-      }
     }
   }
 

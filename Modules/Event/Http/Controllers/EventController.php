@@ -11,6 +11,7 @@ use Modules\Event\Entities\Week;
 use Modules\Event\Entities\EventSpec;
 use Modules\Oratorio\Entities\Oratorio;
 use Modules\Elenco\Entities\Elenco;
+use Yajra\DataTables\DataTables;
 use Session;
 use Input;
 use Entrust;
@@ -36,6 +37,33 @@ class EventController extends Controller
 	public function index(){
 		return view('event::show');
 	}
+
+	public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
+
+    $builder = Event::query()
+    ->select('events.*')
+		->where('id_oratorio', Session::get('session_oratorio'))
+    ->orderBy('created_at', 'DESC');
+
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($event){
+      $action = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#eventOp' data-name='".$event->nome."' data-eventid='".$event->id."'><i class='fas fa-cogs fa-2x'></i> </button>";
+      return $action;
+    })
+		->addColumn('active', function ($event){
+      if($event->active==1){
+        return "<i class='far fa-check-circle fa-2x'></i>";
+      }else{
+        return "<i class='far fa-circle fa-2x'></i>";
+      }
+    })
+		->addColumn('descrizione', function ($event){
+      return $event->descrizione;
+    })
+    ->rawColumns(['action', 'active', 'descrizione'])
+    ->toJson();
+  }
 
 
 	/**
@@ -220,6 +248,10 @@ class EventController extends Controller
 			}
 		}
 
+		if(Input::has('spec_iscrizione')){
+			$input['spec_iscrizione'] = json_encode($input['spec_iscrizione']);
+		}
+
 
 		$event->fill($input)->save();
 		Session::flash('flash_message', 'Evento salvato!');
@@ -239,6 +271,9 @@ class EventController extends Controller
 				Session::forget('work_event');
 			}
 			$sub->delete();
+			$oratorio = Oratorio::find($event->id_oratorio);
+			$oratorio->last_id_event = 0;
+			$oratorio->save();
 			Session::flash("flash_message", "Evento '". $sub->nome."' cancellato!");
 			return redirect()->route('events.index');
 		}else{

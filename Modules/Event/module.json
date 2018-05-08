@@ -1,14 +1,14 @@
 {
     "name": "Event",
     "alias": "event",
-    "description": "",
+    "description": "Gestione eventi",
     "keywords": [],
     "active": 1,
     "order": 3,
     "providers": [
         "Modules\\Event\\Providers\\EventServiceProvider"
     ],
-    "aliases": [],
+    "aliases": {},
     "files": [
         "start.php"
     ],

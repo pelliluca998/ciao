@@ -1,5 +1,14 @@
-table.testgrid { 
-	border-collapse: collapse; 
+.container{
+	width: 90%;
+}
+
+@media print{
+	.container{
+		width: 100%;
+	}
+}
+table.testgrid {
+	border-collapse: collapse;
 	border: 1px solid #CCB;
 	width: 100%;
 	font-size: 14px;
@@ -19,7 +28,7 @@ table.testgrid th {
 	padding-right: 0px;
 	padding-top: 5px;
 	padding-bottom: 5px;
-	white-space: nowrap; 
+	white-space: nowrap;
 }
 
 table.testgrid td {
@@ -32,38 +41,38 @@ table.testgrid i {
 }
 
 .panel-left {
-	width: 50%; 
-	float: left; 
+	width: 50%;
+	float: left;
 	margin-right: 2%;
 }
 
 .panel-right {
-	width: 48%; 
+	width: 48%;
 	float: left;
 }
 
 .box-subscribe{
-	border-radius: 10px; 
-	float: left; 
+	border-radius: 10px;
+	float: left;
 	width: 32%;
 	height: 0;
-	margin: 0.5%; 
-	padding: 5px; 
-	padding-bottom: 30%; 
+	margin: 0.5%;
+	padding: 5px;
+	padding-bottom: 30%;
 	color: black;
 }
 .box-subscribe-title{
-	border-radius: 10px; 
-	width: 100%; 
-	background: white; 
-	opacity: 0.7; 
-	margin-bottom: 10px; 
+	border-radius: 10px;
+	width: 100%;
+	background: white;
+	opacity: 0.7;
+	margin-bottom: 10px;
 	text-align: center;
 }
 
 .box-subscribe-description{
-	padding: 5px; 
-	width: 100%; 
-	background: white; 
+	padding: 5px;
+	width: 100%;
+	background: white;
 	opacity: 0.7;
 }

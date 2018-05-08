@@ -43,7 +43,7 @@ class OratorioController extends Controller
 	* @return Response
 	*/
 	public function create(){
-		return view('oratorio::gestione.create');	
+		return view('oratorio::gestione.create');
 	}
 
     /**
@@ -57,8 +57,6 @@ class OratorioController extends Controller
 		$input['reg_token'] = md5($input['nome']); //è l'hash del nome, serve nella pagina di registrazione per indirizzare l'utente direttamente al suo oratorio
 		$oratorio = Oratorio::create($input);
 		$input['id_oratorio'] = $oratorio->id;
-		//creo una nuova licenza
-		$licenza = License::create($input);
 		//creo due nuovi ruoli associati a questo oratorio
 		$user = new Role();
 		$user->name         = 'user';
@@ -73,31 +71,44 @@ class OratorioController extends Controller
 		$admin->description  = 'Amministratore';
 		$admin->id_oratorio = $oratorio->id;
 		$admin->save();
-		
+
 		//get utente da rendere amministratore
 		$utente = User::findOrfail($input['id_user']);
 		$utente->attachRole($admin);
-		
+
 		//Collego l'utente a questo oratorio
 		$user_oratorio = UserOratorio::create($input);
-		
+
 		//sistemo i permessi
 		$usermodule = Permission::where('name', 'usermodule')->first();
 		$adminmodule = Permission::where('name', 'adminmodule')->first();
 		$user->attachPermission($usermodule); //l'utente può accedere solo ai moduli dell'utente
 		$admin->attachPermission($adminmodule);//l'admin accede ai moduli utente ed admin
 		$admin->attachPermission($usermodule);
-		
+
+    //aggiorno Licenza
+    foreach($input['id_licenza'] as $licenza){
+        if($input['abilita'][$i] == 1){
+          $l = new License;
+          $l->module_name = $input['module_name'][$i];
+          $l->data_inizio = $input['data_inizio'][$i];
+          $l->data_fine = $input['data_fine'][$i];
+          $l->id_oratorio = $oratorio->id;
+          $l->save();
+        }
+      $i++;
+    }
+
 		//invio una mail per avvisare dell'avvenuta registrazione dell'oratorio
-		Mail::send('oratorio::gestione.emailtouser', 
-			['html' => 'oratorio::gestione.emailfromuser', 'user_email' => $utente->email, 'nome_oratorio' => $input['nome'], 'email_oratorio' => $input['email']], 
+		Mail::send('oratorio::gestione.emailtouser',
+			['html' => 'oratorio::gestione.emailtouser', 'user_email' => $utente->email, 'nome_oratorio' => $input['nome'], 'email_oratorio' => $input['email']],
 			function ($message) use ($input){
 				$message->from('info@segresta.it', 'Segresta');
 				$message->subject("Segresta - Creazione nuovo oratorio");
 				$message->to($input['email'], $input['nome']);
 			});
-		
-		
+
+
 		//Fatto!
 		Session::flash('flash_message', 'Oratorio creato!');
 		return redirect()->route('oratorio.showall');
@@ -133,9 +144,9 @@ class OratorioController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request){
+    public function update(Request $request, $id_oratorio){
 		$input = $request->all();
-		$oratorio = Oratorio::findOrFail($input['id_oratorio']);
+		$oratorio = Oratorio::findOrFail($id_oratorio);
 		if(Input::hasFile('logo')){
 			$file = $request->logo;
 			$filename = $request->logo->store('oratorio', 'public');
@@ -153,7 +164,7 @@ class OratorioController extends Controller
 		Session::flash('flash_message', 'Impostazioni salvate!');
 		return redirect()->route('oratorio.index');
 	}
-	
+
 	public function update_owner(Request $request){
 		$input = $request->all();
 		$oratorio = Oratorio::findOrFail($input['id_oratorio']);
@@ -172,19 +183,48 @@ class OratorioController extends Controller
 		}
 		$oratorio->fill($input)->save();
 		//salvo la licenza
-		$licenza = License::findOrFail($input['id_licenza']);
-		if($licenza->license_type!=$input['license_type']){
-			$licenza_old = LicenseType::findOrFail($licenza->license_type)->name;
-			$licenza_new = LicenseType::findOrFail($input['license_type'])->name;
-			Mail::send('oratorio::gestione.message_licenza', 
-			['html' => 'oratorio::gestione.message_licenza', 'oratorio' => $oratorio->nome, 'licenza_old' => $licenza_old, 'licenza_new' => $licenza_new], 
-			function ($message) use ($oratorio){
-				$message->from('info@segresta.it', 'Segresta');
-				$message->subject("Segresta - Aggiornamento licenza!");
-				$message->to($oratorio->email, $oratorio->nome);
-			});
-		}
-		$licenza->fill($input)->save();
+    $i=0;
+    $aggiornata = false;
+    foreach($input['id_licenza'] as $licenza){
+      if($licenza!=null){
+        //licenza per questo modulo esistente, la aggiorno
+        $l = License::find($licenza);
+        if($input['abilita'][$i] == 1){
+          if($l->data_inizio != $input['data_inizio'][$i] || $l->data_fine != $input['data_fine'][$i]){
+            $aggiornata = true;
+          }
+          $l->data_inizio = $input['data_inizio'][$i];
+          $l->data_fine = $input['data_fine'][$i];
+          $l->save();
+        }else{
+          $l->delete();
+          $aggiornata = true;
+        }
+      }else{
+        //non esistente, se checkbox spuntato allora la salvo
+        if($input['abilita'][$i] == 1){
+          $l = new License;
+          $l->module_name = $input['module_name'][$i];
+          $l->data_inizio = $input['data_inizio'][$i];
+          $l->data_fine = $input['data_fine'][$i];
+          $l->id_oratorio = $oratorio->id;
+          $l->save();
+          $aggiornata = true;
+        }
+      }
+      $i++;
+    }
+    if($aggiornata){
+      Mail::send('oratorio::gestione.message_licenza',
+      ['html' => 'oratorio::gestione.message_licenza', 'oratorio' => $oratorio],
+      function ($message) use ($oratorio){
+        $message->from('info@segresta.it', 'Segresta');
+        $message->subject("Segresta - Aggiornamento licenza!");
+        $message->to($oratorio->email, $oratorio->nome);
+      });
+    }
+
+
 		Session::flash('flash_message', 'Impostazioni salvate!');
 		return redirect()->route('oratorio.showall');
 	}
@@ -202,8 +242,8 @@ class OratorioController extends Controller
 		Session::flash('flash_message', 'Oratorio eliminato');
 		return redirect()->route('oratorio.showall');
 	}
-    
-    
+
+
 	/**
 	Richiama la pagina per la modifica dell'oratorio da parte del proprietario
 	**/
@@ -212,40 +252,40 @@ class OratorioController extends Controller
 		$oratorio = Oratorio::findOrFail($input['id_oratorio']);
 	   	return view('oratorio::gestione.edit')->withOratorio($oratorio);
 	}
-	
+
 	public function neworatorio(Request $request){
 		return view('neworatorio');
 	}
-	
+
 	public function new_message(Request $request){
 		return view('oratorio::gestione.add_message');
 	}
-	
+
 	public function save_message(Request $request){
 		$input = $request->all();
 		$message = OwnerMessage::create($input);
 		//invio la mail a tutti gli oratori
 		$oratori = Oratorio::all();
 		foreach($oratori as $o){
-			Mail::send('oratorio::gestione.message', 
-			['html' => 'oratorio::gestione.message', 'oratorio' => $o->nome, 'titolo' => $input['title'], 'messaggio' => $input['message']], 
+			Mail::send('oratorio::gestione.message',
+			['html' => 'oratorio::gestione.message', 'oratorio' => $o->nome, 'titolo' => $input['title'], 'messaggio' => $input['message']],
 			function ($message) use ($o){
 				$message->from('info@segresta.it', 'Segresta');
 				$message->subject("Segresta - Nuovo messaggio!");
 				$message->to($o->email, $o->nome);
 			});
-		
-		
-		//Fatto!		
+
+
+		//Fatto!
 		}
 		Session::flash('flash_message', 'Messaggio creato e email inviata!');
 		return redirect()->route('oratorio.showall');
 	}
-	
+
 	public function neworatorio_emailfromuser(Request $request){
 		$input = $request->all();
-		Mail::send('oratorio::gestione.emailfromuser', 
-				['html' => 'oratorio::gestione.emailfromuser', 'nome_oratorio' => $input['nome'], 'email_oratorio' => $input['email']], 
+		Mail::send('oratorio::gestione.emailfromuser',
+				['html' => 'oratorio::gestione.emailfromuser', 'nome_oratorio' => $input['nome'], 'email_oratorio' => $input['email']],
 				function ($message){
 					$message->from(Auth::user()->email, Auth::user()->name);
 					$message->subject("Richiesta nuovo oratorio");
@@ -254,33 +294,33 @@ class OratorioController extends Controller
 		Session::flash('flash_message', 'Richiesta inviata! Ora attendi una risposta...');
 		return redirect()->route('home');
 	}
-	
+
 	public function affiliazione(Request $request){
 		return view('oratorio::affiliazione');
 	}
-	
+
 	public function work(Request $request){
 		$input = $request->all();
 		$id_oratorio = $input['id_oratorio'];
 		Session::put('session_oratorio', $id_oratorio);
 		return redirect()->route('home');
 	}
-	
+
 	public function salva_affiliazione(Request $request){
 		$input = $request->all();
-		$user_role = Role::where([['name', 'user'],['id_oratorio', $input['id_oratorio']]])->first();		
+		$user_role = Role::where([['name', 'user'],['id_oratorio', $input['id_oratorio']]])->first();
 		Auth::user()->attachRole($user_role);
-		
-		//Collego l'utente a questo oratorio		
+
+		//Collego l'utente a questo oratorio
 		$user_oratorio = new UserOratorio();
 		$user_oratorio->id_user = Auth::user()->id;
 		$user_oratorio->id_oratorio = $input['id_oratorio'];
 		$user_oratorio->save();
-		
+
 		Session::flash('flash_message', 'Fatto!');
 		return redirect()->route('home');
 	}
-	
+
 	public function elimina_affiliazione(Request $request){
 		$input = $request->all();
 		$id_useroratorio = $input['id_useroratorio'];
@@ -297,7 +337,7 @@ class OratorioController extends Controller
 			}else{
 				return redirect()->route('oratorio.affiliazione');
 			}
-			
+
 		}else{
 			abort(403, 'Unauthorized action.');
 		}

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Yajra\DataTables\DataTables;
 use Session;
 use Entrust;
 use Auth;
@@ -33,6 +34,23 @@ use ValidatesRequests;
 		}
 	}
 
+	public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
+
+    $builder = Week::query()
+    ->select('weeks.*')
+		->where('id_event', Session::get('work_event'))
+    ->orderBy('from_date', 'ASC');
+
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($week){
+      $action = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#weekOp' data-name='".$week->from_date." - ".$week->to_date."' data-weekid='".$week->id."'><i class='fas fa-cogs fa-2x' aria-hidden='true'></i> </button>";
+      return $action;
+    })
+    ->rawColumns(['action'])
+    ->toJson();
+  }
+
 	/**
 	* Show the form for creating a new resource.
 	*
@@ -47,7 +65,7 @@ use ValidatesRequests;
 	*
 	* @return Response
 	*/
-	public function store(Request $request){   	
+	public function store(Request $request){
 		$this->validate($request, [
 			'from_date' => 'required',
 			'to_date' => 'required'
@@ -90,7 +108,7 @@ use ValidatesRequests;
 	*/
 	public function update(Request $request){
 		$input = $request->all();
-		$week = Week::findOrFail($input['id_week']);		
+		$week = Week::findOrFail($input['id_week']);
        	$date = Carbon\Carbon::createFromFormat('d/m/Y', $input['from_date']);
 		$input['from_date'] = $date->format('Y-m-d');
 		$date = Carbon\Carbon::createFromFormat('d/m/Y', $input['to_date']);
@@ -112,16 +130,16 @@ use ValidatesRequests;
 		$week = Week::findOrFail($id);
 		$event = Event::findOrFail($week->id_event);
 		if($event->id_oratorio== Session::get('session_oratorio')){
-			$week->delete();		
+			$week->delete();
 		    	Session::flash("flash_message", "Settimana cancellata!");
 			return redirect()->route('week.index');
 		}else{
 			abort(403, 'Unauthorized action.');
 		}
-		
+
 	}
 
-	
 
-    
+
+
 }

@@ -25,7 +25,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['license:', 'role:admin']], 
 	//Route::get('/specsubscriptions/view','SpecSubscriptionController@show');
 
 	Route::get('campoweeks/{id_campo}/destroy', 'WeekController@destroy_campo');
-	
+
 
 });
 
@@ -46,7 +46,7 @@ Route::get('eventspec/dropdown', function(){
 	}else{
 		return EventSpec::where([["id_event", $id_event],['valid_for', 'LIKE', '%"'.$id_week.'":"1"%']])->orderBy("label")->get();
 	}
-    	
+
 });
 
 Route::get('attributos/dropdown', function(){
@@ -83,5 +83,7 @@ Route::get('/admin', ['as' => 'admin', 'uses' => 'HomeController@admin']);
 Route::get('/', function(){
 	return view('welcome');
 });
+
+Route::get('/whatsapp', ['as' => 'whatsapp', 'uses' => 'HomeController@whatsapp']);
 
 ?>

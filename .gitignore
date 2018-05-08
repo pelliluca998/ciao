@@ -2,6 +2,7 @@ Modules/Sms
 Modules/Email
 Modules/Telegram
 Modules/Contabilita
+Modules/Whatsapp
 resources/views/piwik.blade.php
 
 /node_modules

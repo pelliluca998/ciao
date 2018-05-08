@@ -19,10 +19,10 @@ class GroupUserController extends Controller
 	* @return Response
 	*/
 	public function index(){
-	}   
-    
+	}
 
-    
+
+
 	public function create(){
 		$data = Input::get('id_users');
 		Session::flash("selected_users", $data);
@@ -34,7 +34,7 @@ class GroupUserController extends Controller
 	*
 	* @return Response
 	*/
-	public function store(Request $request){   	
+	public function store(Request $request){
 		$input = $request->all();
 		$id_group = $input['id_gruppo'];
 		$users = json_decode($input['check_user']);
@@ -47,7 +47,7 @@ class GroupUserController extends Controller
 			$groupUser->id_user = $user;
 			$groupUser->save();
 			}
-		}        
+		}
 		return redirect()->route('group.index');
 	}
 
@@ -59,20 +59,20 @@ class GroupUserController extends Controller
 	*/
 	public function select(Request $request){
 		$input = $request->all();
-		$check_user = $input['check'];
+		$check_user = $input['users'];
 		if(count(json_decode($check_user))>0){
 			return view('group::groupuser.create')->with('check_user', $check_user);
 		}else{
 			Session::flash("flash_message", "Devi selezionare almeno un contatto prima di inserirlo in un gruppo!");
 			return redirect()->route('user.index');
 		}
-		
+
 	}
-	
+
 	public function show($id){
 	}
 
-   
+
 
     /**
      * Remove the specified resource from storage.
@@ -90,9 +90,9 @@ class GroupUserController extends Controller
 		}else{
 			abort(403, 'Unauthorized action.');
 		}
-		
+
 	}
-	
+
 	public function showcomponents($id_group){
 		return view('group::groupuser.show', ['id_group' => $id_group]);
 	}

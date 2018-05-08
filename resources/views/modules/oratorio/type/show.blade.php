@@ -1,11 +1,10 @@
 <?php
 use Modules\User\Entities\User;
 use App\Role;
-use Modules\Attributo\Entities\Attributo;
-use Modules\Attributo\Entities\AttributoUser;
+use Modules\User\Entities\Group;
+use Modules\Oratorio\Entities\Type;
 use App\Permission;
 use Modules\Oratorio\Entities\TypeSelect;
-use Modules\User\Entities\Group;
 use Nayjest\Grids\Components\Base\RenderableRegistry;
 use Nayjest\Grids\Components\ColumnHeadersRow;
 use Nayjest\Grids\Components\ColumnsHider;
@@ -35,36 +34,36 @@ use Nayjest\Grids\ObjectDataRow;
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container" style="margin-left: 0px; margin-right: 0px; width: 100%;">
 @if(Session::has('flash_message'))
     <div class="alert alert-success">
         {{ Session::get('flash_message') }}
     </div>
 @endif
-    <div class="row">
+    <div class="row" style="margin-left: 0px; margin-right: 0px;">
         <div class="">
-		<div class="panel panel-default">
-		<div class="panel-heading">Informazioni aggiuntive utente</div>
+		<div class="panel panel-default panel-left">
+		<div class="panel-heading">Elenchi a discesa</div>
 		<div class="panel-body">
             
             <!-- Modal2 -->
-			<div class="modal fade" id="attributoOp" tabindex="-1" role="dialog" aria-labelledby="AttributoOperation">
+			<div class="modal fade" id="typeOp" tabindex="-1" role="dialog" aria-labelledby="TypeOperation">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="myModalLabel">Operazioni Informazioni aggiuntive</h4>
+							<h4 class="modal-title" id="myModalLabel">Operazioni Elenco</h4>
 						</div>
                         <?php
                         $buttons = array(
-                            ["label" => "Modifica",
+                            ["label" => "Modifica informazioni",
                              "desc" => "",
-                            "url" => "attributouser.edit",
+                            "url" => "type.edit",
                             "class" => "btn-primary",
                             "icon" => ""],
-                            ["label" => "Elimina",
+                            ["label" => "Elimina elenco",
                              "desc" => "L'operazione è irreversibile!",
-                            "url" => "attributouser.destroy",
+                            "url" => "type.destroy",
                             "class" => "btn-danger",
                             "icon" => ""]
                         );
@@ -72,11 +71,11 @@ use Nayjest\Grids\ObjectDataRow;
 
 						<div class="modal-body">
 
-                            Operazioni disponibili l'informazione <b><span id="name"></span></b>:
+                            Operazioni disponibili per l'elenco <b><span id="name"></span></b>:
                             @foreach ($buttons as $button)
                                 <div style="margin: 5px;">
                                 {!! Form::open(['route' => $button['url'], 'method' => 'GET']) !!}
-                                {!! Form::hidden('id_attributouser', '0', ['id' => 'id_attributouser']) !!}
+                                {!! Form::hidden('id_type', '0', ['id' => 'id_type']) !!}
                                 {!! Form::submit($button['label'], ['class' => 'btn '.$button['class']]) !!}
                                 {{$button['desc']}}
                                 {!! Form::close() !!}
@@ -93,123 +92,71 @@ use Nayjest\Grids\ObjectDataRow;
 				</div>
 			</div>
 
-            {!! Form::open(['route' => 'attributouser.create', 'method' => 'GET']) !!}
-            {!! Form::hidden('id_user', $id_user) !!}
-            {!! Form::submit('Aggiungi nuovo attributo', ['class' => 'btn btn-primary']) !!}
-            {!! Form::close() !!}
 
-			<?php			
-			$query = (new AttributoUser)
+
+
+
+		<a href="{{route('type.create')}}" class="btn btn-primary">Aggiungi nuovo elenco</a>
+			<?php
+			
+			$query = (new Type)
 			    ->newQuery()
-			    ->select('attributo_users.id', 'attributo_users.valore', 'types.label as type', 'attributos.nome', 'attributos.id_type as id_type')
-			    ->leftJoin('attributos', 'attributos.id', 'attributo_users.id_attributo')
-                ->leftJoin('types', 'types.id', '=', 'attributos.id_type')
-			    ->where('attributo_users.id_user', '=', $id_user);
-
+			    ->where('id_oratorio', '=', Session::get('session_oratorio'));
+			
 			$grid = new Grid(
     			(new GridConfig)
 			# Grids name used as html id, caching key, filtering GET params prefix, etc
 			# If not specified, unique value based on file name & line of code will be generated
-			->setName('attributo_users')
+			->setName('type_report')
 			# See all supported data providers in sources
 			->setDataProvider(new EloquentDataProvider($query))
 			# Setup caching, value in minutes, turned off in debug mode
 			->setCachingTime(5) 
 			# Setup table columns
 			->setColumns([
-                #simple results numbering, not related to table PK or any obtained data
-            	(new FieldConfig)
-                    ->setName('id')
-				    ->setLabel('ID')
-				    ->setSortable(true),
-            	(new FieldConfig)
-                    ->setName('nome')
-				    # will be displayed in table header
-				    ->setLabel('Attributo')
-                    # That's all what you need for filtering. 
-                    # It will create controls, process input 
-                    # and filter results (in case of EloquentDataProvider -- modify SQL query)
-				    ->addFilter(
-				        (new FilterConfig)
-				            ->setName('nome')
-				            ->setOperator(FilterConfig::OPERATOR_LIKE)
-				    )
-				    # sorting buttons will be added to header, DB query will be modified
-				    ->setSortable(true),
-				(new FieldConfig)
-                    ->setName('valore')
-				    ->setLabel('Valore')
-                    ->setCallback(function ($val, ObjectDataRow $row) {
-		                   $att = $row->getSrc();
-							if($att->id_type>0){
-								$val = TypeSelect::where('id', $att->valore)->get();
-								if(count($val)>0){
-									$val2 = $val[0];
-									return $val2->option;
-								}else{
-									return "";
-								}
-							}else{
-								switch($att->id_type){
-									case -1:
-										return "<p>".$att->valore."</p>";
-										break;
-									case -2:
-										$icon = "<i class='fa ";
-										if($att->valore==1){
-											$icon .= "fa-check-square-o";
-										}else{
-											$icon .= "fa-square-o";
-										}
-										$icon .= " fa-2x' aria-hidden='true'></i>";
-										return $icon;
-										break;
-									case -3:
-										return "<p>".$att->valore."</p>";
-										break;
-									case -4:
-										$val = Group::where('id', $att->valore)->get();
-										if(count($val)>0){
-											$val2 = $val[0];
-											return $val2->nome;
-										}else{
-											return "";
-										}
-										break;
-								}
-							}
-                        
-                        if ($attributo->id_type=='-1' || $attributo->id_type==-3){ //testo o numero
-                            return "<p>".$attributo->valore."</p>";
-                        }else if ($attributo->id_type=='-2'){ //checkbox
-                            $icon = "<i class='fa ";
-                            if($attributo->valore==1){
-                                $icon .= "fa-check-square-o";
-                            }else{
-                                $icon .= "fa-square-o";
-                            }
-                            $icon .= " fa-2x' aria-hidden='true'></i>";
-                            return $icon;
-                        }else{
-                            
-                        }
-                        })
-				    ->addFilter(
-				        (new FilterConfig)
-				            ->setName('valore')
-				            ->setOperator(FilterConfig::OPERATOR_LIKE)
-				        )
-				    # sorting buttons will be added to header, DB query will be modified
-				    ->setSortable(true),
-				(new FieldConfig)
-                    ->setName('edit')
-				    ->setLabel('')
-				    ->setSortable(false)
-				    ->setCallback(function ($val, ObjectDataRow $row) {
-					    $attributo = $row->getSrc();
-                        $icon = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#attributoOp' data-name='".$attributo->nome."' data-attributouserid='".$attributo->id."'><i class='fa fa-pencil fa-2x' aria-hidden='true'></i> </button>";
-					    return $icon;
-                     })
+           			# simple results numbering, not related to table PK or any obtained data
+            		(new FieldConfig)
+                		->setName('id')
+						->setLabel('ID')
+						->setSortable(true),
+            		(new FieldConfig)
+                		->setName('label')
+						->setLabel('Etichetta')
+						->addFilter(
+							(new FilterConfig)
+							->setName('label')
+							->setOperator(FilterConfig::OPERATOR_LIKE)
+						)
+						->setSortable(true),
+					(new FieldConfig)
+                		->setName('description')
+						->setLabel('Descrizione')
+						->addFilter(
+				    	(new FilterConfig)
+				        	->setName('description')
+				        	->setOperator(FilterConfig::OPERATOR_LIKE)
+						)
+						->setSortable(true),
+                (new FieldConfig)
+                ->setName('edit')
+				->setLabel('')
+				->setSortable(false)
+				->setCallback(function ($val, ObjectDataRow $row) {
+					$type = $row->getSrc();
+                    $icon = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#typeOp' data-name='".$type->label."' data-typeid='".$type->id."'><i class='fa fa-pencil fa-2x' aria-hidden='true'></i> </button>";
+					return $icon;
+                        	}),
+                (new FieldConfig)
+                		->setName('Scelte')
+						->setLabel('')
+						->setSortable(false)
+						->setCallback(function ($val, ObjectDataRow $row) {
+							$sub = $row->getSrc();
+							$click = "$('#spec').load('typeselect/show/".$sub->id."')";
+							$icon = "<i onclick=\"$click\" class='fa fa-flag fa-2x' aria-hidden='true'></i>";
+							return $icon;
+                        }),
+                        	
         		])
 			# Setup additional grid components
 			->setComponents([
@@ -234,7 +181,7 @@ use Nayjest\Grids\ObjectDataRow;
 						# Control to show/hide rows in table
 						(new ColumnsHider)
 							->setHiddenByDefault([
-						   	'remember_token',
+						   	'created_at',
 							])
 						,
 						# Submit button for filters. 
@@ -246,7 +193,7 @@ use Nayjest\Grids\ObjectDataRow;
 		                            			# Some bootstrap classes
 		                            			'class' => 'btn btn-primary'
                                			 	])
-                                			->setContent('Filtra')
+                                		->setContent('Filtra')
 					])
 					# Components may have some placeholders for rendering children there.
 					->setRenderSection(THead::SECTION_BEGIN)
@@ -269,21 +216,27 @@ use Nayjest\Grids\ObjectDataRow;
                    
                 </div>
             </div>
+            
+            <div class="panel panel-default panel-right">
+		<div class="panel-heading">Opzioni di scelta</div>
+		<div id="spec" class="panel-body">
+		 
+		</div>
         </div>
     </div>
 </div>
 
 <script>
 $(document).ready(function(){
-	$('#attributoOp').on('show.bs.modal', function (event) {
+	$('#typeOp').on('show.bs.modal', function (event) {
 	var button = $(event.relatedTarget) // Button that triggered the modal
 	var name = button.data('name') // Extract info from data-* attributes
-	var attributouserid = button.data('attributouserid');
+	var typeid = button.data('typeid');
 	// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
 	// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
 	var modal = $(this);
 	modal.find('#name').text(name);
-	modal.find("[id*='id_attributouser']").val(attributouserid);
+	modal.find("[id*='id_type']").val(typeid);
 	});
 });
 </script>
