@@ -239,11 +239,12 @@ use Modules\Oratorio\Entities\Oratorio;
 
       row += "</td>";
       if(admin){
-        row += "<td><input name='costo["+t+"]' type='number' value='"+price+"' class='form-control' style='width: 70px;' step='0.01'/></td>";
+        row += "<td><input name='costo["+t+"]' type='number' value='"+price+"' class='form-control' style='width: 70px;' step='0.1' id='costo_"+t+"' onchange='check_importo(this, "+t+")'/></td>";
         row += "<td>";
         row += "<input name='pagato["+t+"]' type='hidden' value='0'/>";
-        row += "<input name='pagato["+t+"]' type='checkbox' value='1' class='form-control'/>";
+        row += "<input name='pagato["+t+"]' type='checkbox' value='1' class='form-control'  id='pagato_"+t+"' onchange='check_pagato(this, "+t+")' style='display:none'/>";
         row += "</td>";
+        row += "<td><input name='acconto["+t+"]' type='number' value='"+price+"' class='form-control' style='width: 70px;' step='0.1' id='acconto_"+t+"'/></td>";
       }else{
         row += "<td><input name='costo["+t+"]' type='hidden' value='0' class='form-control' style='width: 70px;' />"+price+"€</td>";
         row += "<td>";

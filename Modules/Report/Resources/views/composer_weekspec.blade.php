@@ -61,8 +61,8 @@ use Modules\Attributo\Entities\Attributo;
 										<td><input name="week[{{$w}}][]" value="{{$spec->id}}" type="checkbox"/></td>
 										<td>{{$spec->label}}</td>
 										<td>
-											<input name="week_filter[{{$w}}]['.$loop->index.']" value="0" type="hidden"/>
-											<input name="week_filter[{{$w}}]['.$loop->index.']" value="{{$spec->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'week_filter_value_{{$w}}_{{$index}}', true)"/>
+											<input name="week_filter[{{$w}}][{{$loop->index}}]" value="0" type="hidden"/>
+											<input name="week_filter[{{$w}}][{{$loop->index}}]" value="{{$spec->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'week_filter_value_{{$w}}_{{$index}}', true)"/>
 										</td>
 										<td>
 

@@ -25,6 +25,7 @@ Route::group(['middleware' => ['web', 'role:admin|owner', 'license:event'], 'pre
 	Route::post('eventspecs/destroy', ['as' => 'eventspecs.destroy', 'uses' => 'EventSpecController@destroy']);
 	Route::post('eventspecs/riempi_specifica', ['as' => 'eventspecs.riempi_specifica', 'uses' => 'EventSpecValueController@riempi_specifica']);
 	Route::post('eventspecs/elimina_specifica', ['as' => 'eventspecs.elimina_specifica', 'uses' => 'EventSpecValueController@elimina_specifica']);
+	Route::post('eventspecs/aggiungi_specifica', ['as' => 'eventspecs.aggiungi_specifica', 'uses' => 'EventSpecValueController@aggiungi_specifica']);
 });
 
 ?>

@@ -109,20 +109,20 @@ use Modules\Event\Entities\EventSpec;
 							{!! Form::text('color', null, ['class' => 'form-control jscolor {hash:true, required:false}']) !!}
 						</div>
 
-						<div class="form-group panel-right">
+						<div class="form-group panel-right" style="min-height: 100px">
 						</div>
 					</div>
 
 
 
-					<h4>Modulo di iscrizione</h4>
-					<div class="form-group">
-						<div class="form-group panel-left">
+					<h3>Modulo di iscrizione</h3>
+					<div class="form-group" style="min-height: 100px;">
+						<div class="form-group panel-3-left">
 							{!! Form::label('template_file', 'Carica un template personalizzato per il modulo di iscrizione. Altrimenti verrà utilizzato quello di default.') !!}
 							{!! Form::file('template_file', null, ['class' => 'form-control']) !!}
 						</div>
 
-						<div class="form-group panel-right">
+						<div class="form-group panel-3-center">
 							<a href="{{ url(Storage::url('public/template/subscription_template.docx')) }}">Scarica il modulo di default.</a><br>
 							{!! Form::hidden('elimina_template', 0) !!}
 							@if($event->template_file == null)
@@ -132,6 +132,13 @@ use Modules\Event\Entities\EventSpec;
 							{!! Form::checkbox('elimina_template', 1, 0, []) !!} Elimina modulo caricato e usa quello di default
 							@endif
 						</div>
+
+						<div class="form-group panel-3-right">
+							{!! Form::label('pagine_foglio', 'Opzioni di stampa. Scegli se il file PDF finale da stampare deve essere composto da una o più pagine per foglio.') !!}
+							{!! Form::select('pagine_foglio', Event::getPaginePerFoglio(), null, ['class' => 'form-control']) !!}
+						</div>
+
+
 					</div>
 
 					<div class="form-group">

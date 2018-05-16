@@ -15,7 +15,7 @@ use App\Permission;
     <hr>
   </div>
   <div class="row">
-    <div class="col-md-8 col-md-offset-2" style="margin-left: 5%; width: 90%;">
+    <div class="col-md-8 col-md-offset-2" style="margin-left: 0%; width: 100%;">
       <div class="panel panel-default">
         <div class="panel-body">
           @if(Session::has('flash_message'))
@@ -186,9 +186,9 @@ $(document).ready(function(){
       { data: 'email', name: 'users.email' },
       { data: 'nato_il', name: 'users.nato_il' },
       { data: 'nato_a', name: 'users.nato_a' },
-      { data: 'sesso', name: 'users.sesso' },
-      { data: 'residente', name: 'users.residente' },
-      { data: 'via', name: 'users.via' },
+      { data: 'sesso', name: 'users.sesso', visible: false },
+      { data: 'residente', name: 'users.residente', visible: false},
+      { data: 'via', name: 'users.via', visible: false},
       { data: 'check', orderable: false, searchable: false},
       { data: 'action', orderable: false, searchable: false}
     ]

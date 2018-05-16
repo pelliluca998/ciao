@@ -35,69 +35,72 @@ use Modules\User\Entities\Group;
 				<?php
 				//specifiche dell'evento
 				$specs = (new EventSpec)
-					->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.price')
+					->select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.price', 'event_specs.acconto')
 					->where([['id_event', $event->id], ['event_specs.general', 1]])
 					->orderBy('event_specs.ordine', 'ASC')
 					->get();
 				?>
+				<table class="testgrid">
+					<thead>
+						<tr>
+							<th style="width: 70%">Specifica</th>
+							<th>Prezzo</th>
+							@if(!Auth::user()->hasRole('user')) <th>Pagato</th> @endif
+							@if(!Auth::user()->hasRole('user')) <th>Acconto</th> @endif
+						</tr>
+					</thead>
 				@foreach($specs as $spec)
-					{!! Form::hidden('id_spec['.$loop->index.']', $spec->id) !!}
 					<?php
 						$price = json_decode($spec->price, true);
+						$acconto = json_decode($spec->acconto, true);
 						if(count($price)==0) $price[0]=0;
+						if(count($acconto)==0) $acconto[0]=0;
 					?>
-					{!! Form::hidden('costo['.$loop->index.']', $price[0]) !!}
-					@if(Auth::user()->hasRole('user') && $spec->hidden==1)
-						{!! Form::hidden('specs['.$loop->index.']', 0) !!}
+
+					<tr style="{!! (($spec->hidden && Auth::user()->hasRole('user'))?'display:none':'display:') !!}">
+					{!! Form::hidden('id_spec['.$loop->index.']', $spec->id) !!}
+					<td>
+						{!! Form::label($spec->id, $spec->label) !!}
+						@if(strlen($spec->descrizione)>0)
+							- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
+						@endif
+
+						@if($spec->id_type>0)
+							{!! Form::select('specs['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
+						@else
+							@if($spec->id_type==-1)
+								{!! Form::text('specs['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							@elseif($spec->id_type==-2)
+								{!! Form::hidden('specs['.$loop->index.']', 0) !!}
+								{!! Form::checkbox('specs['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
+							@elseif($spec->id_type==-3)
+								{!! Form::number('specs['.$loop->index.']', '', ['class' => 'form-control']) !!}
+							@endif
+						@endif
+					</td>
+					<td>
+						@if(Auth::user()->hasRole('user'))
+							{!! Form::hidden('costo['.$loop->index.']', $price[0]) !!}
+							{!! Form::hidden('acconto['.$loop->index.']', 0) !!}
+							{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
+							{{number_format(floatval($price[0]), 2, ',', '')}}€
+						@else
+							{!! Form::number('costo['.$loop->index.']', $price[0], ['class' => 'form-control', 'step' => '0.1']) !!}
+						@endif
+					</td>
+					@if(!Auth::user()->hasRole('user'))
+					<td>
 						{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-					@else
-						<div class="form-group" >
-							<table style="width: 100%;">
-							@if(!Auth::user()->hasRole('user'))
-								<tr><td style="width: 80%;"></td><td style="width: 10%;"></td></tr>
-							@else
-								<tr><td style="width: 100%;"></td></tr>
-							@endif
-							<tr><td>
-							{!! Form::label($spec->id, $spec->label) !!}
-							@if(strlen($spec->descrizione)>0)
-								- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
-							@endif
-
-							@if(floatval($price[0])>0)
-								(Prezzo: {{number_format(floatval($price[0]), 2, ',', '')}}€)
-							@endif
-							@if($spec->id_type>0)
-								{!! Form::select('specs['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control'])!!}
-							@else
-								@if($spec->id_type==-1)
-									{!! Form::text('specs['.$loop->index.']', '', ['class' => 'form-control']) !!}
-								@elseif($spec->id_type==-2)
-									{!! Form::hidden('specs['.$loop->index.']', 0) !!}
-									{!! Form::checkbox('specs['.$loop->index.']', 1, '', ['class' => 'form-control']) !!}
-								@elseif($spec->id_type==-3)
-									{!! Form::number('specs['.$loop->index.']', '', ['class' => 'form-control']) !!}
-								@endif
-							@endif
-							</td>
-							@if(!Auth::user()->hasRole('user'))
-								<td>
-
-									{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-									@if(floatval($price[0])>0)
-										{!! Form::label($spec->id, 'Pagato') !!}
-										{!! Form::checkbox('pagato['.$loop->index.']', 1, false, ['class' => 'form-control']) !!}
-									@endif
-								</td>
-							@else
-								{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-							@endif
-
-							</tr>
-							</table>
-						</div>
+						{!! Form::checkbox('pagato['.$loop->index.']', 1, false, ['class' => 'form-control']) !!}
+					</td>
+					<td>
+						{!! Form::number('acconto['.$loop->index.']', $acconto[0], ['class' => 'form-control', 'step' => '0.1']) !!}
+					</td>
 					@endif
+				</tr>
 				@endforeach
+			</table><br><br>
+
 
 				<div class="form-group">
 					@if(count($specs)>0)

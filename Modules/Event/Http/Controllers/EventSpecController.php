@@ -140,6 +140,7 @@ class EventSpecController extends Controller
 					$spec->valid_for = json_encode(array());
 				}
 				$spec->price = json_encode($input['price'][$id_spec[$key]]);
+				$spec->acconto = json_encode($input['acconto'][$id_spec[$key]]);
 				$spec->save();
 
 			}else{
@@ -161,6 +162,7 @@ class EventSpecController extends Controller
 					$spec->valid_for = json_encode(array());
 				}
 				$spec->price = json_encode(array());
+				$spec->acconto = json_encode(array());
 				$spec->save();
 			}
 			$ordine++;

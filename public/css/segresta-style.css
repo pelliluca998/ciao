@@ -20,7 +20,8 @@ table.testgrid tr {
 
 
 table.testgrid th {
-	background: #E5E5E5;
+	/* background: #E5E5E5; */
+	background: #ff944d;
 	border: 1px solid #D5D5D5;
 	color: #555;
 	text-align: left;
@@ -40,6 +41,10 @@ table.testgrid i {
   cursor: pointer;
 }
 
+table.testgrid tr:nth-child(odd) {
+    background: #ffe0cc;
+}
+
 .panel-left {
 	width: 50%;
 	float: left;
@@ -48,6 +53,23 @@ table.testgrid i {
 
 .panel-right {
 	width: 48%;
+	float: left;
+}
+
+.panel-3-left {
+	width: 32%;
+	float: left;
+	margin-right: 2%;
+}
+
+.panel-3-center {
+	width: 32%;
+	float: left;
+	margin-right: 2%;
+}
+
+.panel-3-right {
+	width: 32%;
 	float: left;
 }
 

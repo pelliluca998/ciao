@@ -11,9 +11,7 @@ class EventSpecValue extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'id_eventspec', 'valore', 'id_subscription', 'id_week', 'costo', 'pagato'
-    ];
+    protected $fillable = ['id_eventspec', 'valore', 'id_subscription', 'id_week', 'costo', 'pagato', 'acconto'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -21,6 +19,6 @@ class EventSpecValue extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 }

@@ -24,6 +24,15 @@ use Modules\User\Entities\Group;
 		<div class="panel-heading">Anagrafica Utenti</div>
 		<div class="panel-body">
 
+			@if($errors->any())
+			<div class="alert alert-danger">
+				@foreach($errors->all() as $error)
+				<p>{{ $error }}</p>
+				@endforeach
+			</div>
+			@endif
+
+
 			{!! Form::model($user, ['method' => 'PATCH','files' => true,'route' => ['user.update', $user->id]]) !!}
 				{!! Form::hidden('id_user', $user->id) !!}
 				<div class="form-group">
@@ -77,12 +86,12 @@ use Modules\User\Entities\Group;
 				</div>
 
 				<div class="form-group">
-					<div class="form-group" style="width: 48%; float: left;">
+					<div class="form-group panel-left">
 						{!! Form::label('photo', 'Foto Profilo') !!}
 						{!! Form::file('photo', null, ['class' => 'form-control']) !!}
 					</div>
 
-					<div class="form-group" style="width: 48%; float: left;">
+					<div class="form-group panel-right">
 						Foto attuale:<br>
 						<?php
 						if($user->photo!=''){

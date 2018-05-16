@@ -69,7 +69,7 @@ class ReportController extends Controller
 			$pdf = PDF::loadView('report::weekreport', compact('input'))->setPaper('a4', 'landscape');
 	    return $pdf->download(camel_case("Report").".pdf");
 			break;
-			case 'excel': return Excel::download(new ReportExport($input), 'report.xlsx');
+			case 'excel': return Excel::download(new ReportExportWeek($input), 'report.xlsx');
 			break;
 			case 'html': return view('report::weekreport', ['input' => $input]);
 			break;

@@ -64,9 +64,15 @@ use App\License;
               <?php
               $valid = json_decode($a->valid_for, true);
               $price = json_decode($a->price, true);
+              $acconto = json_decode($a->acconto, true);
               $price_0 = 0; //prezzo per la colonna generale
+              $acconto_0 = 0; //acconto per la colonna generale
               if(isset($price[0])){
                 $price_0 = $price[0];
+              }
+
+              if(isset($acconto[0])){
+                $acconto_0 = $acconto[0];
               }
 
               ?>
@@ -88,7 +94,8 @@ use App\License;
                   {!! Form::hidden('general[]', 0) !!}
                   {!! Form::checkbox("general[]", $a->id, $a->general, ['id' => "general_".$a->id, 'class' => 'form-control', "onclick" => "check_week($a->id, 0, true)"]) !!}
                   <br>
-                  Prezzo: {!! Form::number("price[".$a->id."][0]", $price_0, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
+                  Prezzo: {!! Form::number("price[".$a->id."][0]", $price_0, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}<br>
+                  Acconto: {!! Form::number("acconto[".$a->id."][0]", $acconto_0, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
                 </td>
                 @foreach($weeks as $w)
                 <td>
@@ -105,8 +112,14 @@ use App\License;
                   if(isset($price[$w->id])){
                     $price_w = $price[$w->id];
                   }
+
+                  $acconto_w = 0;
+                  if(isset($acconto[$w->id])){
+                    $acconto_w = $acconto[$w->id];
+                  }
                   @endphp
-                  Prezzo: {!! Form::number("price[".$a->id."][".$w->id."]", $price_w, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
+                  Prezzo: {!! Form::number("price[".$a->id."][".$w->id."]", $price_w, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}<br>
+                  Acconto: {!! Form::number("acconto[".$a->id."][".$w->id."]", $acconto_w, ['class' => 'form-control', 'style' => 'width: 90px;', 'step' => '0.01']) !!}
                 </td>
                 @endforeach
 
@@ -128,7 +141,7 @@ use App\License;
                   $tipo = TipoPagamento::where('id_oratorio', Session::get('session_oratorio'))->orderBy('id', 'ASC')->pluck('label', 'id');
                   ?>
                   <div style="width: 100%; margin-bottom: 40px;">
-                    <div style="float:left; margin-right: 2px; width: 35%">Cassa:</div>
+                    <div style="float:left; margin-right: 2px; width: 100%">Cassa:</div>
                     <div style="float:left;">
                       @if(count($cassa)>0)
                       {!! Form::select("cassa[]", $cassa, $a->id_cassa, ['class' => 'form-control']) !!}
@@ -138,7 +151,7 @@ use App\License;
                     </div>
                   </div>
                   <div style="width: 100%; margin-bottom: 80px;">
-                    <div style="float:left; margin-right: 2px; width: 35%">Modalità:</div>
+                    <div style="float:left; margin-right: 2px; width: 100%">Modalità:</div>
                     <div style="float:left;">
                       @if(count($modo)>0)
                       {!! Form::select("modo_pagamento[]", $modo, $a->id_modopagamento, ['class' => 'form-control']) !!}
@@ -148,7 +161,7 @@ use App\License;
                     </div>
                   </div>
                   <div style="width: 100%; margin-bottom: 50px;">
-                    <div style="float:left; margin-right: 2px; width: 35%">Tipologia:</div>
+                    <div style="float:left; margin-right: 2px; width: 100%">Tipologia:</div>
                     <div style="float:left;">
                       @if(count($tipo)>0)
                       {!! Form::select("tipo_pagamento[]", $tipo, $a->id_tipopagamento, ['class' => 'form-control']) !!}

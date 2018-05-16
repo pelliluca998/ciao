@@ -61,7 +61,8 @@ echo Form::open(['route' => 'eventspecvalues.save']);
 $index=0;
 //carico tutte le specifiche generali (general=1)
 $specs = (new EventSpecValue)
-	->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.pagato')
+	->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type',
+	'event_spec_values.acconto', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.pagato')
 	->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 	->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 1]])
 	->orderBy('event_specs.ordine', 'asc')
@@ -96,10 +97,11 @@ $specs = (new EventSpecValue)
 <h2>Specifiche generali</h2>
 <table class='testgrid' id='showeventspecvalue'>
 	<thead><tr>
-	<th style='width: 35%;'>Specifica</th>
+	<th style='width: 32%;'>Specifica</th>
 	<th>Valore</th>
 	<th>Costo (€)</th>
 	<th>Pagato</th>
+	<th>Acconto</th>
 	<th></th>
 	</tr></thead>
 	@foreach($specs as $spec)
@@ -123,13 +125,21 @@ $specs = (new EventSpecValue)
 			@endif
 			</td>
 			<td>
-				{!! Form::number('costo['.$loop->index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'step' => '0.01']) !!}
+				{!! Form::number('costo['.$loop->index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'step' => '0.1', 'id' => 'costo_'.$loop->index, 'onchange' => 'check_importo(this, '.$loop->index.')', 'readonly' => ($spec->pagato==1?true:false)]) !!}
 			</td>
 			<td>
-				{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-				@if($spec->costo>0)
-             {!! Form::checkbox('pagato['.$loop->index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
-        @endif
+				<?php
+				$display = "";
+				if($spec->costo==0){
+					$display = "display:none";
+				}
+				if($spec->pagato==null) $spec->pagato=0;
+				?>
+					{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
+          {!! Form::checkbox('pagato['.$loop->index.']', 1, $spec->pagato, ['class' => 'form-control', 'style' => $display, 'id' => 'pagato_'.$loop->index, 'onchange' => 'check_pagato(this, '.$loop->index.')']) !!}
+			</td>
+			<td>
+				{!! Form::number('acconto['.$loop->index.']', $spec->acconto, ['class' => 'form-control', 'step' => '0.01', 'style' => 'width: 85px;'.$display, 'id' => 'acconto_'.$loop->index, 'readonly' => ($spec->pagato==1?true:false)]) !!}
 			</td>
 			<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
 		</tr>
@@ -150,7 +160,9 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 @foreach($weeks as $w)
 	<?php
 		$specs = (new EventSpecValue)
-			->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.pagato')
+			->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type',
+			'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.id',
+			'event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato')
 			->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 			->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 0], ['event_spec_values.id_week', $w->id]])
 			->orderBy('event_specs.ordine', 'asc')
@@ -164,6 +176,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 	<th>Valore</th>
 	<th>Costo (€)</th>
 	<th>Pagato</th>
+	<th>Acconto (€)</th>
 	<th></th>
 	</tr></thead>
 
@@ -185,20 +198,28 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 						{!! Form::text('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
 					@elseif($spec->id_type==-2)
 						{!! Form::hidden('valore['.$index.']', 0) !!}
-		               	{!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
+		        {!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
 					@elseif($spec->id_type==-3)
 						{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
 					@endif
 				@endif
 				</td>
 				<td>
-					{!! Form::number('costo['.$index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'step' => '0.01']) !!}
+					{!! Form::number('costo['.$index.']', $spec->costo, ['class' => 'form-control', 'style' => 'width: 70px;', 'step' => '0.01', 'id' => 'costo_'.$index, 'onchange' => 'check_importo(this, '.$index.')', 'readonly' => ($spec->pagato==1?true:false)]) !!}
 				</td>
 				<td>
+					<?php
+					$display = "";
+					if($spec->costo==0){
+						$display = "display:none";
+					}
+					if($spec->pagato==null) $spec->pagato=false;
+					?>
 					{!! Form::hidden('pagato['.$index.']', 0) !!}
-					@if($spec->costo!=0)
-			               {!! Form::checkbox('pagato['.$index.']', 1, $spec->pagato, ['class' => 'form-control']) !!}
-			          @endif
+			    {!! Form::checkbox('pagato['.$index.']', 1, $spec->pagato, ['class' => 'form-control', 'style' => $display, 'id' => 'pagato_'.$index, 'onchange' => 'check_pagato(this, '.$index.')']) !!}
+				</td>
+				<td>
+					{!! Form::number('acconto['.$index.']', $spec->acconto, ['class' => 'form-control', 'step' => '0.01', 'style' => 'width: 85px;'.$display, 'id' => 'acconto_'.$index, 'readonly' => ($spec->pagato==1?true:false)]) !!}
 				</td>
 				<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
 			</tr>
@@ -223,6 +244,29 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 
 
 <script>
+//Se l'importo è pari a 0, disabilito il pagato e l'acconto
+function check_importo(input, index){
+	var costo = $(input).val();
+	if(costo == 0){
+		$("#pagato_"+index).hide();
+		$("#acconto_"+index).hide();
+		$("#acconto_"+index).val("0")
+	}else{
+		$("#pagato_"+index).show();
+		$("#acconto_"+index).show();
+	}
+}
+
+//se flaggo il pagato, disabilito costo e acconto
+function check_pagato(input, index){
+	if($(input).prop("checked")){
+		$("#acconto_"+index).prop('readonly', true);
+		$("#costo_"+index).prop('readonly', true);
+	}else{
+		$("#acconto_"+index).prop('readonly', false);
+		$("#costo_"+index).prop('readonly', false);
+	}
+}
 $(document).ready(function(){
 	$('#eventspecsOp').on('show.bs.modal', function (event) {
 	$('#valid_for').trigger("change");

@@ -88,6 +88,9 @@ class SubscriptionController extends Controller
 		->addColumn('id_user', function ($sub) use ($event){
 			if($event->stampa_anagrafica==0){
 				$array_specifiche = json_decode($event->spec_iscrizione);
+				if($array_specifiche == null){
+					$array_specifiche = array();
+				}
 				$anagrafica = EventSpecValue::where(['id_subscription' => $sub->id])->whereIn('id_eventspec', $array_specifiche)->get();
 				if(count($anagrafica)>0){
 					$val = "";
@@ -299,6 +302,7 @@ class SubscriptionController extends Controller
 			$specs = $input['specs'];
 			$id_spec = $input['id_spec'];
 			$costo = $input['costo'];
+			$acconto = $input['acconto'];
 			$pagato = $input['pagato'];
 			$i=0;
 			foreach($specs as $spec){
@@ -308,6 +312,7 @@ class SubscriptionController extends Controller
 				$e->id_subscription = $sub->id;
 				$e->id_week=0;
 				$e->costo = floatval($costo[$i]);
+				$e->acconto = floatval($acconto[$i]);
 				$e->pagato = $pagato[$i];
 				$e->save();
 
@@ -328,6 +333,7 @@ class SubscriptionController extends Controller
 						if($event_spec->id_tipopagamento!=null){
 							$id_tipo = $event_spec->id_tipopagamento;
 						}
+						//costo
 						$bilancio = new Bilancio;
 						$bilancio->id_event = $input['id_event'];
 						$bilancio->id_user = Auth::user()->id;
@@ -339,16 +345,30 @@ class SubscriptionController extends Controller
 						$bilancio->descrizione = "Pagamento da ".$user->cognome." ".$user->name." (iscrizione #".$sub->id.")";
 						$bilancio->importo = floatval($costo[$i]);
 						$bilancio->data = date('Y-m-d');
+						$bilancio->tipo_incasso = 1;
 						$bilancio->save();
+						//acconto
+						if(floatval($acconto[$i])>0){
+							$bilancio = new Bilancio;
+							$bilancio->id_event = $input['id_event'];
+							$bilancio->id_user = Auth::user()->id;
+							$bilancio->id_eventspecvalues = $e->id;
+							$bilancio->id_tipopagamento = $id_tipo;
+							$bilancio->id_modalita = $id_modo;
+							$bilancio->id_cassa = $id_cassa;
+							$user = User::findOrFail($input['id_user']);
+							$bilancio->descrizione = "Acconto da ".$user->cognome." ".$user->name." (iscrizione #".$sub->id.")";
+							$bilancio->importo = floatval($acconto[$i]);
+							$bilancio->data = date('Y-m-d');
+							$bilancio->tipo_incasso = 2;
+							$bilancio->save();
+						}
 					}
 				}
 				//endcontabilita
 
 				$i++;
 			}
-
-
-
 			Session::put('id_subscription', $sub->id);
 			Session::put('id_event', $sub->id_event);
 		}
@@ -363,6 +383,7 @@ class SubscriptionController extends Controller
 			$id_eventspec = $input['id_eventspec'];
 			$id_week = $input['id_week'];
 			$costo = $input['costo_2'];
+			$acconto = $input['acconto_2'];
 			$pagato = $input['pagato_2'];
 			$user = User::findOrFail(Subscription::findOrFail($input['id_subscription'])->id_user);
 			$i=0;
@@ -374,6 +395,7 @@ class SubscriptionController extends Controller
 				$e->id_week = $id_week[$i];
 				$e->pagato = $pagato[$i];
 				$e->costo = $costo[$i];
+				$e->acconto = $acconto[$i];
 				$e->save();
 
 				//contabilita
@@ -393,6 +415,7 @@ class SubscriptionController extends Controller
 						if($event_spec->id_tipopagamento!=null){
 							$id_tipo = $event_spec->id_tipopagamento;
 						}
+						//costo
 						$bilancio = new Bilancio;
 						$bilancio->id_event = $input['id_event'];
 						$bilancio->id_user = Auth::user()->id;
@@ -403,7 +426,24 @@ class SubscriptionController extends Controller
 						$bilancio->descrizione = "Pagamento da ".$user->cognome." ".$user->name." (iscrizione #".$input['id_subscription'].")";
 						$bilancio->importo = floatval($costo[$i]);
 						$bilancio->data = date('Y-m-d');
+						$bilancio->tipo_incasso = 1;
 						$bilancio->save();
+
+						//Acconto
+						if(floatval($acconto[$i])>0){
+							$bilancio = new Bilancio;
+							$bilancio->id_event = $input['id_event'];
+							$bilancio->id_user = Auth::user()->id;
+							$bilancio->id_eventspecvalues = $e->id;
+							$bilancio->id_tipopagamento = $id_tipo;
+							$bilancio->id_modalita = $id_modo;
+							$bilancio->id_cassa = $id_cassa;
+							$bilancio->descrizione = "Pagamento da ".$user->cognome." ".$user->name." (iscrizione #".$input['id_subscription'].")";
+							$bilancio->importo = floatval($acconto[$i]);
+							$bilancio->data = date('Y-m-d');
+							$bilancio->tipo_incasso = 2;
+							$bilancio->save();
+						}
 					}
 				}
 				//endcontabilita
@@ -413,20 +453,6 @@ class SubscriptionController extends Controller
 		}
 		return view('subscription::subscribe.grazie')->with('id_subscription', Session::get('id_subscription'));
 	}
-
-	// public function print(Request $request){
-	// 	//$html = View::make('pdf.subscription', []);
-	// 	//return PDF::loadHTML($html)->download('invoice.pdf');
-	// 	$input = $request->all();
-	// 	$id_subscription = $input['id_sub'];
-	// 	$sub = Subscription::findOrFail($id_subscription);
-	// 	$event = Event::findOrfail($sub->id_event);
-	// 	if($event->id_oratorio == Session::get('session_oratorio')){
-	// 		return view('subscription::printsubscription', ['id_subscription' => $id_subscription]);
-	// 	}else{
-	// 		abort(403, 'Unauthorized action.');
-	// 	}
-	// }
 
 	public function usersub_showeventspecs(Request $request){
 		$input = $request->all();
@@ -588,12 +614,19 @@ class SubscriptionController extends Controller
 					$template->setValue('specifica_g#'.$i, $spec->label);
 					$template->setValue('valore_g#'.$i, '');
 					$costi = json_decode($spec->price, true);
+					$acconti = json_decode($spec->acconto, true);
 					if(isset($costi['0'])){
 						$costo = $costi['0'];
 					}else{
 						$costo = 0;
 					}
+					if(isset($acconti['0'])){
+						$acconto = $acconti['0'];
+					}else{
+						$acconto = 0;
+					}
 					$template->setValue('costo_g#'.$i, $costo."€");
+					$template->setValue('acconto_g#'.$i, $acconto."€");
 					if($costo == 0){
 						$template->setValue('pagato_g#'.$i, '');
 					}else{
@@ -631,12 +664,14 @@ class SubscriptionController extends Controller
 								$template->setValue('specifica_w#'.$w.'#'.$i, $spec->label);
 								$template->setValue('valore_w#'.$w.'#'.$i, '');
 								$costi = json_decode($spec->price, true);
-								if(isset($costi[$week->id])){
-									$costo = $costi[$week->id];
+								$acconti = json_decode($spec->acconto, true);
+								if(isset($acconti[$week->id])){
+									$acconto = $acconti[$week->id];
 								}else{
-									$costo = 0;
+									$acconto = 0;
 								}
 								$template->setValue('costo_w#'.$w.'#'.$i, $costo."€");
+								$template->setValue('acconto_w#'.$w.'#'.$i, $acconto."€");
 								if($costo == 0){
 									$template->setValue('pagato_w#'.$w.'#'.$i, '');
 								}else{
@@ -703,8 +738,9 @@ class SubscriptionController extends Controller
 
 			//specifiche generali
 			$importo_totale = 0;
+			$acconto_totale = 0;
 			$da_pagare = 0;
-			$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.pagato')
+			$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato')
 			->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 			->where([['event_spec_values.id_subscription', $sub->id], ['event_specs.general', 1]])
 			->orderBy('event_specs.ordine', 'asc')->get();
@@ -716,7 +752,9 @@ class SubscriptionController extends Controller
 					$template->setValue('valore_g#'.$i, EventSpec::getPrintableValue($spec->id_type, $spec->valore));
 					if(($spec->id_type==-2 && $spec->valore == 1) || $spec->id_type!=-2){
 						$template->setValue('costo_g#'.$i, $spec->costo);
+						$template->setValue('acconto_g#'.$i, $spec->acconto);
 						$importo_totale += $spec->costo;
+						$acconto_totale += $spec->acconto;
 						if($spec->costo == 0){
 							$template->setValue('pagato_g#'.$i, '');
 						}else{
@@ -728,10 +766,11 @@ class SubscriptionController extends Controller
 
 						}
 						if($spec->pagato == false){
-							$da_pagare += $spec->costo;
+							$da_pagare += $spec->costo-$spec->acconto;
 						}
 					}else{
 						$template->setValue('costo_g#'.$i, '');
+						$template->setValue('acconto_g#'.$i, '');
 						$template->setValue('pagato_g#'.$i, '');
 					}
 
@@ -751,7 +790,7 @@ class SubscriptionController extends Controller
 				foreach($weeks as $week){
 					$i = 1;
 					$template->setValue('nome_settimana#'.$w, "Settimana $w - dal ".$week->from_date." al ".$week->to_date);
-					$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.pagato', 'event_specs.valid_for')
+					$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_spec_values.valore', 'event_spec_values.id', 'event_specs.id_type', 'event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato', 'event_specs.valid_for')
 					->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 					->where([['event_spec_values.id_subscription', $sub->id], ['event_specs.general', 0], ['event_spec_values.id_week', $week->id]])
 					->orderBy('event_specs.ordine', 'asc')->get();
@@ -762,7 +801,9 @@ class SubscriptionController extends Controller
 							$template->setValue('valore_w#'.$w.'#'.$i, EventSpec::getPrintableValue($spec->id_type, $spec->valore));
 							if(($spec->id_type==-2 && $spec->valore == 1) || $spec->id_type!=-2){
 								$template->setValue('costo_w#'.$w.'#'.$i, $spec->costo);
+								$template->setValue('acconto_w#'.$w.'#'.$i, $spec->acconto);
 								$importo_totale += $spec->costo;
+								$acconto_totale += $spec->acconto;
 								if($spec->costo == 0){
 									$template->setValue('pagato_w#'.$w.'#'.$i, '');
 								}else{
@@ -774,11 +815,12 @@ class SubscriptionController extends Controller
 								}
 
 								if($spec->pagato == false){
-									$da_pagare += $spec->costo;
+									$da_pagare += ($spec->costo-$spec->acconto);
 								}
 							}else{
 								$template->setValue('pagato_w#'.$w.'#'.$i, '');
 								$template->setValue('costo_w#'.$w.'#'.$i, '');
+								$template->setValue('acconto_w#'.$w.'#'.$i, '');
 							}
 
 
@@ -792,6 +834,7 @@ class SubscriptionController extends Controller
 			}
 
 			$template->setValue('importo_totale', number_format($importo_totale,2));
+			$template->setValue('acconto_totale', number_format($acconto_totale,2));
 			$template->setValue('da_pagare', number_format($da_pagare,2));
 		}
 
@@ -803,7 +846,18 @@ class SubscriptionController extends Controller
 		$path = sys_get_temp_dir().$filename.".docx";
 		$output = sys_get_temp_dir();
 		$template->saveAs($path);
-		shell_exec("unoconv -f pdf ".$path." --outdir ".$output);
-		return response()->file($output.$filename.".pdf");
+		//converto il file in pdf
+		$exec = "unoconv -f pdf ".$path;
+		shell_exec($exec);
+		//stampo 1/2 pagine per foglio in base alle impostazioni
+		$response_file = $output.$filename.".pdf";
+		switch($event->pagine_foglio){
+			case 2:
+				$cmd = "pdfjam --nup 2x1 --landscape --a4paper --outfile ".$output."/".$filename."-2up.pdf ".$response_file;
+				shell_exec($cmd);
+				$response_file = $output.$filename."-2up.pdf";
+			break;
+		}
+		return response()->file($response_file);
 	}
 }

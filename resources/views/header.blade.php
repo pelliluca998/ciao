@@ -72,11 +72,11 @@
 								<li><a href="{{route('usersubscriptions.show')}}"><i class="fa fa-flag" aria-hidden='true'></i> Le tue iscrizioni</a></li>
 								<li><a href="{{route('oratorio.affiliazione')}}"><i class="fa fa-cubes" aria-hidden='true'></i> Affiliazione oratorio</a></li>
 								@if(Module::find('telegram')!=null)
-								<li><a href="{{route('telegram.index')}}"><i class="fa fa-telegram" aria-hidden='true'></i> Telegram</a></li>
+								<li><a href="{{route('telegram.index')}}"><i class="fab fa-telegram-plane" aria-hidden='true'></i> Telegram</a></li>
 								@endif
 								<li>
 									<a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-										<i class="fa fa-sign-out" aria-hidden='true'></i> Logout
+										<i class="fas fa-sign-out-alt" aria-hidden='true'></i> Logout
 									</a>
 
 									<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
@@ -85,7 +85,7 @@
 								</li>
 								@endif
 								@if(Auth::user()->hasRole('owner'))
-								<li class="{{ (Request::is('oratorio/showall') ? 'active' : '') }}"><a href="{{route('oratorio.showall')}}">Gestione oratori</a></li>
+								<li class="{{ (Request::is('oratorio/showall') ? 'active' : '') }}"><a href="{{route('oratorio.showall')}}"><i class="fas fa-cogs"></i> Gestione oratori</a></li>
 								@endif
 
 							</ul>

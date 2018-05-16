@@ -69,7 +69,7 @@ use App\LicenseType;
 						<tr><thead><th>Modulo</th><th>Data aquisto</th><th>Data scadenza</th></thead></tr>
 						@foreach(Module::all() as $module)
 						<?php
-						$license = License::where([['module_name', $module->getLowerName()], ['id_oratorio', Session::get('session_oratorio')]])->first();
+						$license = License::where([['module_name', $module->getLowerName()], ['id_oratorio', $oratorio->id]])->first();
 						?>
 						<tr>
 							@if($license!=null)

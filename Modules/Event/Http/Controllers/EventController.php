@@ -150,7 +150,7 @@ class EventController extends Controller
 			'nome' => 'required',
 			'descrizione' => 'required',
 			'anno' =>'required',
-			'template_file' => 'mimes:docx',
+			'template_file' => 'mimes:docx,zip',
 			'image' => 'mimes:jpeg,jpg,gif,png'
 		], $this->messages);
 		$input = $request->all();
@@ -206,7 +206,7 @@ class EventController extends Controller
 			'nome' => 'required',
 			'descrizione' => 'required',
 			'anno' =>'required',
-			'template_file' => 'mimes:docx',
+			'template_file' => 'mimes:docx,zip',
 			'image' => 'mimes:jpeg,jpg,gif,png'
 		], $this->messages);
 

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateLicenseTable extends Migration
+class AddPagineFoglioEvento extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class UpdateLicenseTable extends Migration
      */
     public function up()
     {
-      Schema::table('licenses', function($table) {
-        $table->dropColumn('license_type');
-        $table->string('module_name')->after('id');
+      Schema::table('events', function($table) {
+        $table->integer('pagine_foglio')->nullable(true)->default(1)->after('template_file');
       });
     }
 
@@ -26,6 +25,8 @@ class UpdateLicenseTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('', function (Blueprint $table) {
+
+        });
     }
 }

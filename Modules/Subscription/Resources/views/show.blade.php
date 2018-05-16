@@ -49,7 +49,7 @@ use App\Permission;
                 <th>Edit</th>
                 <th>Apri iscrizione</th>
               </tr>
-            </thead>
+            </thead>            
           </table>
           {!! Form::close() !!}
         </div>
@@ -141,11 +141,13 @@ function del_confirmation(){
   });
 }
 $(document).ready(function(){
-  $('#subscriptionTable').DataTable({
+  var table = $('#subscriptionTable').DataTable({
     responsive: true,
     processing: true,
-    serverSide: true,
-    dom: 'Bfrtip',
+    serverSide: false,
+    lengthChange: true,
+    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+    dom: 'lBfrtip',
     buttons: [
       {
         extend: 'excel',
@@ -168,16 +170,18 @@ $(document).ready(function(){
     ajax: "{!! route('subscription.data') !!}",
     columns: [
       { data: 'id', name: 'id', visible: false},
-      { data: 'id_user', name: 'subscription.id_user' },
-      { data: 'confirmed', name: 'subscription.confirmed' },
-      { data: 'type', name: 'subscription.type' },
+      { data: 'id_user', name: 'id_user' },
+      { data: 'confirmed', name: 'subscriptions.confirmed' },
+      { data: 'type', name: 'subscriptions.type' },
       { data: 'check', orderable: false, searchable: false},
       { data: 'action', orderable: false, searchable: false},
       { data: 'specs', orderable: false, searchable: false}
-    ]
+    ],
 
 
   });
+
+
 
   $('#subscriptionTable').on('page.dt', function() {
     setTimeout(del_confirmation(), 500);

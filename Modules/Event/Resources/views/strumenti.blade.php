@@ -60,12 +60,44 @@ use Modules\Event\Entities\EventSpec;
 
 					<div class="form-group">
 						{!! Form::label('id_eventspec', "Specifica da eliminare dalle iscrizioni") !!}
-
-						{!! Form::select('id_eventspec', EventSpec::where('id_event', Session::get('work_event'))->orderBy('event_specs.ordine')->pluck('event_specs.label', 'event_specs.id'), null, ['class' => 'form-control']) !!}
+						<select name="id_eventspec" class="form-control" id="add_spec">
+							{!! EventSpec::getSpecsForSelect() !!}
+						</select>
 					</div>
 
 					<div class="form-group">
 						{!! Form::submit('Elimina', ['class' => 'btn btn-primary form-control']) !!}
+					</div>
+
+					{!! Form::close() !!}
+				</div>
+			</div>
+
+
+			<div class="panel panel-default panel-right">
+				<div class="panel-heading">Aggiungi specifica in tutte le iscrizioni</div>
+				<div class="panel-body">
+					<p>Con questo strumento puoi aggiungere una specifica in tutte le iscrizioni già esistenti, selezionando anche il valore predefinito da associare.</p>
+
+					{!! Form::open(['route' => 'eventspecs.aggiungi_specifica']) !!}
+
+					<div class="form-group">
+						{!! Form::label('id_eventspec', "Specifica da aggiungere dalle iscrizioni") !!}
+						<select name="id_eventspec" class="form-control" id="add_spec" onchange="option_selected(this)">
+							{!! EventSpec::getSpecsForSelect() !!}
+						</select>
+					</div>
+
+					<div class="form-group">
+						{!! Form::hidden('id_week', '0', ['id'=>'id_week']) !!}
+						{!! Form::hidden('costo', '0', ['id'=>'costo']) !!}
+						{!! Form::hidden('acconto', '0', ['id'=>'acconto']) !!}
+						{!! Form::label('valore', "Valore della specifica") !!}
+						<span id="span_type3"></span>
+					</div>
+
+					<div class="form-group">
+						{!! Form::submit('Aggiungi', ['class' => 'btn btn-primary form-control']) !!}
 					</div>
 
 					{!! Form::close() !!}
@@ -78,9 +110,16 @@ use Modules\Event\Entities\EventSpec;
 
 @push('scripts')
 <script>
+function option_selected(sel){
+	$('#id_week').val($(sel).find(':selected').data('week'));
+	$('#costo').val($(sel).find(':selected').data('costo'));
+	$('#acconto').val($(sel).find(':selected').data('acconto'));
+	change_type(sel, '', 'valore', 'valore', true, 'span_type3');
+}
 $(document).ready(function(){
 	$('#pesco1').change();
 	$('#pesco2').change();
+	$('#add_spec').change();
 });
 </script>
 @endpush

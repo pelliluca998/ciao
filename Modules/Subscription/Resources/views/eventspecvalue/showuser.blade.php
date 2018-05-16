@@ -52,7 +52,7 @@ use Modules\Subscription\Entities\Subscription;
 
 <?php
 //carico tutte le settimane
-$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_spec_values.valore', 'event_spec_values.id')
+$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_spec_values.valore', 'event_spec_values.id','event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato')
 	->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 	->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.hidden', 0], ['event_specs.general', 1]])
 	->orderBy('event_spec_values.id_eventspec', 'asc')
@@ -71,28 +71,50 @@ $index=0;
 		<th>Valore</th>
 		<th>Costo (€)</th>
 		<th>Pagato</th>
+		<th>Acconto</th>
 		<th></th>
 		</tr></thead>
 		@foreach($specs as $spec)
 			<tr>
-			@if($subscription->confirmed==0)
 				<input type="hidden" name="id_eventspecvalue[{{$loop->index}}]" value="{{$spec->id}}"/>
 				<input type="hidden" name="id_eventspec[{{$loop->index}}]" value="{{$spec->id_eventspec}}"/>
 				<input type="hidden" name="id_subscription[{{$loop->index}}]" value="{{$id_subscription}}"/>
 				<td>{{$spec->label}}</td>
 				<td>
-				@if($spec->id_type>0)
-					{!! Form::select('valore['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
-				@else
-					@if($spec->id_type==-1)
-						{!! Form::text('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
-					@elseif($spec->id_type==-2)
-						{!! Form::hidden('valore['.$loop->index.']', 0) !!}
-				     	{!! Form::checkbox('valore['.$loop->index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
-					@elseif($spec->id_type==-3)
-						{!! Form::number('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
+					@if($subscription->confirmed==0)
+
+						@if($spec->id_type>0)
+							{!! Form::select('valore['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
+						@else
+							@if($spec->id_type==-1)
+								{!! Form::text('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
+							@elseif($spec->id_type==-2)
+								{!! Form::hidden('valore['.$loop->index.']', 0) !!}
+						     	{!! Form::checkbox('valore['.$loop->index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
+							@elseif($spec->id_type==-3)
+								{!! Form::number('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
+							@endif
+						@endif
+
+					@else
+
+						@if($spec->id_type>0)
+							{!! Form::label($loop->index, TypeSelect::where('id', $spec->valore)->first()->option)!!}
+						@else
+							@if($spec->id_type==-1)
+								{!! Form::label($loop->index, $spec->valore) !!}
+							@elseif($spec->id_type==-2)
+						     	@if($spec->valore==1)
+						     		<i class="fa fa-check-square-o fa-2x" aria-hidden='true'></i>
+						     	@else
+						     		<i class="fa fa-square-o fa-2x" aria-hidden='true'></i>
+						     	@endif
+							@elseif($spec->id_type==-3)
+								{!! Form::label($loop->index, $spec->valore) !!}
+							@endif
+						@endif
+
 					@endif
-				@endif
 				</td>
 				<td>
 					{{$spec->costo}}€
@@ -100,50 +122,23 @@ $index=0;
 				</td>
 				<td>
 					@if($spec->pagato==1)
-						<i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
+						<i class="far fa-check-circle fa-2x" aria-hidden="true"></i>
 						{!! Form::hidden('pagato['.$loop->index.']', 1) !!}
 					@else
-						<i class="fa fa-square-o fa-2x" aria-hidden="true"></i>
+						<i class="far fa-circle fa-2x" aria-hidden="true"></i>
 						{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
 					@endif
 
 				</td>
-				<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
-			@else
-				<td>{{$spec->label}}</td>
 				<td>
-				@if($spec->id_type>0)
-					{!! Form::label($loop->index, TypeSelect::where('id', $spec->valore)->first()->option)!!}
-				@else
-					@if($spec->id_type==-1)
-						{!! Form::label($loop->index, $spec->valore) !!}
-					@elseif($spec->id_type==-2)
-				     	@if($spec->valore==1)
-				     		<i class="fa fa-check-square-o fa-2x" aria-hidden='true'></i>
-				     	@else
-				     		<i class="fa fa-square-o fa-2x" aria-hidden='true'></i>
-				     	@endif
-					@elseif($spec->id_type==-3)
-						{!! Form::label($loop->index, $spec->valore) !!}
+					{{$spec->acconto}}€
+					{!! Form::hidden('acconto['.$loop->index.']', $spec->acconto) !!}
+				</td>
+				<td>
+					@if($subscription->confirmed==0)
+					<a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
 					@endif
-				@endif
 				</td>
-				<td>
-					{{$spec->costo}}€
-					{!! Form::hidden('costo['.$loop->index.']', $spec->costo) !!}
-				</td>
-				<td>
-					@if($spec->pagato==1)
-						<i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
-						{!! Form::hidden('pagato['.$loop->index.']', 1) !!}
-					@else
-						<i class="fa fa-square-o fa-2x" aria-hidden="true"></i>
-						{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-					@endif
-
-				</td>
-				<td></td>
-			@endif
 			</tr>
 			@php
 				$index=$loop->index+1
@@ -164,7 +159,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 @foreach($weeks as $w)
 	<?php
 		$specs = (new EventSpecValue)
-			->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.pagato')
+			->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato')
 			->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
 			->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 0], ['event_spec_values.id_week', $w->id]])
 			->orderBy('event_spec_values.id_eventspec', 'asc')
@@ -178,6 +173,7 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 	<th>Valore</th>
 	<th>Costo (€)</th>
 	<th>Pagato</th>
+	<th>Acconto</th>
 	<th></th>
 	</tr></thead>
 
@@ -192,18 +188,36 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 				<input type="hidden" name="id_subscription[{{$index}}]" value="{{$id_subscription}}" />
 				<td>{{$spec->label}}</td>
 				<td>
-				@if($spec->id_type>0)
-					{!! Form::select('valore['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
-				@else
-					@if($spec->id_type==-1)
-						{!! Form::text('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
-					@elseif($spec->id_type==-2)
-						{!! Form::hidden('valore['.$index.']', 0) !!}
-		               	{!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
-					@elseif($spec->id_type==-3)
-						{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
+					@if($subscription->confirmed==0)
+						@if($spec->id_type>0)
+							{!! Form::select('valore['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
+						@else
+							@if($spec->id_type==-1)
+								{!! Form::text('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
+							@elseif($spec->id_type==-2)
+								{!! Form::hidden('valore['.$index.']', 0) !!}
+				        {!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
+							@elseif($spec->id_type==-3)
+								{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
+							@endif
+						@endif
+					@else
+						@if($spec->id_type>0)
+							{!! Form::label($loop->index, TypeSelect::where('id', $spec->valore)->first()->option)!!}
+						@else
+							@if($spec->id_type==-1)
+								{!! Form::label($loop->index, $spec->valore) !!}
+							@elseif($spec->id_type==-2)
+									@if($spec->valore==1)
+										<i class="fa fa-check-square-o fa-2x" aria-hidden='true'></i>
+									@else
+										<i class="fa fa-square-o fa-2x" aria-hidden='true'></i>
+									@endif
+							@elseif($spec->id_type==-3)
+								{!! Form::label($loop->index, $spec->valore) !!}
+							@endif
+						@endif
 					@endif
-				@endif
 				</td>
 				<td>
 					{{$spec->costo}}€
@@ -211,13 +225,21 @@ $weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id
 				</td>
 				<td>
 					@if($spec->pagato==1)
-						<i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
+						<i class="far fa-check-circle fa-2x" aria-hidden="true"></i>
 					@else
-						<i class="fa fa-square-o fa-2x" aria-hidden="true"></i>
+						<i class="far fa-circle fa-2x" aria-hidden="true"></i>
 					@endif
 					{!! Form::hidden('pagato['.$index.']', $spec->pagato) !!}
 				</td>
-				<td><a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a></td>
+				<td>
+					{{$spec->acconto}}€
+					{!! Form::hidden('acconto['.$index.']', $spec->acconto) !!}
+				</td>
+				<td>
+					@if($subscription->confirmed==0)
+					<a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+					@endif
+				</td>
 			</tr>
 
 		@php

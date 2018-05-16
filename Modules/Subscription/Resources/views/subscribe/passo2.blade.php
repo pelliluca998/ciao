@@ -40,13 +40,12 @@ use Modules\Oratorio\Entities\TypeSelect;
 					@if(count($specs)>0)
 					<p><b>Settimana {{$loop->index+1}} - dal {{$w->from_date}} al {{$w->to_date}}</b></p>
 					<table class='testgrid' id="weektable_{{$w->id}}">
-					<thead><tr>
-					<th style='width: 35%;'>Specifica</th>
-					<th>Valore</th>
-					<th>Costo (€)</th>
-					@if(!Auth::user()->hasRole('user'))
-						<th>Pagato</th>
-					@endif
+					<thead>
+						<tr>
+							<th style='width: 70%;'>Specifica</th>
+							<th>Prezzo (€)</th>
+							@if(!Auth::user()->hasRole('user')) <th>Pagato</th> @endif
+							@if(!Auth::user()->hasRole('user')) <th>Acconto</th> @endif
 					</tr></thead>
 
 					@foreach($specs as $spec)
@@ -56,9 +55,13 @@ use Modules\Oratorio\Entities\TypeSelect;
 						@if($valid[$w->id]==1)
 							{!! Form::hidden('id_eventspec['.$index.']', $spec->id) !!}
 							{!! Form::hidden('id_week['.$index.']', $w->id) !!}
-								<tr style="{!! ($spec->hidden?'display:none':'display:') !!}">
-									<td>{{$spec->label}}</td>
+								<tr style="{!! (($spec->hidden && Auth::user()->hasRole('user'))?'display:none':'display:') !!}">
 									<td>
+										{!! Form::label($spec->id, $spec->label) !!}
+										@if(strlen($spec->descrizione)>0)
+											- <i>{!! Form::label($spec->descrizione, $spec->descrizione) !!}</i>
+										@endif
+
 									@if($spec->id_type>0)
 										{!! Form::select('valore['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
 									@else
@@ -75,23 +78,32 @@ use Modules\Oratorio\Entities\TypeSelect;
 									<td>
 										<?php
 											$price = json_decode($spec->price, true);
+											$acconto = json_decode($spec->acconto, true);
 											if(count($price)==0) $price[$w->id]=0;
+											if(count($acconto)==0) $acconto[$w->id]=0;
 										?>
-										{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
-										{!! Form::hidden('costo_2['.$index.']', $price[$w->id]) !!}
-									</td>
-									@if(!Auth::user()->hasRole('user'))
-										<td>
+										@if(Auth::user()->hasRole('user'))
+											{!! Form::hidden('costo_2['.$index.']', $price[$w->id]) !!}
+											{!! Form::hidden('acconto_2['.$index.']', $acconto[$w->id]) !!}
 											{!! Form::hidden('pagato_2['.$index.']', 0) !!}
-											@if($price[$w->id]>0)
-												<input type="checkbox" name="pagato_2[{{$index}}]" value="1" class="form-control" />
-											@endif
-										</td>
-									@else
-										{!! Form::hidden('pagato_2['.$index.']', 0) !!}
-									@endif
+											{{number_format(floatval($price[$w->id]), 2, ',', '')}}€
+										@else
+											{!! Form::number('costo_2['.$index.']', $price[$w->id], ['class' => 'form-control', 'step' => '0.1']) !!}
+										@endif
+									</td>
 
+									@if(!Auth::user()->hasRole('user'))
+									<td>
+										{!! Form::hidden('pagato_2['.$index.']', 0) !!}
+										{!! Form::checkbox('pagato_2['.$index.']', 1, false, ['class' => 'form-control']) !!}
+									</td>
+									<td>
+										{!! Form::number('acconto_2['.$index.']', $acconto[$w->id], ['class' => 'form-control', 'step' => '0.1']) !!}
+									</td>
+									@endif
 								</tr>
+
+
 						@php
 						$index++
 						@endphp

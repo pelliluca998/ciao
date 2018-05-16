@@ -8,13 +8,13 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class ReportExport implements FromView, WithEvents {
+class ReportExportWeek implements FromView, WithEvents {
 
   public function __construct($params){
     $this->params = $params;
   }
   public function view(): View{
-    return view('report::eventspecreport', ['input' => $this->params]);
+    return view('report::weekreport', ['input' => $this->params]);
   }
 
   public function registerEvents(): array

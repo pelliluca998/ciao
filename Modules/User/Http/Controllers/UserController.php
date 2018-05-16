@@ -69,6 +69,8 @@ class UserController extends Controller
 
     $builder = User::query()
     ->select('users.*')
+    ->leftJoin('user_oratorio', 'user_oratorio.id_user', 'users.id')
+    ->where('user_oratorio.id_oratorio', Session::get('session_oratorio'))
     ->orderBy('cognome', 'ASC');
 
     return $datatables->eloquent($builder)
@@ -224,6 +226,16 @@ class UserController extends Controller
   public function update(Request $request){
     $input = $request->all();
     $user = User::findOrFail($input['id_user']);
+
+    $this->validate($request, [
+      'name' => 'required',
+      'cognome' => 'required',
+      'nato_il' => 'required|date_format:d/m/Y',
+      'nato_a' => 'required',
+      'email' => 'required|email|unique:users,email,'.$user->id,
+      'username' => 'required|unique:users,username,'.$user->id,
+    ]);
+
     $orat = UserOratorio::where('id_user', $user->id)->first();
     if($orat->id_oratorio==Session::get('session_oratorio') || Auth::user()->id==$input['id_user']){
 
