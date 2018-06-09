@@ -107,7 +107,7 @@ function stampa_tabella($input, $whereRaw, $format){
 				$f=0;
 				$filter_values = array_values($input['spec_filter_value']);
 				foreach($input['spec_filter'] as $filter_id){
-					if($filter_ok){
+					if($filter_id>0 && $filter_ok){
 						$specs = EventSpecValue::where([['id_subscription', $sub->id_sub], ['id_eventspec', $filter_id], ['valore', $filter_values[$f]]])->orderBy('id_eventspec')->get();
 						if(count($specs)==0) $filter_ok=false;
 					}
@@ -451,6 +451,11 @@ function stampa_tabella($input, $whereRaw, $format){
 			echo "<ul>";
 			$valore_filtro = current($input['spec_filter_value']);
 			foreach($input['spec_filter'] as $filter){
+				echo "Valore: ".$valore_filtro."<br>";
+				if($filter==0){
+					next($input['spec_filter_value'])
+					continue;
+				}
 				$spec = EventSpec::findOrFail($filter);
 				echo "<li>Specifica <b>". $spec->label."</b> con valore  ";
 				if($spec->id_type>0){
@@ -479,7 +484,7 @@ function stampa_tabella($input, $whereRaw, $format){
 						case -3:
 						echo "<b>".$valore_filtro."</b>";
 						break;
-						
+
 					}
 				}
 				echo "</li>";

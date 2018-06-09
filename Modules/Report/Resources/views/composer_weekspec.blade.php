@@ -117,19 +117,22 @@ use Modules\Attributo\Entities\Attributo;
 								<td><input name="spec[]" value="{{$spec->id}}" type="checkbox"/></td>
 								<td>{{$spec->label}}</td>
 								<td>
-									<input name="spec_filter[]" value="{{$spec->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'spec_filter_value_{{$loop->index}}', true)"/></td>
+									<input name="spec_filter[{{$loop->index}}]" value="0" type="hidden"/>
+									<input name="spec_filter[{{$loop->index}}]" value="{{$spec->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'spec_filter_value_{{$loop->index}}', true)"/></td>
 									<td>
 
+										{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
+
 										@if($spec->id_type>0)
-										{!! Form::select('spec_filter_value[]', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index])!!}
+										{!! Form::select('spec_filter_value['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index])!!}
 										@else
 										@if($spec->id_type==-1)
-										{!! Form::text('spec_filter_value[]', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
+										{!! Form::text('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
 										@elseif($spec->id_type==-2)
 										{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
 										{!! Form::checkbox('spec_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
 										@elseif($spec->id_type==-3)
-										{!! Form::number('spec_filter_value[]', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
+										{!! Form::number('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
 										@endif
 										@endif
 

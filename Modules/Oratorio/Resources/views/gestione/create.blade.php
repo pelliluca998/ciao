@@ -72,3 +72,18 @@ use Modules\User\Entities\User;
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function insert_date(checkbox, loop){
+	if(checkbox.checked){
+		var data_inizio = moment();
+	  var data_inizio = moment(moment(), 'DD/MM/YYYY');
+		$('#data_inizio_'+loop).val(data_inizio.format('DD/MM/YYYY'));
+	  var data_fine = data_inizio.add('years', 1);
+		$('#data_fine_'+loop).val(data_fine.format('DD/MM/YYYY'));
+
+	}
+}
+</script>
+@endpush

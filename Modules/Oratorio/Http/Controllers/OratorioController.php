@@ -87,6 +87,7 @@ class OratorioController extends Controller
 		$admin->attachPermission($usermodule);
 
     //aggiorno Licenza
+    $i=0;
     foreach($input['id_licenza'] as $licenza){
         if($input['abilita'][$i] == 1){
           $l = new License;
@@ -167,6 +168,7 @@ class OratorioController extends Controller
 
 	public function update_owner(Request $request){
 		$input = $request->all();
+
 		$oratorio = Oratorio::findOrFail($input['id_oratorio']);
 		if(Input::hasFile('logo')){
 			$file = $request->logo;
