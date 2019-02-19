@@ -9,10 +9,10 @@ Le istruzioni fanno riferimento ad un server web Debian con Apache e MySQL insta
 ### Clone del repo e configurazione
 
 ```
-sudo mkdir /var/www/segresta 
+sudo mkdir /var/www/segresta
 sudo chmod 777 -R /var/www/segresta
 cd /var/www/segresta
-git init 
+git init
 git remote add origin https://github.com/cent89/segresta.git
 git pull origin master
 composer update
@@ -20,9 +20,17 @@ composer update
 
 ### File .env
 Rinomina il file .env.example in .env e modifica i parametri necessari, tra cui la connessione al database.
+Ricorda di mettere OWNER_MAIL=admin@email.it
 Crea la struttura del database:
 
 ```
+php artisan module:migrate Oratorio
+php artisan module:migrate User
+php artisan module:migrate Attributo
+php artisan module:migrate Event
+php artisan module:migrate Elenco
+php artisan module:migrate Group
+php artisan module:migrate Subscription
 php artisan migrate
 ```
 
@@ -35,7 +43,7 @@ php artisan db:seed
 Pulisci la cache e crea il link allo storage:
 
 ```
-php artisan config:cache 
+php artisan config:cache
 php artisan storage:link
 ```
 

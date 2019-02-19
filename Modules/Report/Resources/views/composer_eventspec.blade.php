@@ -147,7 +147,7 @@ use Modules\Attributo\Entities\Attributo;
 									<td>{{$a->nome}}</td>
 									<td>
 										<input name="att_filter[{{$loop->index}}]" value="0" type="hidden" />
-										<input name="att_filter[{{$loop->index}}]" value="1" type="checkbox" class="form-control" onchange="disable_select(this, 'att_filter_value_{{$loop->index}}', true)"/>
+										<input name="att_filter[{{$loop->index}}]" value="{{$a->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'att_filter_value_{{$loop->index}}', true)"/>
 									</td>
 									<td>
 										@if($a->id_type>0)

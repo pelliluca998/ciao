@@ -108,12 +108,17 @@ class DatabaseSeeder extends Seeder
         $licenza_tipo->modules='["events", "user", "subscription", "report", "group", "oratorio", "attributo", "elenco"]';
         $licenza_tipo->save();
 
-        $licenza = new License;
-        $licenza->license_type = $licenza_tipo->id;
-        $licenza->id_oratorio = $oratorio->id;
-        $licenza->data_inizio = Carbon::now()->format('d/m/Y');
-        $licenza->data_fine = Carbon::now()->addYear()->format('d/m/Y');
-        $licenza->save();
+        $array_modules = ["event", "user", "subscription", "report", "group", "oratorio", "attributo", "elenco"];
+        foreach($array_modules as $module){
+          $licenza = new License;
+          $licenza->id_oratorio = $oratorio->id;
+          $licenza->module_name = $module;
+          $licenza->data_inizio = Carbon::now()->format('d/m/Y');
+          $licenza->data_fine = Carbon::now()->addYear()->format('d/m/Y');
+          $licenza->save();
+        }
+
+
 
         $this->command->info("Licenza creata");
     }

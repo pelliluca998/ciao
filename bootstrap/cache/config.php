@@ -1,7 +1,7 @@
 <?php return array (
   'app' => 
   array (
-    'owner_email' => 'roberto.santini89@gmail.com',
+    'owner_email' => 'admin@email.it',
     'name' => 'Segresta 2.0',
     'env' => 'local',
     'debug' => true,
@@ -418,7 +418,7 @@
       'DOMPDF_ENABLE_PHP' => false,
       'DOMPDF_ENABLE_JAVASCRIPT' => true,
       'DOMPDF_ENABLE_REMOTE' => true,
-      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1000000000000001,
+      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1,
       'DOMPDF_ENABLE_CSS_FLOAT' => false,
       'DOMPDF_ENABLE_HTML5PARSER' => false,
     ),

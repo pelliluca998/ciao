@@ -92,11 +92,12 @@ function stampa_tabella($input, $whereRaw, $format){
 
 		$r=0;
 		if(count($input['att_filter'])>0){
-			$att_filter_values = array_values($input['att_filter_value']);
+			//$att_filter_values = array_values($input['att_filter_value']);
+			$att_filter_values = $input['att_filter_value'];
 			foreach($input['att_spec_order'] as $index){
 				$id_filter = $input['att_filter'][$index];
 				if($id_filter>0 && $filter_ok){
-					$at = AttributoUser::where([['id_user', $sub->id_user], ['id_attributo', $id_filter], ['valore', $att_filter_values[$r]]])->get();
+					$at = AttributoUser::where([['id_user', $sub->id_user], ['id_attributo', $id_filter], ['valore', $att_filter_values[$index]]])->get();
 					if(count($at)==0) $filter_ok=false;
 				}
 				$r++;
@@ -236,7 +237,7 @@ function stampa_tabella($input, $whereRaw, $format){
 								case -3:
 								echo "<p>".$value->valore."</p>";
 								break;
-								
+
 							}
 						}
 
@@ -253,7 +254,7 @@ function stampa_tabella($input, $whereRaw, $format){
 
 
 	echo "</table>";
-	//echo "<p><b>Totale iscritti: $tot_iscritti</b></p>";
+	echo "<p><b>Totale iscritti: $tot_iscritti</b></p>";
 } ?>
 <body>
 

@@ -238,8 +238,9 @@ use Modules\Attributo\Entities\Attributo;
 									{!! Form::checkbox('mostra_fitri', '1', true) !!}
 									<br><br>
 									{!! Form::submit('Genera!', ['class' => 'btn btn-primary form-control']) !!}
-									{!! Form::close() !!}
+
 								</div>
+								{!! Form::close() !!}
 
 
 

@@ -71,7 +71,7 @@ class ReportController extends Controller
 			break;
 			case 'excel': return Excel::download(new ReportExportWeek($input), 'report.xlsx');
 			break;
-			case 'html': return view('report::weekreport', ['input' => $input]);
+			case 'html': return view('report::weekreport2', ['input' => $input]);
 			break;
 		}
 	}

@@ -32,6 +32,7 @@ function stampa_tabella($input, $whereRaw, $format){
 	$event = Event::findOrFail(Session::get('work_event'));
 	$weeks = Week::where('id_event', Session::get('work_event'))->orderBy('from_date', 'ASC')->get();
 	$w=0;
+	$array_iscrizioni = array();
 	foreach($weeks as $week){
 		//controllo che per la settimana corrente sia stato scelto qualche campo da stampare...
 		if(isset($input['week'][$w])){
@@ -127,237 +128,233 @@ function stampa_tabella($input, $whereRaw, $format){
 				}
 
 				if($filter_ok){
-					$tot_iscritti++;
-					echo "<tr>";
-					echo "<td>".$sub->id_sub."</td>";
-					//controllo se stampare il nome in anagrafica o una delle specifiche indicate
-					if($event->stampa_anagrafica==0){
-						$array_specifiche = json_decode($event->spec_iscrizione);
-						$anagrafica = EventSpecValue::where(['id_subscription' => $sub->id_sub])->whereIn('id_eventspec', $array_specifiche)->get();
-						if(count($anagrafica)>0){
-							echo "<td>";
-							foreach($anagrafica as $a){
-								echo $a->valore." ";
-							}
-							echo "</td>";
-						}else{
-							echo "<td><i style='font-size:12px;'>Specifica non esistente!</i></td>";
-						}
-					}else{
-						echo "<td>".$sub->cognome." ".$sub->name."</td>";
-					}
-					echo "<td>";
-					if($sub->confirmed=='1'){
-						if($format=='excel'){
-							echo "SI";
-						}else{
-							echo "<i class='fa fa-check-square-o'></i> ";
-						}
-					}else{
-						if($format=='excel'){
-							echo "NO";
-						}else{
-							echo "<i class='fa fa-square-o'></i> ";
-						}
-					}
-					echo "</td>";
-					//get valore dei campi
-					foreach($input['week'][$w] as $id_spec_week){
-						$specs = EventSpecValue::select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.pagato')
-						->leftJoin('event_specs', 'event_specs.id', 'event_spec_values.id_eventspec')
-						->where([['event_spec_values.id_subscription', $sub->id_sub],['event_spec_values.id_week', $week->id], ['event_specs.id', $id_spec_week]])
-						->first();
-
-						if(count($specs)!=0){
-							echo "<td>";
-							if($specs->id_type>0){
-								$val = TypeSelect::where('id', $specs->valore)->get();
-								if(count($val)>0){
-									$val2 = $val[0];
-									echo $val2->option;
-								}else{
-									echo "";
-								}
-							}else{
-								switch($specs->id_type){
-									case -1:
-									echo "<p>".$specs->valore."</p>";
-									break;
-									case -2:
-									if($specs->valore==1){
-										if($format=='excel'){
-											echo "SI";
-										}else{
-											echo "<i class='fa fa-check-square-o fa-2x'></i> ";
-										}
-									}else{
-										if($format=='excel'){
-											echo "NO";
-										}else{
-											echo "<i class='fa fa-square-o fa-2x'></i> ";
-										}
-									}
-									break;
-									case -3:
-									echo "<p>".$specs->valore."</p>";
-									break;
-
-								}
-							}
-							echo "</td>";
-							echo "<td>";
-							if($specs->pagato==1){
-								if($format=='excel'){
-									echo "SI";
-								}else{
-									echo "<i class='fa fa-check-square-o fa-2x'></i> ";
-								}
-							}else{
-								if($format=='excel'){
-									echo "NO";
-								}else{
-									echo "<i class='fa fa-square-o fa-2x'></i> ";
-								}
-							}
-							echo "</td>";
-						}else{
-							echo "<td>n.d.</td>";
-							echo "<td>n.d.</td>";
-						}
-
-					}
-
-					//valori specs1
-					foreach($input['spec'] as $id_spec){
-						$specs = EventSpecValue::select('event_specs.id_type', 'event_spec_values.valore', 'event_spec_values.pagato')
-						->leftJoin('event_specs', 'event_specs.id', 'event_spec_values.id_eventspec')
-						->where([['event_spec_values.id_subscription', $sub->id_sub],['event_spec_values.id_eventspec', $id_spec]])
-						->first();
-
-
-						if($specs!=null){
-							echo "<td>";
-							if($specs->id_type>0){
-								$val = TypeSelect::where('id', $specs->valore)->get();
-								if(count($val)>0){
-									$val2 = $val[0];
-									echo $val2->option;
-								}else{
-									echo "";
-								}
-							}else{
-								switch($specs->id_type){
-									case -1:
-									echo "<p>".$specs->valore."</p>";
-									break;
-									case -2:
-									if($specs->valore==1){
-										if($format=='excel'){
-											echo "SI";
-										}else{
-											echo "<i class='fa fa-check-square-o fa-2x'></i> ";
-										}
-									}else{
-										if($format=='excel'){
-											echo "NO";
-										}else{
-											echo "<i class='fa fa-square-o fa-2x'></i> ";
-										}
-									}
-									break;
-									case -3:
-									echo "<p>".$specs->valore."</p>";
-									break;
-
-								}
-							}
-							echo "</td>";
-							echo "<td>";
-							if($specs->pagato==1){
-								if($format=='excel'){
-									echo "SI";
-								}else{
-									echo "<i class='fa fa-check-square-o fa-2x'></i> ";
-								}
-							}else{
-								if($format=='excel'){
-									echo "NO";
-								}else{
-									echo "<i class='fa fa-square-o fa-2x'></i> ";
-								}
-							}
-							echo "</td>";
-						}else{
-							echo "<td></td>";
-							echo "<td></td>";
-						}
-
-					}
-
-					//SPECIFICHE UTENTE
-					if(count($input['spec_user'])>0){
-						foreach($input['spec_user'] as $user){
-							echo "<td>".$sub->$user."</td>";
-						}
-					}
-
-					//ATTRIBUTI
-					if(count($input['att_spec'])>0){
-						foreach($input['att_spec'] as $at){
-							$whereSpec = array('id_attributo' => $at, 'id_user' => $sub->id);
-
-							$value = AttributoUser::leftJoin('attributos', 'attributos.id', '=', 'attributo_users.id_attributo')->where($whereSpec)->first();
-							echo "<td>";
-							if(isset($value->valore)){
-								if($value->id_type>0){
-									$val = TypeSelect::where('id', $value->valore)->get();
-									if(count($val)>0){
-										$val2 = $val[0];
-										echo $val2->option;
-									}else{
-										echo "";
-									}
-								}else{
-									switch($value->id_type){
-										case -1:
-										echo "<p>".$value->valore."</p>";
-										break;
-										case -2:
-										if($value->valore==1){
-											if($format=='excel'){
-												echo "SI";
-											}else{
-												echo "<i class='fa fa-check-square-o fa-2x'></i> ";
-											}
-										}else{
-											if($format=='excel'){
-												echo "NO";
-											}else{
-												echo "<i class='fa fa-square-o fa-2x'></i> ";
-											}
-										}
-										break;
-										case -3:
-										echo "<p>".$value->valore."</p>";
-										break;
-
-									}
-								}
-
-							}else{
-								echo "n.d.";
-
-							}
-							echo "</td>";
-						}
-					}
-
-					//aggiungo celle vuote per completare la riga
-					// for($i=0; $i<count($input['spec'])-count($specs); $i++){
-					// 	echo "<td>n.d.</td>";
-					// 	echo "<td>n.d.</td>";
+					array_push($array_iscrizioni, $sub->id_sub);
+					// $tot_iscritti++;
+					// echo "<tr>";
+					// echo "<td>".$sub->id_sub."</td>";
+					// //controllo se stampare il nome in anagrafica o una delle specifiche indicate
+					// if($event->stampa_anagrafica==0){
+					// 	$array_specifiche = json_decode($event->spec_iscrizione);
+					// 	$anagrafica = EventSpecValue::where(['id_subscription' => $sub->id_sub])->whereIn('id_eventspec', $array_specifiche)->get();
+					// 	if(count($anagrafica)>0){
+					// 		echo "<td>";
+					// 		foreach($anagrafica as $a){
+					// 			echo $a->valore." ";
+					// 		}
+					// 		echo "</td>";
+					// 	}else{
+					// 		echo "<td><i style='font-size:12px;'>Specifica non esistente!</i></td>";
+					// 	}
+					// }else{
+					// 	echo "<td>".$sub->cognome." ".$sub->name."</td>";
 					// }
-					echo "</tr>";
+					// echo "<td>";
+					// if($sub->confirmed=='1'){
+					// 	if($format=='excel'){
+					// 		echo "SI";
+					// 	}else{
+					// 		echo "<i class='fa fa-check-square-o'></i> ";
+					// 	}
+					// }else{
+					// 	if($format=='excel'){
+					// 		echo "NO";
+					// 	}else{
+					// 		echo "<i class='fa fa-square-o'></i> ";
+					// 	}
+					// }
+					// echo "</td>";
+					// //get valore dei campi
+					// foreach($input['week'][$w] as $id_spec_week){
+					// 	$specs = EventSpecValue::select('event_specs.id_type', 'event_specs.hidden', 'event_specs.id', 'event_specs.label', 'event_specs.descrizione', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.pagato')
+					// 	->leftJoin('event_specs', 'event_specs.id', 'event_spec_values.id_eventspec')
+					// 	->where([['event_spec_values.id_subscription', $sub->id_sub],['event_spec_values.id_week', $week->id], ['event_specs.id', $id_spec_week]])
+					// 	->first();
+          //
+					// 	if(count($specs)!=0){
+					// 		echo "<td>";
+					// 		if($specs->id_type>0){
+					// 			$val = TypeSelect::where('id', $specs->valore)->get();
+					// 			if(count($val)>0){
+					// 				$val2 = $val[0];
+					// 				echo $val2->option;
+					// 			}else{
+					// 				echo "";
+					// 			}
+					// 		}else{
+					// 			switch($specs->id_type){
+					// 				case -1:
+					// 				echo "<p>".$specs->valore."</p>";
+					// 				break;
+					// 				case -2:
+					// 				if($specs->valore==1){
+					// 					if($format=='excel'){
+					// 						echo "SI";
+					// 					}else{
+					// 						echo "<i class='fa fa-check-square-o fa-2x'></i> ";
+					// 					}
+					// 				}else{
+					// 					if($format=='excel'){
+					// 						echo "NO";
+					// 					}else{
+					// 						echo "<i class='fa fa-square-o fa-2x'></i> ";
+					// 					}
+					// 				}
+					// 				break;
+					// 				case -3:
+					// 				echo "<p>".$specs->valore."</p>";
+					// 				break;
+          //
+					// 			}
+					// 		}
+					// 		echo "</td>";
+					// 		echo "<td>";
+					// 		if($specs->pagato==1){
+					// 			if($format=='excel'){
+					// 				echo "SI";
+					// 			}else{
+					// 				echo "<i class='fa fa-check-square-o fa-2x'></i> ";
+					// 			}
+					// 		}else{
+					// 			if($format=='excel'){
+					// 				echo "NO";
+					// 			}else{
+					// 				echo "<i class='fa fa-square-o fa-2x'></i> ";
+					// 			}
+					// 		}
+					// 		echo "</td>";
+					// 	}else{
+					// 		echo "<td>n.d.</td>";
+					// 		echo "<td>n.d.</td>";
+					// 	}
+          //
+					// }
+          //
+					// //valori specs1
+					// foreach($input['spec'] as $id_spec){
+					// 	$specs = EventSpecValue::select('event_specs.id_type', 'event_spec_values.valore', 'event_spec_values.pagato')
+					// 	->leftJoin('event_specs', 'event_specs.id', 'event_spec_values.id_eventspec')
+					// 	->where([['event_spec_values.id_subscription', $sub->id_sub],['event_spec_values.id_eventspec', $id_spec]])
+					// 	->first();
+          //
+          //
+					// 	if($specs!=null){
+					// 		echo "<td>";
+					// 		if($specs->id_type>0){
+					// 			$val = TypeSelect::where('id', $specs->valore)->get();
+					// 			if(count($val)>0){
+					// 				$val2 = $val[0];
+					// 				echo $val2->option;
+					// 			}else{
+					// 				echo "";
+					// 			}
+					// 		}else{
+					// 			switch($specs->id_type){
+					// 				case -1:
+					// 				echo "<p>".$specs->valore."</p>";
+					// 				break;
+					// 				case -2:
+					// 				if($specs->valore==1){
+					// 					if($format=='excel'){
+					// 						echo "SI";
+					// 					}else{
+					// 						echo "<i class='fa fa-check-square-o fa-2x'></i> ";
+					// 					}
+					// 				}else{
+					// 					if($format=='excel'){
+					// 						echo "NO";
+					// 					}else{
+					// 						echo "<i class='fa fa-square-o fa-2x'></i> ";
+					// 					}
+					// 				}
+					// 				break;
+					// 				case -3:
+					// 				echo "<p>".$specs->valore."</p>";
+					// 				break;
+          //
+					// 			}
+					// 		}
+					// 		echo "</td>";
+					// 		echo "<td>";
+					// 		if($specs->pagato==1){
+					// 			if($format=='excel'){
+					// 				echo "SI";
+					// 			}else{
+					// 				echo "<i class='fa fa-check-square-o fa-2x'></i> ";
+					// 			}
+					// 		}else{
+					// 			if($format=='excel'){
+					// 				echo "NO";
+					// 			}else{
+					// 				echo "<i class='fa fa-square-o fa-2x'></i> ";
+					// 			}
+					// 		}
+					// 		echo "</td>";
+					// 	}else{
+					// 		echo "<td></td>";
+					// 		echo "<td></td>";
+					// 	}
+          //
+					// }
+          //
+					// //SPECIFICHE UTENTE
+					// if(count($input['spec_user'])>0){
+					// 	foreach($input['spec_user'] as $user){
+					// 		echo "<td>".$sub->$user."</td>";
+					// 	}
+					// }
+          //
+					// //ATTRIBUTI
+					// if(count($input['att_spec'])>0){
+					// 	foreach($input['att_spec'] as $at){
+					// 		$whereSpec = array('id_attributo' => $at, 'id_user' => $sub->id);
+          //
+					// 		$value = AttributoUser::leftJoin('attributos', 'attributos.id', '=', 'attributo_users.id_attributo')->where($whereSpec)->first();
+					// 		echo "<td>";
+					// 		if(isset($value->valore)){
+					// 			if($value->id_type>0){
+					// 				$val = TypeSelect::where('id', $value->valore)->get();
+					// 				if(count($val)>0){
+					// 					$val2 = $val[0];
+					// 					echo $val2->option;
+					// 				}else{
+					// 					echo "";
+					// 				}
+					// 			}else{
+					// 				switch($value->id_type){
+					// 					case -1:
+					// 					echo "<p>".$value->valore."</p>";
+					// 					break;
+					// 					case -2:
+					// 					if($value->valore==1){
+					// 						if($format=='excel'){
+					// 							echo "SI";
+					// 						}else{
+					// 							echo "<i class='fa fa-check-square-o fa-2x'></i> ";
+					// 						}
+					// 					}else{
+					// 						if($format=='excel'){
+					// 							echo "NO";
+					// 						}else{
+					// 							echo "<i class='fa fa-square-o fa-2x'></i> ";
+					// 						}
+					// 					}
+					// 					break;
+					// 					case -3:
+					// 					echo "<p>".$value->valore."</p>";
+					// 					break;
+          //
+					// 				}
+					// 			}
+          //
+					// 		}else{
+					// 			echo "n.d.";
+          //
+					// 		}
+					// 		echo "</td>";
+					// 	}
+					// }
+          //
+					// echo "</tr>";
 				}
 			}
 			echo "</table>";
