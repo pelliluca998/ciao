@@ -26,6 +26,7 @@ class EventServiceProvider extends ServiceProvider
     $this->registerTranslations();
     $this->registerConfig();
     $this->registerViews();
+    $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     $this->app['router']->aliasMiddleware('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
     $this->app['router']->aliasMiddleware('license', \App\Http\Middleware\CheckLicense::class);
     //Popolo il menu con un link a questo modulo.
@@ -33,22 +34,22 @@ class EventServiceProvider extends ServiceProvider
     $menuList = Menu::get('SegrestaNavBar');
     $menuList->add("Eventi", array("route" => "events.index"))
     ->prepend("<i class='fas fa-calendar-alt' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all', 'mod_elenco'])->data('order', 20);
+    ->data('permissions', ['view-event'])->data('order', 20);
 
     $menuList->get('eventi')
     ->add('Eventi', array('route'  => 'events.index'))
     ->prepend("<i class='fas fa-calendar-alt' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 21);
+    ->data('permissions', ['view-event'])->data('order', 21);
 
     $menuList->get('eventi')
     ->add('Settimane', array('route'  => 'week.index'))
     ->prepend("<i class='fas fa-sun' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 22);
+    ->data('permissions', ['manage-week'])->data('order', 22);
 
-    $menuList->get('eventi')
-    ->add('Strumenti', array('route'  => 'events.strumenti'))
-    ->prepend("<i class='fas fa-gavel' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 22);
+    // $menuList->get('eventi')
+    // ->add('Strumenti', array('route'  => 'events.strumenti'))
+    // ->prepend("<i class='fas fa-gavel' aria-hidden='true'></i> ")
+    // ->data('permissions', ['adminmodule', 'all'])->data('order', 22);
 
   }
 

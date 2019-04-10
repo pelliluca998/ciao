@@ -11,9 +11,7 @@ class Subscription extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'id_user', 'id_event', 'confirmed', 'type'
-    ];
+    protected $fillable = ['id_user', 'id_event', 'confirmed', 'type', 'consenso_affiliazione', 'consenso_foto', 'consenso_dati_sanitari'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -21,6 +19,6 @@ class Subscription extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 }

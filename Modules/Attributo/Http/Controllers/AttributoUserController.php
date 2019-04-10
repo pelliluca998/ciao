@@ -6,115 +6,84 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-
 use Modules\Attributo\Entities\AttributoUser;
 use Modules\Attributo\Entities\Attributo;
 use Modules\User\Entities\User;
+use Yajra\DataTables\DataTables;
+use Modules\Attributo\Http\Controllers\DataTables\AttributoUserDataTableEditor;
+use Modules\Attributo\Http\Controllers\DataTables\AttributoUserDataTable;
+use Modules\Oratorio\Entities\Type;
+use Modules\Oratorio\Entities\TypeSelect;
 use Input;
 use Auth;
 use Session;
 
-class AttributoUserController extends Controller
-{
-use ValidatesRequests;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {        
-    }
+class AttributoUserController extends Controller{
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create(Request $request){
-        $input = $request->all();
-        $id_user = $input['id_user'];
-        $u = User::leftJoin('user_oratorio', 'user_oratorio.id_user', 'users.id')
-            ->where([['users.id', $id_user], ['user_oratorio.id_oratorio', Session::get('session_oratorio')]])->get();
-        if(count($u)>0){
-            return view('attributo::attributouser.create')->with('id_user', $id_user);
+  public function __construct(){
+    $this->middleware('permission:view-attributo')->only(['index', 'data']);
+    $this->middleware('permission:edit-attributo')->only(['store']);
+  }
+
+  public function index(AttributoUserDataTable $dataTable){
+    //return $dataTable->render('attributo::index');
+  }
+
+  public function store(AttributoUserDataTableEditor $editor){
+    return $editor->process(request());
+  }
+
+  public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
+
+    $builder = AttributoUser::query()
+    ->select('attributo_users.*', 'attributos.nome as attributo_label', 'attributos.id_type')
+    ->leftJoin('attributos', 'attributos.id', 'attributo_users.id_attributo')
+    ->where('id_user', $input['id_user'])
+    ->orderBy('attributos.nome', 'ASC');
+
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($entity){
+      $edit = "<button class='btn btn-sm btn-primary btn-block' id='editor_edit'><i class='fas fa-pencil-alt'></i> Modifica</button>";
+      $remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
+
+      if(!Auth::user()->can('edit-attributo')){
+        $edit = "";
+        $remove = "";
+      }
+
+
+      return $edit.$remove;
+    })
+    ->addColumn('DT_RowId', function ($entity){
+      return $entity->id;
+    })
+    ->addColumn('valore_label', function ($entity){
+      if($entity->id_type > 0){
+        $option = TypeSelect::find($entity->valore);
+        return $option!=null?$option->option:"";
+      }
+
+      switch ($entity->id_type) {
+        case Type::TEXT_TYPE:
+        return $entity->valore;
+
+        case Type::BOOL_TYPE:
+        if($entity->valore == 1){
+          return "<i class='far fa-check-circle fa-2x'></i>";
         }else{
-            abort(403, 'Unauthorized action.');
+          return "<i class='far fa-circle fa-2x'></i>";
         }
 
-    }
+        case Type::NUMBER_TYPE:
+        return $entity->valore;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-	public function show(Request $request){
-		$input = $request->all();
-		return view('attributo::attributouser.show')->with('id_user', $id_user = $input['id_user']);
-	}
+        case Type::DATE_TYPE:
+        return $entity->valore;
+      }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-	public function edit(Request $request)
-	{
-		$input = $request->all();
-		$attributo = AttributoUser::findOrFail($input['id_attributouser']);
-		$user = User::select('user_oratorio.id_oratorio')->leftJoin('user_oratorio', 'user_oratorio.id_user', 'users.id')->where('users.id', $attributo->id_user)->first();
-		if($user->id_oratorio == Session::get('session_oratorio')){		
-			return view('attributo::attributouser.edit')->withAttributouser($attributo);
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function update(Request $request){
-		$input = $request->all();
-		$attributouser = AttributoUser::findOrFail($input['id_attributouser']);
-		$attributouser->fill($input)->save();
-		Session::flash('flash_message', 'Informazione aggiornata!');
-		return redirect()->route('attributouser.show', ['id_user' => $attributouser->id_user]);
-	}
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-	public function destroy(Request $request){
-		$input = $request->all();
-		$attributouser = AttributoUSer::findOrFail($input['id_attributouser']);
-		$attributo = Attributo::findOrFail($attributouser->id_attributo);
-		if($attributo->id_oratorio==Session::get('session_oratorio')){		
-			$attributouser->delete();
-			Session::flash("flash_message", "Attributo ".$input['id_attributouser']." cancellato!");
-			return redirect()->route('attributouser.show', ['id_user' => $attributouser->id_user]);
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
-
-
-	public function store(Request $request){
-		$input = $request->all();
-		$attributo = new AttributoUser;
-		$attributo->id_user=$input['id_user'];
-		$attributo->id_attributo=$input['id_attributo'];
-		$attributo->valore=$input['valore'];
-		$attributo->save();
-		Session::flash('flash_message', 'Informazione aggiunta!');
-		return redirect()->route('attributouser.show', ['id_user' => $input['id_user']]);
-	}
+    })
+    ->rawColumns(['action', 'valore_label'])
+    ->toJson();
+  }
 }

@@ -37,7 +37,7 @@ function stampa_tabella($input, $whereRaw, $format){
 	->orderBy('users.name', 'asc');
 
 	$subs = $subs->get();
-	echo "<table class='testgrid'>";
+	echo "<table class='table table-bordered'>";
 	echo "<thead>";
 	echo "<tr>";
 	echo "<th>ID</th>";

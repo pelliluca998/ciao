@@ -12,16 +12,27 @@ use Modules\Event\Entities\EventSpec;
 use Modules\Oratorio\Entities\Oratorio;
 use Modules\Elenco\Entities\Elenco;
 use Yajra\DataTables\DataTables;
+use Modules\Event\Http\Controllers\DataTables\EventDataTableEditor;
+use Modules\Event\Http\Controllers\DataTables\EventDataTable;
 use Session;
 use Input;
 use Entrust;
 use Image;
 use File;
+use Form;
 use Storage;
+use Auth;
 
 class EventController extends Controller
 {
 	use ValidatesRequests;
+
+	public function __construct(){
+    $this->middleware('permission:view-event')->only(['index', 'data', 'work']);
+    $this->middleware('permission:edit-event')->only(['store', 'clone', 'create', 'store_event', 'edit', 'update', 'destroy']);
+  }
+
+
 	public $messages = [
 			'nome.required' => 'Inserisci un nome valido per l\'evento',
 			'descrizione.required'  => 'Inserisci una descrizione valida',
@@ -34,9 +45,13 @@ class EventController extends Controller
 	* Display a listing of the resource.
 	* @return Response
 	*/
-	public function index(){
-		return view('event::show');
-	}
+	public function index(EventDataTable $dataTable){
+    return $dataTable->render('event::index');
+  }
+
+	public function store(EventDataTableEditor $editor){
+    return $editor->process(request());
+  }
 
 	public function data(Request $request, Datatables $datatables){
     $input = $request->all();
@@ -47,21 +62,31 @@ class EventController extends Controller
     ->orderBy('created_at', 'DESC');
 
     return $datatables->eloquent($builder)
-    ->addColumn('action', function ($event){
-      $action = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#eventOp' data-name='".$event->nome."' data-eventid='".$event->id."'><i class='fas fa-cogs fa-2x'></i> </button>";
-      return $action;
+    ->addColumn('action', function ($entity){
+			$edit = "<div style='display: inline'>".Form::open(['method' => 'GET', 'route' => ['events.edit', $entity->id], 'style' => 'float: left; width: 50%; margin-right: 2px;'])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-pencil-alt'></i> Modifica</button>".Form::close();
+      $remove = "<button style='float: left; width: 48%; margin: 0px;' class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button></div>";
+			$work = Form::open(['method' => 'GET', 'route' => ['events.work', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-hammer'></i> Lavora con questo evento</button>".Form::close();
+			$iscrizioni = Form::open(['method' => 'GET', 'route' => ['subscription.event']])."<input name='id_event' type='hidden' value='".$entity->id."' /><button class='btn btn-sm btn-primary btn-block'><i class='far fa-clock'></i> Mostra iscrizioni</button>".Form::close();
+			$specifiche = Form::open(['method' => 'GET', 'route' => ['eventspecs.index']])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-stream'></i> Specifiche evento</button>".Form::close();
+			$clona = Form::open(['method' => 'GET', 'route' => ['events.clone', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-copy'></i> Clona evento</button>".Form::close();
+
+			if(!Auth::user()->can('edit-event')){
+				$edit = "";
+				$remove = "";
+				$work = "";
+				$specifiche = "";
+				$clona = "";
+			}
+      return $edit.$remove.$work.$iscrizioni.$specifiche.$clona;
     })
-		->addColumn('active', function ($event){
-      if($event->active==1){
-        return "<i class='far fa-check-circle fa-2x'></i>";
-      }else{
-        return "<i class='far fa-circle fa-2x'></i>";
-      }
+		->addColumn('DT_RowId', function ($entity){
+      return $entity->id;
     })
-		->addColumn('descrizione', function ($event){
-      return $event->descrizione;
+		->addColumn('descrizione_label', function ($entity){
+			$max_length = 900;
+      return (strlen(strip_tags($entity->descrizione)) > $max_length) ? substr(strip_tags($entity->descrizione), 0, $max_length) . '...' : strip_tags($entity->descrizione);
     })
-    ->rawColumns(['action', 'active', 'descrizione'])
+    ->rawColumns(['action', 'descrizione_label'])
     ->toJson();
   }
 
@@ -71,9 +96,7 @@ class EventController extends Controller
 	*
 	* @return Response
 	*/
-	public function work(Request $request){
-		$input = $request->all();
-		$id_event = $input['id_event'];
+	public function work(Request $request, $id_event){
 		$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
 		$oratorio->last_id_event = $id_event;
 		$oratorio->save();
@@ -85,9 +108,8 @@ class EventController extends Controller
 	** Clona un'evento in un nuovo evento, comprese tutte le specifiche
 	**/
 
-	public function clone(Request $request){
+	public function clone(Request $request, $id_event){
 		$input = $request->all();
-		$id_event = $input['id_event'];
 		$event = Event::find($id_event);
 		$newEvent = $event->replicate();
 		$newEvent->nome = "Copia di ".$event->nome;
@@ -140,12 +162,16 @@ class EventController extends Controller
 		return view('event::create');
 	}
 
+	public function show($id_event){
+		return view('event::show')->withEvent(Event::find($id_event));
+	}
+
 	/**
 	* Store a newly created resource in storage.
 	* @param  Request $request
 	* @return Response
 	*/
-	public function store(Request $request){
+	public function store_event(Request $request){
 		$this->validate($request, [
 			'nome' => 'required',
 			'descrizione' => 'required',
@@ -167,27 +193,17 @@ class EventController extends Controller
 		$event = Event::create($input);
 		Session::flash('flash_message', 'Evento aggiunto! Ora crea le informazioni che gli utenti devono dare durante l\'iscrizione');
 		Session::put('work_event', $event->id);
-		return redirect()->route('eventspecs.show');
+		return redirect()->route('eventspecs.index');
 	}
 
-	public function show($id){
-		$event = Event::findOrFail($id);
-		if($event->id_oratorio==Session::get('session_oratorio')){
-			return view('subscription::show', array('id_event' => $id));
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-
-	}
 
 	/**
 	* Show the form for editing the specified resource.
 	* @return Response
 	*/
-	public function edit(Request $request){
+	public function edit(Request $request, $id_event){
 		$input = $request->all();
-		$id = $input['id_event'];
-		$event = Event::findOrFail($id);
+		$event = Event::findOrFail($id_event);
 		if($event->id_oratorio==Session::get('session_oratorio')){
 			return view('event::edit')->withEvent($event);
 		}else{
@@ -200,7 +216,7 @@ class EventController extends Controller
 	* @param  Request $request
 	* @return Response
 	*/
-	public function update(Request $request){
+	public function update(Request $request, $id_event){
 		$input = $request->all();
 		$this->validate($request, [
 			'nome' => 'required',
@@ -210,7 +226,7 @@ class EventController extends Controller
 			'image' => 'mimes:jpeg,jpg,gif,png'
 		], $this->messages);
 
-		$event = Event::findOrFail($input['id_event']);
+		$event = Event::findOrFail($id_event);
 		//$input['active'] = (Input::has('active') && $input['active']) ? true : false;
 		//$input['more_subscriptions'] = (Input::has('more_subscriptions') && $input['more_subscriptions']) ? true : false;
 		//$input['stampa_anagrafica'] = (Input::has('stampa_anagrafica') && $input['stampa_anagrafica']) ? true : false;
@@ -258,28 +274,7 @@ class EventController extends Controller
 		return redirect()->route('events.index');
 	}
 
-	/**
-	* Remove the specified resource from storage.
-	* @return Response
-	*/
-	public function destroy(Request $request){
-		$input = $request->all();
-		$id = $input['id_event'];
-		$sub = Event::findOrFail($id);
-		if($sub->id_oratorio==Session::get('session_oratorio')){
-			if(Session::get('work_event')==$sub->id){
-				Session::forget('work_event');
-			}
-			$sub->delete();
-			$oratorio = Oratorio::find($event->id_oratorio);
-			$oratorio->last_id_event = 0;
-			$oratorio->save();
-			Session::flash("flash_message", "Evento '". $sub->nome."' cancellato!");
-			return redirect()->route('events.index');
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
+
 
 
 	public function strumenti(Request $request){

@@ -1,5 +1,8 @@
 <?php
 
 return [
-    'name' => 'Report'
+    'name' => 'Report',
+    'permissions' => array(
+       'generate-report' => 'Genera report'
+    )
 ];

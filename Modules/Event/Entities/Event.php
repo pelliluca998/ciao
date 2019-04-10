@@ -12,7 +12,9 @@ class Event extends Model
      *
      * @var array
      */
-    protected $fillable = ['nome', 'anno', 'descrizione', 'id_oratorio', 'active', 'firma', 'image', 'color', 'more_subscriptions', 'stampa_anagrafica', 'spec_iscrizione', 'grazie', 'template_file', 'pagine_foglio'];
+    protected $fillable = ['nome', 'anno', 'descrizione', 'id_oratorio', 'active', 'firma', 'image', 'color',
+    'more_subscriptions', 'stampa_anagrafica', 'spec_iscrizione', 'grazie', 'template_file', 'pagine_foglio', 'select_famiglia'];
+    
     public static $pagine_per_foglio = array('1' => "Una pagina per foglio", '2' => "Due pagine per foglio");
 
     public static function getPaginePerFoglio(){

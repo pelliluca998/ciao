@@ -36,12 +36,13 @@ class License extends Model
   }
 
   public static function isValid($moduleName){
-    $now = date("Y-m-d");
-    $license = License::where([['module_name', $moduleName], ['data_inizio', '<=', $now], ['data_fine', '>=', $now], ['id_oratorio', Session::get('session_oratorio')]])->first();
-    if($license != null){
-      return true;
-    }else{
-      return false;
-    }
+    return true;
+    // $now = date("Y-m-d");
+    // $license = License::where([['module_name', $moduleName], ['data_inizio', '<=', $now], ['data_fine', '>=', $now], ['id_oratorio', Session::get('session_oratorio')]])->first();
+    // if($license != null){
+    //   return true;
+    // }else{
+    //   return false;
+    // }
   }
 }

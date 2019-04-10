@@ -54,6 +54,9 @@ return [
   */
 
   'url' => env('APP_URL', 'http://localhost/segresta'),
+  'nome_parrocchia' => env('POLICY_NOME_PARROCCHIA', 'La mia parrocchia'),
+  'indirizzo_parrocchia' => env('POLICY_INDIRIZZO_PARROCCHIA', ''),
+  'email_parrocchia' => env('POLICY_EMAIL_PARROCCHIA', ''),
 
   /*
   |--------------------------------------------------------------------------

@@ -26,6 +26,7 @@ class OratorioServiceProvider extends ServiceProvider
     $this->registerTranslations();
     $this->registerConfig();
     $this->registerViews();
+    $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     $this->app['router']->aliasMiddleware('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
     $this->app['router']->aliasMiddleware('license', \App\Http\Middleware\CheckLicense::class);
     //Popolo il menu con un link a questo modulo.
@@ -33,18 +34,23 @@ class OratorioServiceProvider extends ServiceProvider
     $menuList = Menu::get('SegrestaNavBar');
     $menuList->add("Il tuo oratorio", array("route" => "oratorio.index"))
     ->prepend("<i class='fas fa-cube'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 10)
+    ->data('permissions', ['edit-oratorio', 'view-select', 'edit-permission'])->data('order', 10)
     ->nickname('oratorio');
 
     $menuList->get('oratorio')
     ->add('Opzioni', array('route'  => 'oratorio.index'))
     ->prepend("<i class='fas fa-cube'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 11);
+    ->data('permissions', ['edit-oratorio'])->data('order', 11);
 
     $menuList->get('oratorio')
     ->add('Elenchi a scelta', array('route'  => 'type.index'))
     ->prepend("<i class='fa fa-bars' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 12);
+    ->data('permissions', ['view-select'])->data('order', 12);
+
+    $menuList->get('oratorio')
+    ->add('Ruoli e permessi', array('route'  => 'role.index'))
+    ->prepend("<i class='fas fa-ruler-combined' aria-hidden='true'></i> ")
+    ->data('permissions', ['edit-permission'])->data('order', 12);
 
   }
 

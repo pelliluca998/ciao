@@ -14,14 +14,14 @@ class ReportExportWeek implements FromView, WithEvents {
     $this->params = $params;
   }
   public function view(): View{
-    return view('report::weekreport', ['input' => $this->params]);
+    return view('report::weekreport2', ['input' => $this->params]);
   }
 
   public function registerEvents(): array
   {
     return [
       BeforeExport::class => function(BeforeExport $event) {
-        $event->writer->getDelegate()->getProperties()->setCreator("Roberto");
+        $event->writer->getDelegate()->getProperties()->setCreator("Parrocchia");
       },
       AfterSheet::class => function(AfterSheet $event) {
         $event->sheet->getDelegate()->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);

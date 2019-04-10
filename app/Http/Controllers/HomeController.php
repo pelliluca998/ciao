@@ -48,6 +48,7 @@ class HomeController extends Controller
       }
 
     }
+    Session::reflash();
     if(Auth::user()->hasRole('user')){
       return view('home');
     }else{
@@ -58,6 +59,8 @@ class HomeController extends Controller
   }
 
   public function admin(){
+    Session::reflash();
+    
     if(Session::get('session_oratorio')==null || Session::get('session_oratorio')==''){
       return redirect()->route('home');
     }

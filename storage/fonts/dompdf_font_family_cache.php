@@ -80,4 +80,7 @@
   'fontawesome' => array(
     'normal' => $fontDir . '/79efc0ce15fcc54dc626dd6fd94e6bca',
   ),
+  'nunito' => array(
+    'normal' => $fontDir . '/2ee5a7797d02fe4d560048b698835802',
+  ),
 ) ?>

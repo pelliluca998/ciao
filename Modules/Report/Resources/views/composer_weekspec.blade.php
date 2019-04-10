@@ -13,16 +13,25 @@ use Modules\Attributo\Entities\Attributo;
 
 <div class="container" style="">
 	<div class="row">
-		<h1>Report iscrizioni settimanale</h1>
-		<p>Attraverso questa pagina puoi generare il report delle iscrizioni dell'evento corrente. Oltre a quelle settimanali, puoi scegliere quali informazioni generali inserire nel report. Puoi anche settare un filtro su uno o più campi, mettendo una spunta nella colonna "Filtra" e indicando il valore del filtro.</p>
-		<p>Puoi decidere l'ordine con cui mostrare le specifiche (le colonne della tabella del report) semplicemente trascinando le righe delle tabelle delle settimane.</p>
-		<hr>
+		<div class="col">
+			<div class="card bg-transparent border-0">
+				<h1><i class='far fa-file-alt'></i> Report iscrizioni settimanale</h1>
+
+				<p class="lead">
+					Attraverso questa pagina puoi generare il report delle iscrizioni dell'evento corrente. Oltre a quelle settimanali,
+					puoi scegliere quali informazioni generali inserire nel report. Puoi anche settare un filtro su uno o più campi, mettendo una spunta nella colonna "Filtra"
+					e indicando il valore del filtro.<br>
+					Puoi decidere l'ordine con cui mostrare le specifiche (le colonne della tabella del report) semplicemente trascinando le righe delle tabelle delle settimane.
+				</p>
+				<hr>
+			</div>
+		</div>
 	</div>
-	<div class="row" style="margin-left: 0px; margin-right: 0px;">
-		<div class="">
-			<div class="panel panel-default" style="">
-				<div class="panel-heading">Stampa report iscrizioni</div>
-				<div class="panel-body">
+
+	<div class="row justify-content-center" style="margin-top: 20px;">
+		<div class="col">
+			<div class="card">
+				<div class="card-body">
 					{!! Form::open(['route' => 'report.gen_weekspec']) !!}
 					<?php
 					$id_event=Session::get('work_event');
@@ -42,7 +51,7 @@ use Modules\Attributo\Entities\Attributo;
 							->where([['id_event', $id_event], ['event_specs.general', 0]])
 							->get();
 							?>
-							<table class='testgrid draggable'>
+							<table class='table table-bordered draggable'>
 								<tr>
 									<th>Check</th>
 									<th style="width: 60%;">Campo</th>
@@ -103,7 +112,7 @@ use Modules\Attributo\Entities\Attributo;
 						->orderBy('event_specs.label', 'asc')
 						->get();
 						?>
-						<table class='testgrid draggable'>
+						<table class='table table-bordered draggable'>
 							<tr>
 								<th>Check</th>
 								<th style="width: 60%;">Specifica</th>
@@ -112,34 +121,34 @@ use Modules\Attributo\Entities\Attributo;
 							</tr>
 							<tbody>
 
-							@foreach($specs as $spec)
-							<tr>
-								<td><input name="spec[]" value="{{$spec->id}}" type="checkbox"/></td>
-								<td>{{$spec->label}}</td>
-								<td>
-									<input name="spec_filter[{{$loop->index}}]" value="0" type="hidden"/>
-									<input name="spec_filter[{{$loop->index}}]" value="{{$spec->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'spec_filter_value_{{$loop->index}}', true)"/></td>
+								@foreach($specs as $spec)
+								<tr>
+									<td><input name="spec[]" value="{{$spec->id}}" type="checkbox"/></td>
+									<td>{{$spec->label}}</td>
 									<td>
+										<input name="spec_filter[{{$loop->index}}]" value="0" type="hidden"/>
+										<input name="spec_filter[{{$loop->index}}]" value="{{$spec->id}}" type="checkbox" class="form-control" onchange="disable_select(this, 'spec_filter_value_{{$loop->index}}', true)"/></td>
+										<td>
 
-										{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
+											{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
 
-										@if($spec->id_type>0)
-										{!! Form::select('spec_filter_value['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index])!!}
-										@else
-										@if($spec->id_type==-1)
-										{!! Form::text('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
-										@elseif($spec->id_type==-2)
-										{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
-										{!! Form::checkbox('spec_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
-										@elseif($spec->id_type==-3)
-										{!! Form::number('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
-										@endif
-										@endif
+											@if($spec->id_type>0)
+											{!! Form::select('spec_filter_value['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index])!!}
+											@else
+											@if($spec->id_type==-1)
+											{!! Form::text('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
+											@elseif($spec->id_type==-2)
+											{!! Form::hidden('spec_filter_value['.$loop->index.']', 0) !!}
+											{!! Form::checkbox('spec_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
+											@elseif($spec->id_type==-3)
+											{!! Form::number('spec_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "spec_filter_value_".$loop->index]) !!}
+											@endif
+											@endif
 
-									</td>
-								</tr>
-								@endforeach
-							</tbody>
+										</td>
+									</tr>
+									@endforeach
+								</tbody>
 							</table>
 
 
@@ -148,7 +157,7 @@ use Modules\Attributo\Entities\Attributo;
 
 							<h4>Passo 3: Scegli le infomazioni <b>anagrafiche degli utenti</b> da inserire nel report:</h4>
 
-							<table class='testgrid' id=''>
+							<table class='table table-bordered' id=''>
 								<thead><tr>
 									<th>Check</th>
 									<th style='width: 60%;'>Specifica</th>
@@ -189,7 +198,7 @@ use Modules\Attributo\Entities\Attributo;
 
 								<h4>Passo 4: Scegli gli attributi degli utenti da inserire nel report:</h4>
 
-								<table class='testgrid' id=''>
+								<table class='table table-bordered' id=''>
 									<thead><tr>
 										<th>Check</th>
 										<th style='width: 60%;'>Attributo</th>
@@ -208,66 +217,66 @@ use Modules\Attributo\Entities\Attributo;
 											<input name="att_filter[{{$loop->index}}]" value="1" type="checkbox" class="form-control" onchange="disable_select(this, 'att_filter_value_{{$loop->index}}', true)"/>
 										</td>
 										<td>
-												@if($a->id_type>0)
-												{!! Form::select('att_filter_value['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index])!!}
-												@else
-												@if($a->id_type==-1)
-												{!! Form::text('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
-												@elseif($a->id_type==-2)
-												{!! Form::hidden('att_filter_value['.$loop->index.']', 0) !!}
-												{!! Form::checkbox('att_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
-												@elseif($a->id_type==-3)
-												{!! Form::number('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
-												@endif
-												@endif
-											</td>
-										</tr>
-										@endforeach
-									</table><br>
+											@if($a->id_type>0)
+											{!! Form::select('att_filter_value['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index])!!}
+											@else
+											@if($a->id_type==-1)
+											{!! Form::text('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
+											@elseif($a->id_type==-2)
+											{!! Form::hidden('att_filter_value['.$loop->index.']', 0) !!}
+											{!! Form::checkbox('att_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
+											@elseif($a->id_type==-3)
+											{!! Form::number('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
+											@endif
+											@endif
+										</td>
+									</tr>
+									@endforeach
+								</table><br>
 
 
 
 
-									<h4>Passo 5: In quale formato vuoi il tuo report?</h4>
-									{!! Form::radio('format', 'html', false) !!} HTML
-									{!! Form::radio('format', 'pdf', true) !!} PDF
-									{!! Form::radio('format', 'excel', false) !!} Excel
-									<br><br>
-									Mostra i filtri applicati nella parte alta della pagina
-									{!! Form::hidden('mostra_fitri', '0') !!}
-									{!! Form::checkbox('mostra_fitri', '1', true) !!}
-									<br><br>
-									{!! Form::submit('Genera!', ['class' => 'btn btn-primary form-control']) !!}
-
-								</div>
-								{!! Form::close() !!}
-
-
-
-
+								<h4>Passo 5: In quale formato vuoi il tuo report?</h4>
+								{!! Form::radio('format', 'html', false) !!} HTML
+								{!! Form::radio('format', 'pdf', true) !!} PDF
+								{!! Form::radio('format', 'excel', false) !!} Excel
+								<br><br>
+								Mostra i filtri applicati nella parte alta della pagina
+								{!! Form::hidden('mostra_fitri', '0') !!}
+								{!! Form::checkbox('mostra_fitri', '1', true) !!}
+								<br><br>
+								{!! Form::submit('Genera!', ['class' => 'btn btn-primary form-control']) !!}
 
 							</div>
-						</div>
+							{!! Form::close() !!}
 
+
+
+
+
+						</div>
 					</div>
+
 				</div>
 			</div>
+		</div>
 
-			<script>
-			$(document).ready(function(){
-				// Drag adn Drop delle righe della tabella
-				var fixHelper = function(e, ui) {
-					ui.children().each(function() {
-						$(this).width($(this).width());
-					});
-					return ui;
-				};
+		<script>
+		$(document).ready(function(){
+			// Drag adn Drop delle righe della tabella
+			var fixHelper = function(e, ui) {
+				ui.children().each(function() {
+					$(this).width($(this).width());
+				});
+				return ui;
+			};
 
-				$(".draggable tbody").sortable({
-					stop: function(event, ui){
-					}
-				}).disableSelection();
+			$(".draggable tbody").sortable({
+				stop: function(event, ui){
+				}
+			}).disableSelection();
 
-			});
-			</script>
-			@endsection
+		});
+		</script>
+		@endsection

@@ -1,284 +1,197 @@
 <?php
-use Modules\User\Entities\User;
-use App\Role;
-use App\Permission;
-use Modules\Event\Entities\EventSpecValue;
-use Modules\Event\Entities\EventSpec;
-use Modules\User\Entities\Group;
 use Modules\Event\Entities\Week;
-
-use App\SpecSubscription;
-use Modules\Oratorio\Entities\TypeSelect;
-use Modules\Subscription\Entities\Subscription;
-
+use Modules\User\Entities\User;
+use Modules\Event\Entities\Event;
+$weeks = Week::select('id', 'from_date', 'to_date')->where('id_event', $event->id)->orderBy('from_date', 'asc')->get();
+$weeks_json = Week::where('id_event', $event->id)->orderBy('from_date', 'asc')->pluck('id')->toArray();
+array_push($weeks_json, 0); //id della tabella specifiche generali
+$weeks_json = json_encode($weeks_json);
 ?>
-<html lang="en">
-<head>
-</head>
 
-<!-- Modal2 -->
-<div class="modal fade" id="eventspecsOp" tabindex="-1" role="dialog" aria-labelledby="EventSpecsOperation">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Aggiungi Specifica</h4>
-				<p>1) Scegli se vuoi inserire la specifica...</p>
-				<?php
-					$options = "<option value='0'>Generale</option>";
-					$weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
-					foreach($weeks as $w){
-						$options .= "<option value=".$w->id.">Settimana dal ".$w->from_date." al ".$w->to_date."</option>";
-					}
-				?>
-				<select id="valid_for" onchange="change_eventspec(this, {{$id_event}})" class="form-control"><?php echo $options; ?></select>
-				<p>2) Quale specifica?</p>
-				<select id="event_spec" class="form-control"></select><br>
+<body>
 
-				<i onclick="add_eventspec({{$id_subscription}}, {{$id_event}}, false)" class="btn btn-primary" style="width: 45%"><i class="fa fa-plus" aria-hidden="true"></i>Inserisci</i>
-			</div>
-
-			<div class="modal-body">
-
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
-			</div>
-			{!! Form::close() !!}
-		</div>
-	</div>
-</div>
+  <div style="padding: 2px; padding-top: 10px; text-align: center; background: #90EE90; border-radius: 10px; margin-bottom: 5px; " id="nome_sub">
+    <?php
+    if($event->stampa_anagrafica==0){
+      $array_specifiche = json_decode($event->spec_iscrizione);
+      $anagrafica = EventSpecValue::where(['id_subscription' => $subscription->id])->whereIn('id_eventspec', $array_specifiche)->get();
+      if(count($anagrafica)>0){
+        $val = "";
+        foreach($anagrafica as $a){
+          $val .= $a->valore." ";
+        }
+        echo "<h2>".$val."</h2>";
+      }else{
+        echo "<i style='font-size:12px;'>Specifica non esistente!</i>";
+      }
+    }else{
+      try{
+        echo "<h2>".User::find($subscription->id_user)->full_name."</h2>";
+      }catch(\Exception $e){
+        echo "<h2>Utente non esistente</h2>";
+      }
+    }
+    ?>
+  </div>
 
 
-<?php
-//carico tutte le settimane
-$specs = (new EventSpecValue)->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_spec_values.valore', 'event_spec_values.id','event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato')
-	->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
-	->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.hidden', 0], ['event_specs.general', 1]])
-	->orderBy('event_spec_values.id_eventspec', 'asc')
-	->get();
+  <h2>Informazioni generali</h2>
+  <table class="table table-bordered" id="spec_table_0" style="width: 100%">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th style='width: 32%;'>Specifica</th>
+        <th>Valore</th>
+        <th>Costo</th>
+        <th>Acconto</th>
+        <th>Pagato</th>
+        <th></th>
+      </tr>
+    </thead>
+  </table>
+  <br><br>
 
-$subscription = Subscription::findOrFail($id_subscription);
-$index=0;
-?>
-{!! Form::open(['route' => 'eventspecvalues.save']) !!}
+  @if(count($weeks)>0)
+  <h2>Informazioni settimanali</h2>
 
-@if(count($specs)>0)
-	<h2>Specifiche generali</h2>
-	<table class='testgrid' id='showeventspecvalue'>
-		<thead><tr>
-		<th style='width: 35%;'>Specifica</th>
-		<th>Valore</th>
-		<th>Costo (€)</th>
-		<th>Pagato</th>
-		<th>Acconto</th>
-		<th></th>
-		</tr></thead>
-		@foreach($specs as $spec)
-			<tr>
-				<input type="hidden" name="id_eventspecvalue[{{$loop->index}}]" value="{{$spec->id}}"/>
-				<input type="hidden" name="id_eventspec[{{$loop->index}}]" value="{{$spec->id_eventspec}}"/>
-				<input type="hidden" name="id_subscription[{{$loop->index}}]" value="{{$id_subscription}}"/>
-				<td>{{$spec->label}}</td>
-				<td>
-					@if($subscription->confirmed==0)
-
-						@if($spec->id_type>0)
-							{!! Form::select('valore['.$loop->index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
-						@else
-							@if($spec->id_type==-1)
-								{!! Form::text('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
-							@elseif($spec->id_type==-2)
-								{!! Form::hidden('valore['.$loop->index.']', 0) !!}
-						     	{!! Form::checkbox('valore['.$loop->index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
-							@elseif($spec->id_type==-3)
-								{!! Form::number('valore['.$loop->index.']', $spec->valore, ['class' => 'form-control']) !!}
-							@endif
-						@endif
-
-					@else
-
-						@if($spec->id_type>0)
-							{!! Form::label($loop->index, TypeSelect::where('id', $spec->valore)->first()->option)!!}
-						@else
-							@if($spec->id_type==-1)
-								{!! Form::label($loop->index, $spec->valore) !!}
-							@elseif($spec->id_type==-2)
-						     	@if($spec->valore==1)
-						     		<i class="fa fa-check-square-o fa-2x" aria-hidden='true'></i>
-						     	@else
-						     		<i class="fa fa-square-o fa-2x" aria-hidden='true'></i>
-						     	@endif
-							@elseif($spec->id_type==-3)
-								{!! Form::label($loop->index, $spec->valore) !!}
-							@endif
-						@endif
-
-					@endif
-				</td>
-				<td>
-					{{$spec->costo}}€
-					{!! Form::hidden('costo['.$loop->index.']', $spec->costo) !!}
-				</td>
-				<td>
-					@if($spec->pagato==1)
-						<i class="far fa-check-circle fa-2x" aria-hidden="true"></i>
-						{!! Form::hidden('pagato['.$loop->index.']', 1) !!}
-					@else
-						<i class="far fa-circle fa-2x" aria-hidden="true"></i>
-						{!! Form::hidden('pagato['.$loop->index.']', 0) !!}
-					@endif
-
-				</td>
-				<td>
-					{{$spec->acconto}}€
-					{!! Form::hidden('acconto['.$loop->index.']', $spec->acconto) !!}
-				</td>
-				<td>
-					@if($subscription->confirmed==0)
-					<a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
-					@endif
-				</td>
-			</tr>
-			@php
-				$index=$loop->index+1
-			@endphp
-		@endforeach
-	</table>
-@else
-	<i>Nessuna specifica generale!</i>
-@endif
+  @foreach($weeks as $w)
+  <h3>Settimana {{ $w->id}}</h3>
+  <table class='table table-bordered' id="spec_table_{{$w->id}}" style="width: 100%">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th style='width: 32%;'>Specifica</th>
+        <th>Valore</th>
+        <th>Costo</th>
+        <th>Acconto</th>
+        <th>Pagato</th>
+        <th></th>
+      </tr>
+    </thead>
+  </table>
+  <br>
+  @endforeach  <!-- foreach settimane-->
 
 
-<?php
-$weeks = (new Week)->select('id', 'from_date', 'to_date')->where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
-?>
-@if(count($weeks)>0)
-<h2>Specifiche settimanali</h2>
-
-@foreach($weeks as $w)
-	<?php
-		$specs = (new EventSpecValue)
-			->select('event_spec_values.id_eventspec', 'event_specs.label', 'event_specs.id_type as id_type', 'event_specs.valid_for', 'event_spec_values.valore', 'event_spec_values.id', 'event_spec_values.costo', 'event_spec_values.acconto', 'event_spec_values.pagato')
-			->leftJoin('event_specs', 'event_specs.id', '=', 'event_spec_values.id_eventspec')
-			->where([['event_spec_values.id_subscription', $id_subscription], ['event_specs.general', 0], ['event_spec_values.id_week', $w->id]])
-			->orderBy('event_spec_values.id_eventspec', 'asc')
-			->get();
-	?>
-
-	<p><b>Settimana {{$loop->index+1}} - dal {{$w->from_date}} al {{$w->to_date}}</b></p>
-	<table class='testgrid' id="weektable_{{$w->id}}">
-	<thead><tr>
-	<th style='width: 35%;'>Specifica</th>
-	<th>Valore</th>
-	<th>Costo (€)</th>
-	<th>Pagato</th>
-	<th>Acconto</th>
-	<th></th>
-	</tr></thead>
-
-	@foreach($specs as $spec)
-		<?php
-		$valid = json_decode($spec->valid_for, true);
-		?>
-		@if($valid[$w->id]==1)
-			<tr>
-				<input type="hidden" name="id_eventspecvalue[{{$index}}]" value="{{$spec->id}}" />
-				<input type="hidden" name="id_eventspec[{{$index}}]" value="{{$spec->id_eventspec}}" />
-				<input type="hidden" name="id_subscription[{{$index}}]" value="{{$id_subscription}}" />
-				<td>{{$spec->label}}</td>
-				<td>
-					@if($subscription->confirmed==0)
-						@if($spec->id_type>0)
-							{!! Form::select('valore['.$index.']', TypeSelect::where('id_type', $spec->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), $spec->valore, ['class' => 'form-control'])!!}
-						@else
-							@if($spec->id_type==-1)
-								{!! Form::text('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
-							@elseif($spec->id_type==-2)
-								{!! Form::hidden('valore['.$index.']', 0) !!}
-				        {!! Form::checkbox('valore['.$index.']', 1, $spec->valore, ['class' => 'form-control']) !!}
-							@elseif($spec->id_type==-3)
-								{!! Form::number('valore['.$index.']', $spec->valore, ['class' => 'form-control']) !!}
-							@endif
-						@endif
-					@else
-						@if($spec->id_type>0)
-							{!! Form::label($loop->index, TypeSelect::where('id', $spec->valore)->first()->option)!!}
-						@else
-							@if($spec->id_type==-1)
-								{!! Form::label($loop->index, $spec->valore) !!}
-							@elseif($spec->id_type==-2)
-									@if($spec->valore==1)
-										<i class="fa fa-check-square-o fa-2x" aria-hidden='true'></i>
-									@else
-										<i class="fa fa-square-o fa-2x" aria-hidden='true'></i>
-									@endif
-							@elseif($spec->id_type==-3)
-								{!! Form::label($loop->index, $spec->valore) !!}
-							@endif
-						@endif
-					@endif
-				</td>
-				<td>
-					{{$spec->costo}}€
-					{!! Form::hidden('costo['.$index.']', $spec->costo) !!}
-				</td>
-				<td>
-					@if($spec->pagato==1)
-						<i class="far fa-check-circle fa-2x" aria-hidden="true"></i>
-					@else
-						<i class="far fa-circle fa-2x" aria-hidden="true"></i>
-					@endif
-					{!! Form::hidden('pagato['.$index.']', $spec->pagato) !!}
-				</td>
-				<td>
-					{{$spec->acconto}}€
-					{!! Form::hidden('acconto['.$index.']', $spec->acconto) !!}
-				</td>
-				<td>
-					@if($subscription->confirmed==0)
-					<a href="{{url('eventspecvalues', [$spec->id])}}/destroy"><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
-					@endif
-				</td>
-			</tr>
-
-		@php
-			$index++
-		@endphp
-		@endif
-	@endforeach
-	</table><br>
-@endforeach
-@else
-	<i>Nessuna settimana inserita!</i>
-@endif
+  @endif<!--  endif numero di settimane > 0-->
 
 
-
-
-@if($subscription->confirmed==0)
-	<input id='contatore_e' type='hidden' value="{{$index}}" />
-	<input id='id_event' type='hidden' value='0' />
-	{!! Form::submit('Salva', ['class' => 'btn btn-primary form-control', 'style' => 'width: 45%']) !!}
-		<button style="font-size: 15px; width: 49%;" type='button' class="btn btn-primary btn-sm" data-toggle='modal' data-target='#eventspecsOp' data-name='' data-eventid=''><i class="fa fa-plus" aria-hidden="true"></i> <i>Aggiungi specifica</i></button>
-	{!! Form::close() !!}
-@endif
-
+</body>
 
 <script>
-$(document).ready(function(){
-	$('#eventspecsOp').on('show.bs.modal', function (event) {
-	$('#valid_for').trigger("change");
-	var button = $(event.relatedTarget) // Button that triggered the modal
-	var name = button.data('name') // Extract info from data-* attributes
-	var eventid = button.data('eventid');
-	// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-	// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-	var modal = $(this);
-	modal.find('#name').text(name);
-	modal.find("[id*='id_event']").val(eventid);
-	});
-});
-</script>
+var editors = [];
+var tables = [];
 
-</html>
+$(document).ready(function(){
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': '{{csrf_token()}}'
+    }
+  });
+
+  // Tabelle delle specifiche settimanali
+  var weeks = JSON.parse("{{ $weeks_json }}");
+  $.each(weeks, function(index, id_week){
+    $('#spec_table_'+id_week).DataTable({
+      responsive: true,
+      processing: true,
+      serverSide: true,
+      rowId: 'DT_RowId',
+      dom: '',
+      language: { "url": "{{ asset('Italian.json') }}" },
+      ajax: {
+        url: "{!! route('eventspecvalues.data') !!}",
+        data: {
+          id_iscrizione: "{{ $subscription->id }}",
+          id_week: id_week
+        }
+      },
+      columns: [
+        { data: 'id', name: 'id', visible: false},
+        { data: 'specifica_label'},
+        { data: 'valore_label', editField: 'valore', className: "dt-body-center"},
+        { data: 'costo', render: function ( data, type, row ){
+          return data+" €";
+        }
+      },
+      { data: 'acconto', render: function ( data, type, row ){
+        return data+" €";
+      }
+    },
+    {
+      data:   "pagato",
+      render: function ( data, type, row ) {
+        if (type === 'display') {
+          if(row['costo'] == 0){
+            return "";
+          }
+          if(data == 1){
+            return "<i class='far fa-check-circle fa-2x'></i>";
+          }else{
+            return "<i class='far fa-circle fa-2x'></i>";
+          }
+        }
+        return data;
+      },
+      className: "dt-body-center"
+    },
+    { data: 'action', orderable: false, searchable: false, visible: "{{ Auth::user()->can('edit-iscrizioni') }}"}
+  ]
+});
+
+//salvo l'editor in un array per i trigger successivi
+editors[id_week] = new $.fn.dataTable.Editor({
+  ajax: {
+    url: "{{ route('eventspecvalues.index') }}"
+  },
+  table: '#spec_table_'+id_week,
+  display: "lightbox",
+  fields: [
+    {label: "ID", name: "id"},
+    {label: "Valore", name: "valore"}, //questa field viene aggiornata prima di aprire l'editor con il type corrispondente della specifica
+  ]
+});
+
+//inline. Prima di aprire, aggiorno il type di "valore" con ajax
+$('#spec_table_'+id_week).on('click', 'tbody td:not(:last-child)', function (e) {
+  if("{{ !Auth::user()->can('edit-iscrizioni') }}") return;
+	if("{{ $subscription->confirmed == 1 }}") return;
+  if(editors[id_week].display() == 'inline') return;
+  id_eventspecvalue = this.parentNode.id;
+  $.ajax({
+    type: "POST",
+    async: false,
+    url: "{{ route('eventspecvalues.valore_field') }}",
+    data: {
+      id_eventspecvalue: id_eventspecvalue,
+      _token : "{{csrf_token()}}",
+    },
+    success: function(data2){
+      editors[id_week].clear('valore');
+      editors[id_week].add(JSON.parse(data2));
+    },
+    error: function(XMLHttpRequest, textStatus, exception) { alert("Ajax failure\n" + XMLHttpRequest.responseText + "\n" + exception); },
+  });
+
+  editors[id_week].inline(this, {
+    onBlur: 'submit',
+    submit: 'allIfChanged'
+  })
+});
+
+// Delete a record
+$('#spec_table_'+id_week).on('click', 'button#editor_remove', function (e) {
+  if("{{ !Auth::user()->can('edit-iscrizioni') }}") return;
+  e.preventDefault();
+  editors[id_week].remove( $(this).closest('tr'), {
+    title: 'Cancella record',
+    message: 'Sei sicuro di voler eliminare la riga selezionata?',
+    buttons: 'Cancella riga'
+  } );
+} );
+
+});
+});
+
+
+</script>

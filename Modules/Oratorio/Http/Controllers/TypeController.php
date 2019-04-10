@@ -8,95 +8,59 @@ use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Modules\Oratorio\Entities\Type;
 use Modules\Oratorio\Entities\TypeSelect;
+use Yajra\DataTables\DataTables;
+use Modules\Oratorio\Http\Controllers\DataTables\TypeDataTableEditor;
+use Modules\Oratorio\Http\Controllers\DataTables\TypeDataTable;
 use Session;
 use Entrust;
 use Input;
 use Auth;
 
-class TypeController extends Controller
-{
-    
-	/**
-	* Display a listing of the resource.
-	*
-	* @return Response
-	*/
-	public function index(){
-		return view('oratorio::type.show');
-	}	
-    
+class TypeController extends Controller{
 
-	/**
-	* Show the form for creating a new resource.
-	*
-	* @return Response
-	*/
-	public function create(){
-		return view('oratorio::type.create');
-	}
+  public function __construct(){
+    $this->middleware('permission:view-select')->only(['index', 'data', 'opzioni']);
+    $this->middleware('permission:edit-select')->only(['store']);
+  }
 
-	/**
-	* Store a newly created resource in storage.
-	*
-	* @return Response
-	*/
-	public function store(Request $request){   	
-		$input = $request->all();
-		Type::create($input);
-		//To Do Aggiungere un event_spec_values di questo tipo per ogni iscrizione
-		Session::flash('flash_message', 'Elenco creato!');
-		return redirect()->route('type.index');
-	}
+  public function index(TypeDataTable $dataTable){
+    return $dataTable->render('oratorio::type.index');
+  }
 
-    
+  public function store(TypeDataTableEditor $editor){
+    return $editor->process(request());
+  }
 
-	/**
-	* Show the form for editing the specified resource.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function edit(Request $request){
-        $input = $request->all();
-		$type = Type::findOrFail($input['id_type']);
-		if($type->id_oratorio==Session::get('session_oratorio')){
-			return view('oratorio::type.edit')->withType($type);
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
+  public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
 
-	}
+    $builder = Type::query()
+    ->select('types.*')
+    ->where('id_oratorio', Session::get('session_oratorio'))
+    ->orderBy('label', 'ASC');
 
-	/**
-	* Update the specified resource in storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function update(Request $request){
-		$input = $request->all();
-		$sub = Type::findOrFail($input['id_type']);		
-		$sub->fill($input)->save();
-		Session::flash('flash_message', 'Elenco salvato!');
-		return redirect()->route('type.index');
-	}
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($entity){
+      $edit = "<button class='btn btn-sm btn-primary btn-block' id='editor_edit'><i class='fas fa-pencil-alt'></i> Modifica</button>";
+      $remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
+      $opzioni = "<button class='btn btn-sm btn-primary btn-block' onclick='load_opzioni(".$entity->id.")'><i class='fas fa-info'></i> Opzioni elenco</button>";
 
-	/**
-	* Remove the specified resource from storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function destroy(Request $request){
-        $input = $request->all();
-		$sub = Type::findOrFail($input['id_type']);
-		if($sub->id_oratorio==Session::get('session_oratorio')){
-			$sub->delete();
-			Session::flash("flash_message", "Elenco ".$input['id_type']." cancellato!");
-			return redirect()->route('type.index');
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-		
-	}
+      if(!Auth::user()->can('edit-select')){
+        $edit = "";
+        $remove = "";
+      }
+
+      return $edit.$remove.$opzioni;
+    })
+    ->addColumn('DT_RowId', function ($entity){
+      return $entity->id;
+    })
+    ->rawColumns(['action'])
+    ->toJson();
+  }
+
+  public function opzioni($id_type){
+    return view('oratorio::type.opzioni')->withType(Type::find($id_type));
+  }
+
 }

@@ -1,97 +1,114 @@
 <?php
+use Modules\Oratorio\Entities\Oratorio;
+if(!Auth::guest()){
+	$seg = Menu::get('SegrestaNavBar');
+	$seg->add("Help", "https://doc.segresta.it")
+	->prepend("<i class='fa fa-life-ring' aria-hidden='true'></i> ")
+	->data('permissions', ['usermodule', 'all'])->data('order', 70);
+
+	//filtro il menu popolato dai vari moduli in base al ruolo
+	$seg = Menu::get('SegrestaNavBar');
+	$seg->filter(function($item){
+		return ($item->data('permissions') == null || Auth::user()->can($item->data('permissions'))) ? : false;
+	});
+	$seg->sortBy('order');
+}
 ?>
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+
 	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-				<span class="sr-only">Toggle Navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="{{ url('/home') }}"><img src="{{url('logo_segresta.png')}}" width='70px' ></a>
-		</div>
+		<!-- <div class="navbar-header"> -->
+		<a class="navbar-brand" href="{{ url('/home') }}">
+			<?php
+			if(Session::get('session_oratorio') != null){
+				$oratorio = Oratorio::where('id', Session::get('session_oratorio'))->first();
+				if($oratorio->logo != ''){
+					echo "<img src='".url(Storage::url('public/'.$oratorio->logo))."' height='60px' ><br>";
+				}else{
+					echo "<img src='".asset('/assets/logo.png')."' height='60px'><br>";
+				}
+			}else{
+				echo "<img src='".asset('/assets/logo.png')."' height='60px'><br>";
+			}
+			?>
 
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-				@if (!Auth::guest())
-				<?php
-				//Menu::make('MyNavBar', function($menu){});
-				$menuList = Menu::get('SegrestaNavBar');
-				$menuList->add("Help", "http://doc.segresta.it")
-				->prepend("<i class='fa fa-life-ring' aria-hidden='true'></i> ")
-				->data('permissions', ['usermodule', 'all'])->data('order', 70);
+		</a>
 
-				//filtro il menu popolato dai vari moduli in base al ruolo
-				$seg = Menu::get('SegrestaNavBar');
-				$seg->filter(function($item){
-					return Auth::user()->can($item->data('permissions')) ? : false;
-				});
-				$seg->sortBy('order');
+		<!-- </div> -->
+		<button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse"
+		data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+		aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
 
-				?>
-				@include('custom-menu-items', array('items' => $SegrestaNavBar->roots()))
+	<div class="collapse navbar-collapse" id="navbarCollapse" style="background-color: white;">
+		<ul class="navbar-nav mr-auto">
+			@if (!Auth::guest())
+			@include('custom-menu-items', array('items' => $seg->roots()))
+			@endif
+		</ul>
+
+		<ul class="navbar-nav ml-auto">
+			<!-- Authentication Links -->
+			@guest
+			<li class="nav-item">
+				<a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+			</li>
+			<li class="nav-item">
+				@if (Route::has('register'))
+				<a class="nav-link" href="{{ route('register') }}">Registrati</a>
 				@endif
+			</li>
 
+			@else
+			<li class="nav-item dropdown">
+				<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+					<?php
+					if(Session::get('session_oratorio')!=null){
+						$user = Auth::user();
+						if($user->photo==''){
+							if($user->sesso=="M"){
+								echo "<img src='".url("boy.png")."'>";
+							}else if($user->sesso=="F"){
+								echo "<img src='".url("girl.png")."'>";
+							}
 
+						}else{
+							echo "<img src='".url(Storage::url('public/'.$user->photo))."' width=48px/>";
+						}
+					}
 
-			</ul>
+					?>
+					{{ Auth::user()->full_name }} <span class="caret"></span>
+				</a>
 
-			<ul class="nav navbar-nav navbar-right">
-				@if (Auth::guest())
-				<li class="{{ (Request::is('login') ? 'active' : '') }}"><a href="{{ url('login') }}"><i
-					class="fa fa-sign-in"></i> Login</a></li>
-					<li class="{{ (Request::is('register') ? 'active' : '') }}"><a
-						href="{{ url('register') }}">Registrati</a></li>
-						@else
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-								<?php
-								if(Session::get('session_oratorio')!=null){
-									$user = Auth::user();
-									if($user->photo==''){
-										if($user->sesso=="M"){
-											echo "<img src='".url("boy.png")."'>";
-										}else if($user->sesso=="F"){
-											echo "<img src='".url("girl.png")."'>";
-										}
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+					<a class="dropdown-item" href="{{ url('profile/show') }}"><i class="fas fa-user-circle"></i> Profilo</a>
+					@if(Auth::user()->can('view-iscrizioni'))
+					<a class="dropdown-item" href="{{ route('iscrizioni.index') }}"><i class="fa fa-flag"></i> Le tue iscrizioni</a>
+					@endif
+					@if(Module::find('telegram')!=null)
+					<a class="dropdown-item" href="{{ route('telegram.index') }}"><i class="fab fa-telegram-plane"></i> Telegram</a>
+					@endif
+					@if(Auth::user()->hasRole('owner'))
+					<a class="dropdown-item" href="{{route('oratorio.showall')}}"><i class="fas fa-cogs"></i> Gestione oratori</a>
+					@endif
 
-									}else{
-										echo "<img src='".url(Storage::url('public/'.$user->photo))."' width=48px/>";
-									}
-								}
+					<a class="dropdown-item" href="{{ route('logout') }}"
+					onclick="event.preventDefault();
+					document.getElementById('logout-form').submit();">
+					<i class="fas fa-sign-out-alt"></i> Logout
+				</a>
 
-								?>
-								{{ Auth::user()->name }}
-								<i class="fa fa-caret-down"></i>
-							</a>
-							<ul class="dropdown-menu" role="menu">
-								@if(Auth::check())
-								<li><a href="{{url('profile/show')}}"><i class="fa fa-user" aria-hidden='true'></i> Profilo</a></li>
-								<li><a href="{{route('usersubscriptions.show')}}"><i class="fa fa-flag" aria-hidden='true'></i> Le tue iscrizioni</a></li>
-								<li><a href="{{route('oratorio.affiliazione')}}"><i class="fa fa-cubes" aria-hidden='true'></i> Affiliazione oratorio</a></li>
-								@if(Module::find('telegram')!=null)
-								<li><a href="{{route('telegram.index')}}"><i class="fab fa-telegram-plane" aria-hidden='true'></i> Telegram</a></li>
-								@endif
-								<li>
-									<a href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-										<i class="fas fa-sign-out-alt" aria-hidden='true'></i> Logout
-									</a>
+				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+					@csrf
+				</form>
 
-									<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-										{{ csrf_field() }}
-									</form>
-								</li>
-								@endif
-								@if(Auth::user()->hasRole('owner'))
-								<li class="{{ (Request::is('oratorio/showall') ? 'active' : '') }}"><a href="{{route('oratorio.showall')}}"><i class="fas fa-cogs"></i> Gestione oratori</a></li>
-								@endif
-
-							</ul>
-						</li>
-						@endif
-					</ul>
-				</div>
 			</div>
-		</nav>
+		</li>
+		@endguest
+	</ul>
+</div>
+</div>
+</nav>

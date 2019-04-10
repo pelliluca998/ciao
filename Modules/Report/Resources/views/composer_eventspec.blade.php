@@ -13,16 +13,25 @@ use Modules\Attributo\Entities\Attributo;
 
 <div class="container" style="">
 	<div class="row">
-		<h1>Report iscrizioni generale</h1>
-		<p>Attraverso questa pagina puoi generare il report delle iscrizioni dell'evento corrente. Oltre a quelle di base, puoi scegliere quali informazioni inserire nel report. Puoi anche settare un filtro a uno o più campi, mettendo una spunta nella colonna "Filtra" e indicando il valore del filtro.</p>
-		<p>Puoi decidere l'ordine con cui mostrare le specifiche (le colonne della tabella del report) semplicemente trascinando le righe della prima tabella qui sotto.</p>
-		<hr>
+		<div class="col">
+			<div class="card bg-transparent border-0">
+				<h1><i class='far fa-file-alt'></i> Report iscrizioni generale</h1>
+
+				<p class="lead">
+					Attraverso questa pagina puoi generare il report delle iscrizioni dell'evento corrente. Oltre a quelle di base, puoi scegliere quali informazioni inserire nel report.
+					Puoi anche settare un filtro a uno o più campi, mettendo una spunta nella colonna "Filtra" e indicando il valore del filtro.<br>
+					Puoi decidere l'ordine con cui mostrare le specifiche (le colonne della tabella del report) semplicemente trascinando le righe della prima tabella qui sotto.
+				</p>
+				<hr>
+			</div>
+		</div>
 	</div>
-	<div class="row" style="margin-left: 0px; margin-right: 0px;">
-		<div class="">
-			<div class="panel panel-default" style="">
-				<div class="panel-heading">Stampa report iscrizioni</div>
-				<div class="panel-body">
+
+	<div class="row justify-content-center" style="margin-top: 20px;">
+		<div class="col">
+			<div class="card">
+				<div class="card-body">
+
 					<div style="width: 100%; float: left;  padding: 5px;">
 						<h4>Passo 1: Scegli le infomazioni <b>riguardanti l'iscrizione</b> da inserire nel report:</h4>
 						{!! Form::open(['route' => 'report.gen_eventspec']) !!}
@@ -35,7 +44,7 @@ use Modules\Attributo\Entities\Attributo;
 						->orderBy('event_specs.label', 'asc')
 						->get();
 						?>
-						<table class='testgrid' id='specs_table'>
+						<table class='table table-bordered' id='specs_table'>
 							<thead><tr>
 								<th>Check</th>
 								<th style="width: 60%;">Specifica</th>
@@ -84,7 +93,7 @@ use Modules\Attributo\Entities\Attributo;
 					<div style="width: 100%; float: left;">
 						<h4>Passo 2: Scegli le infomazioni <b>anagrafiche degli utenti</b> da inserire nel report:</h4>
 
-						<table class='testgrid' id='user_table'>
+						<table class='table table-bordered' id='user_table'>
 							<thead><tr>
 								<th>Check</th>
 								<th style='width: 60%;'>Specifica</th>
@@ -127,7 +136,7 @@ use Modules\Attributo\Entities\Attributo;
 
 							<h4>Passo 3: Scegli gli attributi degli utenti da inserire nel report:</h4>
 
-							<table class='testgrid' id=''>
+							<table class='table table-bordered' id=''>
 								<thead><tr>
 									<th>Check</th>
 									<th style='width: 60%;'>Attributo</th>

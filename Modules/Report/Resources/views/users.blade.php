@@ -49,7 +49,7 @@ $subs = DB::table('subscriptions as sub')->select('sub.id as id_subs', 'users.*'
 	//}
 	//echo $subs->toSql();
 	$subs = $subs->get();
-	echo "<table class='testgrid'>";
+	echo "<table class='table table-bordered'>";
 	echo "<thead>";
 	echo "<tr>";
 	echo "<th>ID</th>";
@@ -138,7 +138,7 @@ $subs = DB::table('subscriptions as sub')->select('sub.id as id_subs', 'users.*'
 							case -3:
 								echo "<p>".$value->valore."</p>";
 								break;
-							
+
 						}
 					}
 

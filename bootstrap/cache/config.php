@@ -6,6 +6,9 @@
     'env' => 'local',
     'debug' => true,
     'url' => 'http://localhost/segresta',
+    'nome_parrocchia' => 'NOME PARROCCHIA',
+    'indirizzo_parrocchia' => 'INDIRIZZO PARROCCHIA',
+    'email_parrocchia' => 'EMAIL PARROCCHIA',
     'timezone' => 'Europe/Rome',
     'locale' => 'it',
     'fallback_locale' => 'en',
@@ -101,6 +104,11 @@
   'attributo' => 
   array (
     'name' => 'Attributo',
+    'permissions' => 
+    array (
+      'view-attributo' => 'Visualizza la finestra degli attributi',
+      'edit-attributo' => 'Modifica gli attributi degli utenti',
+    ),
   ),
   'auth' => 
   array (
@@ -236,11 +244,17 @@
   'contabilita' => 
   array (
     'name' => 'Contabilita',
+    'permissions' => 
+    array (
+      'edit-contabilita-opzioni' => 'Modifica le opzioni contabilità',
+      'edit-contabilita' => 'Modifica la contabilità',
+    ),
   ),
   'cookie-consent' => 
   array (
     'enabled' => true,
     'cookie_name' => 'laravel_cookie_consent',
+    'cookie_lifetime' => 7300,
   ),
   'database' => 
   array (
@@ -288,9 +302,9 @@
       'cluster' => false,
       'default' => 
       array (
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'password' => NULL,
-        'port' => '6379',
+        'port' => 6379,
         'database' => 0,
       ),
     ),
@@ -304,12 +318,13 @@
       'case_insensitive' => true,
       'use_wildcards' => false,
     ),
-    'index_column' => 'DT_Row_Index',
+    'index_column' => 'DT_RowIndex',
     'engines' => 
     array (
       'eloquent' => 'Yajra\\DataTables\\EloquentDataTable',
       'query' => 'Yajra\\DataTables\\QueryDataTable',
       'collection' => 'Yajra\\DataTables\\CollectionDataTable',
+      'resource' => 'Yajra\\DataTables\\ApiResourceDataTable',
     ),
     'builders' => 
     array (
@@ -397,6 +412,8 @@
       1 => '$.',
       2 => 'function',
     ),
+    'script' => 'datatables::script',
+    'editor' => 'datatables::editor',
   ),
   'dompdf' => 
   array (
@@ -404,23 +421,21 @@
     'orientation' => 'portrait',
     'defines' => 
     array (
-      'DOMPDF_FONT_DIR' => '/var/www/segresta/storage/fonts/',
-      'DOMPDF_FONT_CACHE' => '/var/www/segresta/storage/fonts/',
-      'DOMPDF_TEMP_DIR' => '/tmp',
-      'DOMPDF_CHROOT' => '/var/www/segresta',
-      'DOMPDF_UNICODE_ENABLED' => true,
-      'DOMPDF_ENABLE_FONT_SUBSETTING' => false,
-      'DOMPDF_PDF_BACKEND' => 'CPDF',
-      'DOMPDF_DEFAULT_MEDIA_TYPE' => 'screen',
-      'DOMPDF_DEFAULT_PAPER_SIZE' => 'a4',
-      'DOMPDF_DEFAULT_FONT' => 'serif',
-      'DOMPDF_DPI' => 96,
-      'DOMPDF_ENABLE_PHP' => false,
-      'DOMPDF_ENABLE_JAVASCRIPT' => true,
-      'DOMPDF_ENABLE_REMOTE' => true,
-      'DOMPDF_FONT_HEIGHT_RATIO' => 1.1,
-      'DOMPDF_ENABLE_CSS_FLOAT' => false,
-      'DOMPDF_ENABLE_HTML5PARSER' => false,
+      'font_dir' => '/var/www/segresta/storage/fonts/',
+      'font_cache' => '/var/www/segresta/storage/fonts/',
+      'temp_dir' => '/tmp',
+      'chroot' => '/var/www/segresta',
+      'enable_font_subsetting' => false,
+      'pdf_backend' => 'CPDF',
+      'default_media_type' => 'screen',
+      'default_paper_size' => 'a4',
+      'default_font' => 'serif',
+      'dpi' => 96,
+      'enable_php' => false,
+      'enable_javascript' => true,
+      'enable_remote' => true,
+      'font_height_ratio' => 1.1,
+      'enable_html5_parser' => false,
     ),
   ),
   'elenco' => 
@@ -430,6 +445,11 @@
   'email' => 
   array (
     'name' => 'Email',
+    'permissions' => 
+    array (
+      'view-email' => 'Archivio Email',
+      'send-email' => 'Invia email',
+    ),
   ),
   'entrust' => 
   array (
@@ -445,13 +465,37 @@
   'event' => 
   array (
     'name' => 'Event',
+    'permissions' => 
+    array (
+      'view-event' => 'Visualizza la finestra degli eventi',
+      'edit-event' => 'Modifica le informazioni degli eventi',
+      'manage-week' => 'Visualizza e modifica le settimane',
+    ),
   ),
   'excel' => 
   array (
     'exports' => 
     array (
       'chunk_size' => 1000,
-      'temp_path' => '/tmp',
+      'pre_calculate_formulas' => false,
+      'csv' => 
+      array (
+        'delimiter' => ',',
+        'enclosure' => '"',
+        'line_ending' => '
+',
+        'use_bom' => false,
+        'include_separator_line' => false,
+        'excel_compatibility' => false,
+      ),
+    ),
+    'imports' => 
+    array (
+      'read_only' => true,
+      'heading_row' => 
+      array (
+        'formatter' => 'slug',
+      ),
       'csv' => 
       array (
         'delimiter' => ',',
@@ -479,261 +523,30 @@
       'htm' => 'Html',
       'html' => 'Html',
       'csv' => 'Csv',
+      'tsv' => 'Csv',
       'pdf' => 'Dompdf',
     ),
-    'cache' => 
+    'value_binder' => 
     array (
-      'enable' => true,
-      'driver' => 'memory',
-      'settings' => 
-      array (
-        'memoryCacheSize' => '32MB',
-        'cacheTime' => 600,
-      ),
-      'memcache' => 
-      array (
-        'host' => 'localhost',
-        'port' => 11211,
-      ),
-      'dir' => '/var/www/segresta/storage/cache',
+      'default' => 'Maatwebsite\\Excel\\DefaultValueBinder',
     ),
-    'properties' => 
+    'transactions' => 
     array (
-      'creator' => 'Maatwebsite',
-      'lastModifiedBy' => 'Maatwebsite',
-      'title' => 'Spreadsheet',
-      'description' => 'Default spreadsheet export',
-      'subject' => 'Spreadsheet export',
-      'keywords' => 'maatwebsite, excel, export',
-      'category' => 'Excel',
-      'manager' => 'Maatwebsite',
-      'company' => 'Maatwebsite',
+      'handler' => 'db',
     ),
-    'sheets' => 
+    'temporary_files' => 
     array (
-      'pageSetup' => 
-      array (
-        'orientation' => 'portrait',
-        'paperSize' => '9',
-        'scale' => '100',
-        'fitToPage' => false,
-        'fitToHeight' => true,
-        'fitToWidth' => true,
-        'columnsToRepeatAtLeft' => 
-        array (
-          0 => '',
-          1 => '',
-        ),
-        'rowsToRepeatAtTop' => 
-        array (
-          0 => 0,
-          1 => 0,
-        ),
-        'horizontalCentered' => false,
-        'verticalCentered' => false,
-        'printArea' => NULL,
-        'firstPageNumber' => NULL,
-      ),
+      'local_path' => '/tmp',
+      'remote_disk' => NULL,
     ),
-    'creator' => 'Maatwebsite',
-    'csv' => 
+  ),
+  'famiglia' => 
+  array (
+    'name' => 'Famiglia',
+    'permissions' => 
     array (
-      'delimiter' => ',',
-      'enclosure' => '"',
-      'line_ending' => '
-',
-      'use_bom' => false,
-    ),
-    'export' => 
-    array (
-      'autosize' => true,
-      'generate_heading_by_indices' => true,
-      'merged_cell_alignment' => 'left',
-      'calculate' => false,
-      'includeCharts' => false,
-      'sheets' => 
-      array (
-        'page_margin' => false,
-        'nullValue' => NULL,
-        'startCell' => 'A1',
-        'strictNullComparison' => false,
-      ),
-      'store' => 
-      array (
-        'path' => '/var/www/segresta/storage/exports',
-        'returnInfo' => false,
-      ),
-      'pdf' => 
-      array (
-        'driver' => 'DomPDF',
-        'drivers' => 
-        array (
-          'DomPDF' => 
-          array (
-            'path' => '/var/www/segresta/vendor/dompdf/dompdf/',
-          ),
-          'tcPDF' => 
-          array (
-            'path' => '/var/www/segresta/vendor/tecnick.com/tcpdf/',
-          ),
-          'mPDF' => 
-          array (
-            'path' => '/var/www/segresta/vendor/mpdf/mpdf/',
-          ),
-        ),
-      ),
-    ),
-    'filters' => 
-    array (
-      'registered' => 
-      array (
-        'chunk' => 'Maatwebsite\\Excel\\Filters\\ChunkReadFilter',
-      ),
-      'enabled' => 
-      array (
-      ),
-    ),
-    'import' => 
-    array (
-      'heading' => 'slugged',
-      'startRow' => 1,
-      'separator' => '_',
-      'includeCharts' => false,
-      'to_ascii' => true,
-      'encoding' => 
-      array (
-        'input' => 'UTF-8',
-        'output' => 'UTF-8',
-      ),
-      'calculate' => true,
-      'ignoreEmpty' => false,
-      'force_sheets_collection' => false,
-      'dates' => 
-      array (
-        'enabled' => true,
-        'format' => false,
-        'columns' => 
-        array (
-        ),
-      ),
-      'sheets' => 
-      array (
-        'test' => 
-        array (
-          'firstname' => 'A2',
-        ),
-      ),
-    ),
-    'views' => 
-    array (
-      'styles' => 
-      array (
-        'th' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 12,
-          ),
-        ),
-        'strong' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 12,
-          ),
-        ),
-        'b' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 12,
-          ),
-        ),
-        'i' => 
-        array (
-          'font' => 
-          array (
-            'italic' => true,
-            'size' => 12,
-          ),
-        ),
-        'h1' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 24,
-          ),
-        ),
-        'h2' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 18,
-          ),
-        ),
-        'h3' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 13.5,
-          ),
-        ),
-        'h4' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 12,
-          ),
-        ),
-        'h5' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 10,
-          ),
-        ),
-        'h6' => 
-        array (
-          'font' => 
-          array (
-            'bold' => true,
-            'size' => 7.5,
-          ),
-        ),
-        'a' => 
-        array (
-          'font' => 
-          array (
-            'underline' => true,
-            'color' => 
-            array (
-              'argb' => 'FF0000FF',
-            ),
-          ),
-        ),
-        'hr' => 
-        array (
-          'borders' => 
-          array (
-            'bottom' => 
-            array (
-              'style' => 'thin',
-              'color' => 
-              array (
-                0 => 'FF000000',
-              ),
-            ),
-          ),
-        ),
-      ),
+      'view-famiglia' => 'Visualizza la famiglia',
+      'edit-famiglia' => 'Modifica le informazioni sulla famiglia',
     ),
   ),
   'filesystems' => 
@@ -785,6 +598,11 @@
   'group' => 
   array (
     'name' => 'Group',
+    'permissions' => 
+    array (
+      'view-gruppo' => 'Visualizza la finestra dei gruppi',
+      'edit-gruppo' => 'Modifica gruppi e componenti',
+    ),
   ),
   'image' => 
   array (
@@ -817,17 +635,25 @@
   ),
   'mail' => 
   array (
-    'driver' => 'mailgun',
-    'host' => NULL,
-    'port' => 587,
+    'driver' => 'smtp',
+    'host' => 'ssl0.ovh.net',
+    'port' => '465',
     'from' => 
     array (
-      'address' => 'info@segresta.it',
-      'name' => 'Segresta',
+      'address' => 'info@elephantech.it',
+      'name' => 'ElephanTech',
     ),
-    'encryption' => NULL,
-    'username' => NULL,
-    'password' => NULL,
+    'encryption' => 'ssl',
+    'username' => 'info@elephantech.it',
+    'password' => '2gnxTohjMb8mN04JLPqI',
+    'markdown' => 
+    array (
+      'theme' => 'default',
+      'paths' => 
+      array (
+        0 => '/var/www/segresta/resources/views/vendor/mail',
+      ),
+    ),
     'sendmail' => '/usr/sbin/sendmail -bs',
     'pretend' => false,
   ),
@@ -842,7 +668,6 @@
       array (
         'start' => 'start.php',
         'routes' => 'Http/routes.php',
-        'json' => 'module.json',
         'views/index' => 'Resources/views/index.blade.php',
         'views/master' => 'Resources/views/layouts/master.blade.php',
         'scaffold/config' => 'Config/config.php',
@@ -853,6 +678,7 @@
         'start' => 
         array (
           0 => 'LOWER_NAME',
+          1 => 'ROUTES_LOCATION',
         ),
         'routes' => 
         array (
@@ -888,6 +714,7 @@
           5 => 'MODULE_NAMESPACE',
         ),
       ),
+      'gitkeep' => true,
     ),
     'paths' => 
     array (
@@ -896,25 +723,121 @@
       'migration' => '/var/www/segresta/database/migrations',
       'generator' => 
       array (
-        'assets' => 'Assets',
-        'config' => 'Config',
-        'command' => 'Console',
-        'event' => 'Events',
-        'listener' => 'Events/Handlers',
-        'migration' => 'Database/Migrations',
-        'model' => 'Entities',
-        'repository' => 'Repositories',
-        'seeder' => 'Database/Seeders',
-        'controller' => 'Http/Controllers',
-        'filter' => 'Http/Middleware',
-        'request' => 'Http/Requests',
-        'provider' => 'Providers',
-        'lang' => 'Resources/lang',
-        'views' => 'Resources/views',
-        'test' => 'Tests',
-        'jobs' => 'Jobs',
-        'emails' => 'Emails',
-        'notifications' => 'Notifications',
+        'config' => 
+        array (
+          'path' => 'Config',
+          'generate' => true,
+        ),
+        'command' => 
+        array (
+          'path' => 'Console',
+          'generate' => true,
+        ),
+        'migration' => 
+        array (
+          'path' => 'Database/Migrations',
+          'generate' => true,
+        ),
+        'seeder' => 
+        array (
+          'path' => 'Database/Seeders',
+          'generate' => true,
+        ),
+        'factory' => 
+        array (
+          'path' => 'Database/factories',
+          'generate' => true,
+        ),
+        'model' => 
+        array (
+          'path' => 'Entities',
+          'generate' => true,
+        ),
+        'controller' => 
+        array (
+          'path' => 'Http/Controllers',
+          'generate' => true,
+        ),
+        'filter' => 
+        array (
+          'path' => 'Http/Middleware',
+          'generate' => true,
+        ),
+        'request' => 
+        array (
+          'path' => 'Http/Requests',
+          'generate' => true,
+        ),
+        'provider' => 
+        array (
+          'path' => 'Providers',
+          'generate' => true,
+        ),
+        'assets' => 
+        array (
+          'path' => 'Resources/assets',
+          'generate' => true,
+        ),
+        'lang' => 
+        array (
+          'path' => 'Resources/lang',
+          'generate' => true,
+        ),
+        'views' => 
+        array (
+          'path' => 'Resources/views',
+          'generate' => true,
+        ),
+        'test' => 
+        array (
+          'path' => 'Tests',
+          'generate' => true,
+        ),
+        'repository' => 
+        array (
+          'path' => 'Repositories',
+          'generate' => false,
+        ),
+        'event' => 
+        array (
+          'path' => 'Events',
+          'generate' => false,
+        ),
+        'listener' => 
+        array (
+          'path' => 'Listeners',
+          'generate' => false,
+        ),
+        'policies' => 
+        array (
+          'path' => 'Policies',
+          'generate' => false,
+        ),
+        'rules' => 
+        array (
+          'path' => 'Rules',
+          'generate' => false,
+        ),
+        'jobs' => 
+        array (
+          'path' => 'Jobs',
+          'generate' => false,
+        ),
+        'emails' => 
+        array (
+          'path' => 'Emails',
+          'generate' => false,
+        ),
+        'notifications' => 
+        array (
+          'path' => 'Notifications',
+          'generate' => false,
+        ),
+        'resource' => 
+        array (
+          'path' => 'Transformers',
+          'generate' => false,
+        ),
       ),
     ),
     'scan' => 
@@ -943,11 +866,19 @@
     'register' => 
     array (
       'translations' => true,
+      'files' => 'register',
     ),
   ),
   'oratorio' => 
   array (
     'name' => 'Oratorio',
+    'permissions' => 
+    array (
+      'view-select' => 'Visualizza gli elenchi con tutte le opzioni',
+      'edit-select' => 'Modifica gli elenchi con tutte le opzioni',
+      'edit-oratorio' => 'Modifica le informazioni relative all\'oratorio',
+      'edit-permission' => 'Gestisci permessi',
+    ),
   ),
   'queue' => 
   array (
@@ -998,13 +929,17 @@
   'report' => 
   array (
     'name' => 'Report',
+    'permissions' => 
+    array (
+      'generate-report' => 'Genera report',
+    ),
   ),
   'services' => 
   array (
     'mailgun' => 
     array (
-      'domain' => 'mailgun.segresta.it',
-      'secret' => 'key-aef2f7c2269f25786a0d16a402e90ac6',
+      'domain' => NULL,
+      'secret' => NULL,
     ),
     'ses' => 
     array (
@@ -1051,6 +986,12 @@
   'subscription' => 
   array (
     'name' => 'Subscription',
+    'permissions' => 
+    array (
+      'view-iscrizioni' => 'Visualizza iscrizioni',
+      'edit-iscrizioni' => 'Modifica iscrizioni',
+      'edit-admin-iscrizioni' => 'Modifica iscrizioni come segreteria',
+    ),
   ),
   'telegram' => 
   array (
@@ -1065,6 +1006,11 @@
   'user' => 
   array (
     'name' => 'User',
+    'permissions' => 
+    array (
+      'view-users' => 'Visualizza la finestra dell\'anagrafica',
+      'edit-users' => 'Modifica le informazioni degli utenti',
+    ),
   ),
   'view' => 
   array (
@@ -1077,7 +1023,5 @@
   'whatsapp' => 
   array (
     'name' => 'Whatsapp',
-    'waboxapp_key' => '531a1d356dad6427164434d9c034bcb85aed838e9dbb2',
-    'waboxapp_phone' => '393662294145',
   ),
 );

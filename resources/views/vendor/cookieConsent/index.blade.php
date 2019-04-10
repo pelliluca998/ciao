@@ -1,4 +1,4 @@
-@if($cookieConsentConfig['enabled'] && !$alreadyConsentedWithCookies)
+@if($cookieConsentConfig['enabled'] && ! $alreadyConsentedWithCookies)
 
     @include('cookieConsent::dialogContents')
 
@@ -6,10 +6,10 @@
 
         window.laravelCookieConsent = (function () {
 
-            var COOKIE_VALUE = 1;
+            const COOKIE_VALUE = 1;
 
             function consentWithCookies() {
-                setCookie('{{ $cookieConsentConfig['cookie_name'] }}', COOKIE_VALUE, 365 * 20);
+                setCookie('{{ $cookieConsentConfig['cookie_name'] }}', COOKIE_VALUE, {{ $cookieConsentConfig['cookie_lifetime'] }});
                 hideCookieDialog();
             }
 
@@ -18,26 +18,26 @@
             }
 
             function hideCookieDialog() {
-                var dialogs = document.getElementsByClassName('js-cookie-consent');
+                const dialogs = document.getElementsByClassName('js-cookie-consent');
 
-                for (var i = 0; i < dialogs.length; ++i) {
+                for (let i = 0; i < dialogs.length; ++i) {
                     dialogs[i].style.display = 'none';
                 }
             }
 
             function setCookie(name, value, expirationInDays) {
-                var date = new Date();
+                const date = new Date();
                 date.setTime(date.getTime() + (expirationInDays * 24 * 60 * 60 * 1000));
-                document.cookie = name + '=' + value + '; ' + 'expires=' + date.toUTCString() +';path=/';
+                document.cookie = name + '=' + value + '; ' + 'expires=' + date.toUTCString() +';path=/{{ config('session.secure') ? ';secure' : null }}';
             }
 
             if(cookieExists('{{ $cookieConsentConfig['cookie_name'] }}')) {
                 hideCookieDialog();
             }
 
-            var buttons = document.getElementsByClassName('js-cookie-consent-agree');
+            const buttons = document.getElementsByClassName('js-cookie-consent-agree');
 
-            for (var i = 0; i < buttons.length; ++i) {
+            for (let i = 0; i < buttons.length; ++i) {
                 buttons[i].addEventListener('click', consentWithCookies);
             }
 

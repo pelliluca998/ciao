@@ -20,25 +20,10 @@ use Session;
 
 class EventSpecController extends Controller
 {
-	/**
-	* Display a listing of the resource.
-	*
-	* @return Response
-	*/
-	public function index(){
-		//return view('groups.show');
-	}
 
-
-	/**
-	* Show the form for creating a new resource.
-	*
-	* @return Response
-	*/
-	//public function create(){
-	//	return view('groups.create');
-	//}
-
+	public function __construct(){
+    $this->middleware('permission:edit-event');
+  }
 
 
 	/**
@@ -47,21 +32,21 @@ class EventSpecController extends Controller
 	* @param  int  $id
 	* @return Response
 	*/
-	public function show(Request $request){
-        	$input = $request->all();
-        	if(isset($input['id_event'])){
-        		$id = $input['id_event'];
-        	}elseif(Session::has('work_event')){
-        		$id = Session::get('work_event');
-        	}else{
-        		Session::flash("flash_message", "Devi specificare un evento per compiere questa azione!");
+	public function index(Request $request){
+		$input = $request->all();
+		if(isset($input['id_event'])){
+			$id = $input['id_event'];
+		}elseif(Session::has('work_event')){
+			$id = Session::get('work_event');
+		}else{
+			Session::flash("flash_message", "Devi specificare un evento per compiere questa azione!");
 			return redirect()->route('events.index');
-        	}
+		}
 
 		$event = Event::findOrFail($id);
 
-		if($event->id_oratorio==Session::get('session_oratorio')){
-			return view('event::eventspecs.show')->with('id_event', $id);
+		if($event->id_oratorio == Session::get('session_oratorio')){
+			return view('event::eventspecs.index')->with('id_event', $id);
 		}else{
 			abort(403, 'Unauthorized action.');
 		}
@@ -119,6 +104,8 @@ class EventSpecController extends Controller
 				$spec->id_tipopagamento = $id_tipo_pagamento[$key];
 				$spec->hidden = false;
 				$spec->general = false;
+				$spec->obbligatoria = false;
+
 				foreach($input['hidden'] as $hidden){
 					if($hidden == $id_spec[$key]){
 						$spec->hidden = true;
@@ -128,6 +115,12 @@ class EventSpecController extends Controller
 				foreach($input['general'] as $general){
 					if($general == $id_spec[$key]){
 						$spec->general = true;
+						break;
+					}
+				}
+				foreach($input['obbligatoria'] as $obbligatoria){
+					if($obbligatoria == $id_spec[$key]){
+						$spec->obbligatoria = true;
 						break;
 					}
 				}
@@ -151,6 +144,7 @@ class EventSpecController extends Controller
 				$spec->id_event = $event[$key];
 				$spec->hidden = false;
 				$spec->general = true;
+				$spec->obbligatoria = false;
 				$spec->ordine = $ordine;
 				$spec->id_cassa = null;
 				$spec->id_modopagamento = null;
@@ -168,11 +162,7 @@ class EventSpecController extends Controller
 			$ordine++;
 		}
 		Session::flash("flash_message", "Specifiche evento aggiornate!");
-		return redirect()->route('eventspecs.show');
-	}
-
-	public function show_eventspecvalues($id_sub){
-		return view('subscription::eventspecvalue.show', ['id_sub' => $id_sub]);
+		return redirect()->route('eventspecs.index');
 	}
 
 

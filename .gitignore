@@ -3,6 +3,7 @@ Modules/Email
 Modules/Telegram
 Modules/Contabilita
 Modules/Whatsapp
+Modules/Famiglia
 resources/views/piwik.blade.php
 
 /node_modules

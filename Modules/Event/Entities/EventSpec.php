@@ -4,20 +4,17 @@ namespace Modules\Event\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Oratorio\Entities\TypeSelect;
+use Modules\Oratorio\Entities\Type;
 use Session;
 use Modules\Event\Entities\Week;
 
 class EventSpec extends Model
 {
-  /**
-  * The attributes that are mass assignable.
-  *
-  * @var array
-  */
-  protected $fillable = ['id_event', 'ordine', 'valid_for', 'general', 'label', 'descrizione', 'id_type', 'hidden', 'price', 'acconto', 'id_cassa', 'id_tipopagamento', 'id_modopagamento'];
+  protected $fillable = ['id_event', 'ordine', 'valid_for', 'general', 'label', 'descrizione', 'id_type', 'hidden',
+  'price', 'acconto', 'id_cassa', 'id_tipopagamento', 'id_modopagamento', 'descrizione'];
 
   public static function getPrintableValue($id_type, $value){
-    if($id_type>0){
+    if($id_type > 0){
       //il valore è da ricercare negli elenchi a scelta multipla creati dall'utente
       $select = TypeSelect::where('id', $value)->get();
       if(count($select)>0){
@@ -25,15 +22,17 @@ class EventSpec extends Model
       }else{
         return "n/a";
       }
-    }elseif($id_type==-1){
-      //spec di tipo testo, torno il valore così come è
+    }
+
+    switch($id_type){
+      case Type::TEXT_TYPE:
       return $value;
-    }elseif($id_type==-2){
-      //valore booleano
+      case Type::BOOL_TYPE:
       if($value==0) return "NO";
       else return "SI";
-    }elseif($id_type==-3){
-      //spec di tipo numero, torno il valore così come è
+      case Type::NUMBER_TYPE:
+      return $value;
+      case Type::DATE_TYPE:
       return $value;
     }
   }

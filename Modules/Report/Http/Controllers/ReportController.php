@@ -9,12 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Modules\User\Entities\User;
 use Modules\Event\Entities\Week;
 use Modules\Event\Entities\Event;
-use App\SpecSubscription;
 use Modules\User\Entities\Group;
-use App\CampoWeek;
 use Modules\Subscription\Entities\Subscription;
 use Modules\Oratorio\Entities\Oratorio;
-use App\Classe;
 use Modules\Event\Entities\EventSpecValue;
 use Modules\Event\Entities\EventSpec;
 use Modules\Oratorio\Entities\TypeSelect;
@@ -28,6 +25,10 @@ use PDF;
 
 class ReportController extends Controller
 {
+
+	public function __construct(){
+    $this->middleware('permission:generate-report');
+  }
 
 	public function eventspecreport(){
 		if(Session::has('work_event')){

@@ -1,0 +1,147 @@
+.container{
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Overwrite app.css  */
+/* .modal.fade .modal-dialog{
+	transform: translateY(0);
+} */
+
+/*  */
+@media print{
+	body{
+		background-color: white;
+	}
+}
+@media print{
+	.container{
+		width: 100%;
+		background-color: white;
+	}
+}
+
+
+
+
+.navbar-brand{
+	height: 70px;
+}
+
+h2{
+	font-size: 4vmin;
+}
+
+label{
+	font-weight: bold;
+}
+
+html{
+	/* Sovrascrive il font-size di bootstrap.css */
+	font-size: inherit;
+}
+
+.btn-primary{
+	word-wrap: break-word;
+	white-space: normal;
+}
+
+.btn{
+	margin-bottom: 5px;
+}
+
+/* .row{
+	display: inherit;
+} */
+
+.row_yellow_background{
+	background-color: #F0E68C;
+}
+
+.row_green_background{
+	background-color: #90EE90 !important;
+}
+
+.row_white_background{
+	background-color: #FFFFFF;
+}
+
+.row_grey_background{
+	background-color: #A9A9A9;
+}
+
+.row_red_background{
+	background-color: #F08080 !important;
+}
+
+
+.cookie-consent{
+	width: 90%;
+	margin-left: 5%;
+	padding: 10px;
+	background-color: #F0F8FF;
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	font-size: 14px;
+	color: black;
+}
+
+.full-height {
+		height: 100vh;
+}
+
+.flex-center {
+		align-items: center;
+		display: flex;
+		justify-content: center;
+}
+
+.position-ref {
+		position: relative;
+}
+
+.top-right {
+		position: absolute;
+		right: 10px;
+		top: 18px;
+}
+
+.content {
+		text-align: center;
+}
+
+.title {
+		font-size: 84px;
+}
+
+.links > a {
+		color: #636b6f;
+		padding: 0 25px;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: .1rem;
+		text-decoration: none;
+		text-transform: uppercase;
+}
+
+.m-b-md {
+		margin-bottom: 30px;
+}
+
+.card-deck {
+	padding-bottom: 15px;
+}
+
+.DTED_Lightbox_Wrapper{
+	width: 60% !important;
+	left: 43% !important;
+}
+
+.DTE_Field{
+	padding: 5px 5% !important;
+}
+
+.py-4{
+	padding-bottom: 3.5rem!important;
+}

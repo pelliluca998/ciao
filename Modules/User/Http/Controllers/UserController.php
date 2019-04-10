@@ -12,29 +12,51 @@ use Entrust;
 use Carbon\Carbon;
 use App\RoleUser;
 use App\Role;
+use App\Comune;
+use App\Nazione;
 use Input;
 use File;
+use Form;
 use Image;
 use Hash;
 use Modules\Oratorio\Entities\UserOratorio;
 use Modules\Attributo\Entities\AttributoUser;
+use Modules\Event\Entities\Event;
 use Auth;
 use Storage;
 use Excel;
 use Yajra\DataTables\DataTables;
+use Modules\User\Http\Controllers\DataTables\UserDataTableEditor;
+use Modules\User\Http\Controllers\DataTables\UserDataTable;
 
 class UserController extends Controller
 {
   use ValidatesRequests;
 
+  public function __construct(){
+    $this->middleware('permission:view-users')->only(['index', 'data']);
+    $this->middleware('permission:edit-users')->only(['store']);
+  }
+
+  public $messages = [
+    'name.required' => 'Devi inserire un nome valido',
+    'cognome.required' => 'Devi inserire un cognome valido',
+    'email.required' => 'Devi inserire un indirizzo email valido',
+    'password.required' => 'Devi inserire una password valida',
+    'email.unique' => 'La mail inserita è già presente nel database',
+    'password.min' => 'La password deve essere lunga almeno 8 caratteri'
+  ];
 
   /**
   * Display a listing of the resource.
   * @return Response
   */
-  public function index()
-  {
-    return view('user::show');
+  public function index(UserDataTable $dataTable){
+    return $dataTable->render('user::index');
+  }
+
+  public function store(UserDataTableEditor $editor){
+    return $editor->process(request());
   }
 
   public function action(Request $request){
@@ -43,29 +65,31 @@ class UserController extends Controller
       Session::flash("flash_message", "Devi selezionare almeno un utente!");
       return redirect()->route('user.index');
     }
-    $check_user = $input['check_user'];
-    $json = json_encode($check_user);
+    $json = $input['check_user'];
+    //$json = json_encode($check_user);
     switch($input['action']){
       case 'email':
-      return redirect()->route('email.create', ['users' => $json]);
+      return route('email.create', ['users' => $json]);
       break;
       case 'sms':
-      return redirect()->route('sms.create', ['users' => $json]);
+      return route('sms.create', ['users' => $json]);
       break;
       case 'telegram':
-      return redirect()->route('telegram.create', ['users' => $json]);
+      return route('telegram.create', ['users' => $json]);
       break;
       case 'group':
-      return redirect()->route('groupusers.select', ['users' => $json]);
+      return route('groupusers.select', ['users' => $json]);
       break;
       case 'whatsapp':
-      return redirect()->route('whatsapp.create', ['users' => $json]);
+      return route('whatsapp.create', ['users' => $json]);
       break;
     }
   }
 
   public function data(Request $request, Datatables $datatables){
     $input = $request->all();
+
+    $events = Event::orderBy('created_at', 'DESC')->pluck('nome', 'id');
 
     $builder = User::query()
     ->select('users.*')
@@ -74,42 +98,64 @@ class UserController extends Controller
     ->orderBy('cognome', 'ASC');
 
     return $datatables->eloquent($builder)
-    ->addColumn('action', function ($user){
-      $action = "<button type='button' class='btn btn-primary btn-sm' data-toggle='modal' data-target='#userOp' data-username='".$user->name." ".$user->cognome."' data-userid='".$user->id."'><i class='fas fa-cogs fa-2x'></i> </button>";
-      return $action;
+    ->addColumn('action', function ($entity) use ($events){
+      $edit = "<div style=''><div style='display: flow-root'><button class='btn btn-sm btn-primary btn-block' id='editor_edit' style='float: left; width: 50%; margin-right: 2px;'><i class='fas fa-pencil-alt'></i> Modifica</button>";
+      $remove = "<button style='float: left; width: 48%; margin: 0px;' class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button></div></div>";
+      $attributi = "<button class='btn btn-sm btn-primary btn-block' onclick='edit_attributi(".$entity->id.")' ><i class='fas fa-paperclip'></i> Attributi</button>";
+      //iscrivi
+      $iscrivi = "<div>".Form::open(['method' => 'POST', 'route' => ['subscribe.create']]).
+      "<div class='row'><div class='col-5'>".
+      Form::hidden('id_user', $entity->id).
+      Form::select('id_event', $events, null, ['class' => 'form-control', 'style' => 'padding: 2px; height: auto;']).
+      "</div><div class='col-7'><button class='btn btn-sm btn-primary btn-block' type='submit'><i class='fas fa-dolly'></i> Iscrivi all'evento</button></div></div></div>".
+      Form::close();
+
+      $famiglia = Form::open(['method' => 'GET', 'route' => ['famiglia.user', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-child'></i> Famiglia</button>".Form::close();
+
+      if(count($events) == 0){
+        $iscrivi = "";
+      }
+
+      if(!Auth::user()->can('edit-users')){
+        $edit = "";
+        $remove = "";
+      }
+      if(!Auth::user()->can('view-attributo')){
+        $attributi = "";
+      }
+      if(!Auth::user()->can('view-famiglia')){
+        $famiglia = "";
+      }
+
+      return $edit.$remove.$iscrivi.$attributi.$famiglia;
     })
-    ->addColumn('check', function ($user){
-      $check = "<input name='check_user[]' id='check_users_".$user->id."' type='checkbox' value='".$user->id."' class='form-control'/>";
-      return $check;
-    })
-    ->addColumn('photo', function ($user){
-      if($user->photo==null){
-        if($user->sesso=="M"){
+    ->addColumn('path_photo', function ($entity){
+      if($entity->photo == null){
+        if($entity->sesso == "M"){
           return "<img src='".url("boy.png")."'>";
-        }else if($user->sesso=="F"){
+        }else if($entity->sesso=="F"){
           return "<img src='".url("girl.png")."'>";
         }
       }else{
-        return "<img src='".url(Storage::url('public/'.$user->photo))."' width=48px/>";
+        return "<img src='".url(Storage::url('public/'.$entity->photo))."' width=48px/>";
       }
     })
-    ->rawColumns(['photo', 'action', 'check'])
+    ->addColumn('DT_RowId', function ($entity){
+      return $entity->id;
+    })
+    ->addColumn('role_id', function ($entity){
+      return $entity->roles[0]->id;
+    })
+    ->addColumn('comune_nascita_label', function ($entity){
+      if($entity->id_nazione_nascita != 118){ //se non è nato in Italia, scrivo lo stato di nascita, ignorando il resto
+        return Nazione::find($entity->id_nazione_nascita)->nome_stato;
+      }
+      if($entity->id_comune_nascita != null){
+        return Comune::find($entity->id_comune_nascita)->nome;
+      }
+    })
+    ->rawColumns(['action', 'check', 'path_photo'])
     ->toJson();
-  }
-
-  /**
-  * Show the form for creating a new resource.
-  * @return Response
-  */
-  public function create()
-  {
-    return view('user::create');
-  }
-
-  public function print_userprofile(Request $request){
-    $input = $request->all();
-    $id_user = $input['id_user'];
-    return view('user::userprofile')->with('id_user', $id_user);
   }
 
   /**
@@ -117,7 +163,7 @@ class UserController extends Controller
   * @param  Request $request
   * @return Response
   */
-  public function store(Request $request)
+  public function store_user(Request $request)
   {
     //Genera user, password e email se non forniti
     if(isset($request['genera_email'])){
@@ -188,30 +234,8 @@ class UserController extends Controller
   }
 
   /**
-  * Show the specified resource.
-  * @return Response
-  */
-  public function show()
-  {
-    return view('user::show');
-  }
-
-  /**
-  * Show the form for editing the specified resource.
-  * @return Response
-  */
-  public function edit(Request $request)
-  {
-    $input = $request->all();
-    $id = $input['id_user'];
-    $user = User::findOrFail($id);
-    $orat = UserOratorio::where([['id_user', $user->id], ['id_oratorio', Session::get('session_oratorio')]])->get();
-    if(count($orat)>0){
-      return view('user::edit')->withUser($user);
-    }else{
-      abort(403, 'Unauthorized action.');
-    }
-  }
+  ** Mostra la pagina di aggiornamento profilo utente
+  **/
 
   public function profile(){
     $user = User::findOrFail(Auth::user()->id);
@@ -219,188 +243,76 @@ class UserController extends Controller
   }
 
   /**
-  * Update the specified resource in storage.
-  * @param  Request $request
-  * @return Response
-  */
-  public function update(Request $request){
-    $input = $request->all();
-    $user = User::findOrFail($input['id_user']);
-
-    $this->validate($request, [
-      'name' => 'required',
-      'cognome' => 'required',
-      'nato_il' => 'required|date_format:d/m/Y',
-      'nato_a' => 'required',
-      'email' => 'required|email|unique:users,email,'.$user->id,
-      'username' => 'required|unique:users,username,'.$user->id,
-    ]);
-
-    $orat = UserOratorio::where('id_user', $user->id)->first();
-    if($orat->id_oratorio==Session::get('session_oratorio') || Auth::user()->id==$input['id_user']){
-
-      if(Input::hasFile('photo')){
-        $file = $request->photo;
-        $filename = $request->photo->store('profile', 'public');
-        $path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
-        $image = Image::make($path);
-        $image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
-        $image->save($path);
-        $input['photo'] = $filename;
-        //cancello la vecchia immagine se presente
-        if($user->photo!=""){
-          Storage::delete('public/'.$user->photo);
-        }
-      }
-      if(strlen($input['password'])>0){
-        $input['password'] = Hash::make($input['password']);
-      }else{
-        unset($input['password']);
-      }
-      $user->fill($input)->save();
-      Session::flash('flash_message', 'Utente salvato!');
-      $query = Session::get('query_param');
-      Session::forget('query_param');
-      //salvo ruolo
-      //$user->roles()->sync(array($input['id_role']));
-      $role = RoleUser::where([['user_id', $user->id],['role_id', $user->roles[0]->id]])->first();
-      $role->role_id = $input['id_role'];
-      $role->save();
-
-      //Salvo gli attributi
-      $keys = ['id_attributo', 'id_attributouser', 'valore'];
-      foreach($keys as $key){
-        if(!array_key_exists($key, $input)){
-          $input[$key] = array();
-        }
-      }
-      $id_attributo = $input['id_attributo'];
-      $id_attributouser = $input['id_attributouser'];
-      $valore = $input['valore'];
-      $i=0;
-      foreach($id_attributo as $id){
-        if($id_attributouser[$i]>0){
-          $u = AttributoUser::findOrfail($id_attributouser[$i]);
-          $u->valore = $valore[$i];
-          $u->save();
-        }else{
-          $u = new AttributoUser();
-          $u->id_user = $user->id;
-          $u->id_attributo = $id_attributo[$i];
-          $u->valore = $valore[$i];
-          $u->save();
-        }
-        $i++;
-      }
-
-      //end salvo ruolo
-      if(Auth::user()->hasRole('user')){
-        return redirect()->route('home');
-      }else{
-        return redirect()->route('user.index', $query);
-      }
-
-    }else{
-      abort(403, 'Unauthorized action.');
-    }
-  }
-
-  /**
-  * Remove the specified resource from storage.
-  * @return Response
-  */
-  public function destroy(Request $request)
-  {
-    $input = $request->all();
-    $user = User::findOrFail($input['id_user']);
-    $orat = UserOratorio::where('id_user', $user->id)->first();
-    if($orat->id_oratorio==Session::get('session_oratorio')){
-      $orat->delete();
-      //$user->delete();
-      Session::flash("flash_message", "Utente cancellato!");
-      $query = Session::get('query_param');
-      Session::forget('query_param');
-      return redirect()->route('user.index', $query);
-    }else{
-      abort(403, 'Unauthorized action.');
-    }
-  }
+  ** Aggiorna il profilo utente
+  **/
 
   public function updateprofile(Request $request){
     $input = $request->all();
-    $user = User::findOrFail($input['id']);
-    if(Auth::user()->id==$user->id){
-      if(Input::hasFile('photo')){
-        $file = $request->photo;
-        $filename = $request->photo->store('profile', 'public');
-        $path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
-        $image = Image::make($path);
-        $image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
-        $image->save($path);
-        $input['photo'] = $filename;
-        //cancello la vecchia immagine se presente
-        if($user->photo!=""){
-          Storage::delete('public/'.$user->photo);
-        }
+    $user = Auth::user();
+    $this->validate($request, [
+      'name' => 'required',
+      'cognome' => 'required',
+      'email' => 'required|email|unique:users,email,'.$user->id,
+      'password_new' => 'nullable|min:8',
+      'confirm_password' => 'nullable|same:password_new',
+    ], $this->messages);
+
+    if($request->hasFile('path_photo')){
+      $file = $request->path_photo;
+      $filename = $request->path_photo->store('profile', 'public');
+      $path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
+      $image = Image::make($path);
+      $image->orientate();
+      $image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
+      $image->save($path);
+      $input['photo'] = $filename;
+
+      //cancello la vecchia immagine se presente
+      if($user->photo != ""){
+        Storage::delete('public/'.$user->photo);
       }
-      if(strlen($input['password'])>0){
-        $input['password'] = Hash::make($input['password']);
+    }
+
+    $user->fill($input);
+    if($input['password_new'] != null){
+      $user->password = Hash::make($input['password_new']);
+    }
+
+    $user->save();
+
+    //Salvo gli attributi
+    $keys = ['id_attributo', 'id_attributouser', 'valore'];
+    foreach($keys as $key){
+      if(!array_key_exists($key, $input)){
+        $input[$key] = array();
+      }
+    }
+    $id_attributo = $input['id_attributo'];
+    $id_attributouser = $input['id_attributouser'];
+    $valore = $input['valore'];
+    $i=0;
+    foreach($id_attributo as $id){
+      if($id_attributouser[$i]>0){
+        $u = AttributoUser::findOrfail($id_attributouser[$i]);
+        $u->valore = $valore[$i];
+        $u->save();
       }else{
-        unset($input['password']);
+        $u = new AttributoUser();
+        $u->id_user = $user->id;
+        $u->id_attributo = $id_attributo[$i];
+        $u->valore = $valore[$i];
+        $u->save();
       }
-      $user->fill($input)->save();
-      //Salvo gli attributi
-      $keys = ['id_attributo', 'id_attributouser', 'valore'];
-      foreach($keys as $key){
-        if(!array_key_exists($key, $input)){
-          $input[$key] = array();
-        }
-      }
-      $id_attributo = $input['id_attributo'];
-      $id_attributouser = $input['id_attributouser'];
-      $valore = $input['valore'];
-      $i=0;
-      foreach($id_attributo as $id){
-        if($id_attributouser[$i]>0){
-          $u = AttributoUser::findOrfail($id_attributouser[$i]);
-          $u->valore = $valore[$i];
-          $u->save();
-        }else{
-          $u = new AttributoUser();
-          $u->id_user = $user->id;
-          $u->id_attributo = $id_attributo[$i];
-          $u->valore = $valore[$i];
-          $u->save();
-        }
-        $i++;
-      }
-      //Redirect
-      Session::flash('flash_message', 'Profilo salvato!');
-      $query = Session::get('query_param');
-      Session::forget('query_param');
-      return redirect()->route('home');
-    }else{
-      abort(403, 'Unauthorized action.');
+      $i++;
     }
+    //Redirect
+
+    // $query = Session::get('query_param');
+    // Session::forget('query_param');
+    Session::flash('flash_message', 'Profilo salvato!');
+    return redirect()->route('home');
 
 
-  }
-
-  public function sistema_permessi(){
-    $user_oratorio = UserOratorio::all();
-    foreach($user_oratorio as $uo){
-      $role = RoleUser::where('user_id', $uo->id_user)->get();
-      if(count($role)==0){
-        $roles = Role::where([['name', 'user'], ['id_oratorio', $uo->id_oratorio]])->get();
-        if(count($roles)>0){
-          //creo il ruolo
-          $role = new RoleUser;
-          $role->user_id = $uo->id_user;
-          $role->role_id = $roles[0]->id;
-          $role->save();
-        }
-      }
-    }
   }
 
 

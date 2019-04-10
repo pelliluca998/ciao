@@ -7,149 +7,90 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Yajra\DataTables\DataTables;
+use Modules\Attributo\Http\Controllers\DataTables\AttributoDataTableEditor;
+use Modules\Attributo\Http\Controllers\DataTables\AttributoDataTable;
 
 use Modules\Attributo\Entities\Attributo;
+use Modules\Attributo\Entities\AttributoUser;
+use Modules\Oratorio\Entities\Type;
+use Modules\Oratorio\Entities\TypeSelect;
 use Session;
 use Input;
 
-class AttributoController extends Controller
-{
-use ValidatesRequests;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        return view('attributo::show');
+class AttributoController extends Controller{
+
+  public function __construct(){
+    $this->middleware('permission:view-attributo')->only(['index', 'data']);
+    $this->middleware('permission:edit-attributo')->only(['store']);
+  }
+
+  public function index(AttributoDataTable $dataTable){
+    return $dataTable->render('attributo::index');
+  }
+
+  public function store(AttributoDataTableEditor $editor){
+    return $editor->process(request());
+  }
+
+  public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
+
+    $builder = Attributo::query()
+    ->select('attributos.*')
+    ->where('id_oratorio', Session::get('session_oratorio'))
+    ->orderBy('nome', 'ASC');
+
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($entity){
+      $edit = "<button class='btn btn-sm btn-primary btn-block' id='editor_edit'><i class='fas fa-pencil-alt'></i> Modifica</button>";
+      $remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
+
+      if(!Auth::user()->can('edit-attributo')){
+        $edit = "";
+        $remove = "";
+      }
+
+      return $edit.$remove;
+    })
+    ->addColumn('DT_RowId', function ($entity){
+      return $entity->id;
+    })
+    ->addColumn('type_label', function ($entity){
+      return Type::getTypeLabel($entity->id_type);
+    })
+    ->rawColumns(['action'])
+    ->toJson();
+  }
+
+  public function valore_field(Request $request){
+    $input = $request->all();
+    //$attributo_user = AttributoUser::find($input['id_attributo_user']);
+    $attributo = Attributo::find($input['id_attributo']);
+    if($attributo == null){
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'text'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-	public function create(){
-		return view('attributo::create');
-	}
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-    	$this->validate($request, [
-			'nome' => 'required'
-		]);
-		$input = $request->all();
-		$attributo = new Attributo;
-		$attributo->nome = $input['nome'];
-		$attributo->id_oratorio = Session::get('session_oratorio');
-		$attributo->id_type = $input['id_type'];
-		$attributo->ordine = $input['ordine'];
-		$attributo->note = $input['note'];
-		$attributo->hidden = $input['hidden'];
-
-		$attributo->save();
-		Session::flash('flash_message', 'Attributo aggiunto!');
-		return redirect()->route('attributo.index');
+    if($attributo->id_type > 0){
+      $types = TypeSelect::where('id_type', $attributo->id_type)->orderBy('ordine', 'ASC')->pluck('id', 'option');
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'select', 'options' => $types));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-    	//return view('attributo.show')->with('id_user', $id_user);
+    switch ($attributo->id_type) {
+      case Type::TEXT_TYPE:
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'text'));
+
+      case Type::BOOL_TYPE:
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'checkbox', 'options' => array('' => 1), 'separator' => '', 'unselectedValue' => '0'));
+
+      case Type::NUMBER_TYPE:
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'attr' => array('type' => 'number')));
+
+      case Type::DATE_TYPE:
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'datetime', 'format' => 'DD/MM/YYYY'));
     }
+  }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit(Request $request){
-        $input = $request->all();
-        $attributo = Attributo::findOrFail($input['id_attributo']);
-        if($attributo->id_oratorio == Session::get('session_oratorio')){
-			return view('attributo::edit')->withAttributo($attributo);
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-	public function update(Request $request){
-		$input = $request->all();
-		$attributo = Attributo::findOrFail($input['id_attributo']);	   
-		$attributo->fill($input)->save();
-		Session::flash('flash_message', 'Attributo aggiornato!');
-		return redirect()->route('attributo.index');
-	}
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-	public function destroy(Request $request){
-		$input = $request->all();
-		$attributo = Attributo::findOrFail($input['id_attributo']);
-		if($attributo->id_oratorio == Session::get('session_oratorio')){		
-			$attributo->delete();
-			Session::flash("flash_message", "Attributo ".$input['id_attributo']." cancellato!");
-			return redirect()->route('attributo.index');
-		}else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
-    
-    /*public function save(Request $request){
-		$id_attributo = Input::get('id_attributo');
-		$nome = Input::get('nome');
-		$note = Input::get('note');
-		$ordine = Input::get('ordine');
-		$hidden = Input::get('hidden');
-		$id_type = Input::get('id_type');
-		$i=0;
-		foreach($id_attributo as $id) {
-			if($id>0){
-				//update
-				$spec = Attributo::findOrFail($id);
-				$spec->nome = $nome[$i];
-				$spec->note = $note[$i];
-				$spec->id_type = $id_type[$i];
-				$spec->hidden = $hidden[$i];
-				$spec->ordine = $ordine[$i];
-				$spec->save();
-			
-			}else{
-				$spec = new Attributo;
-				$spec->nome = $nome[$i];
-				$spec->note = $note[$i];
-				$spec->id_type = $id_type[$i];
-				$spec->hidden = $hidden[$i];
-				$spec->ordine = $ordine[$i];
-				$spec->id_oratorio = Session::get('session_oratorio');
-				$spec->save();
-			}
-			$i++;
-		}
-		Session::flash("flash_message", "Attributi aggiornati!");
-		return redirect()->route('attributos.index');
-	}*/
 }

@@ -16,15 +16,16 @@ class CheckLicense
      * @return mixed
      */
 	public function handle($request, Closure $next, $moduleName){
+		return $next($request);
 		//cerco una licenza attiva, compreso il nome del modulo da cui il controllo proviene
-		$now = date("Y-m-d");
-		$license = License::where([['module_name', $moduleName], ['data_inizio', '<=', $now], ['data_fine', '>=', $now], ['id_oratorio', Session::get('session_oratorio')]])->first();
-		//$license = License::leftJoin('license_types', 'licenses.license_type', 'license_types.id')->where([['licenses.id_oratorio', Session::get('session_oratorio')], ["modules", "like", "%".$moduleName."%"]])->orWhere([['licenses.data_fine', '>=', $now], ['licenses.data_fine', 'null']])->get();
-		if($license != null){
-		  return $next($request);
-		}else{
-		  return redirect('licenza');
-		}
+		// $now = date("Y-m-d");
+		// $license = License::where([['module_name', $moduleName], ['data_inizio', '<=', $now], ['data_fine', '>=', $now], ['id_oratorio', Session::get('session_oratorio')]])->first();
+		// //$license = License::leftJoin('license_types', 'licenses.license_type', 'license_types.id')->where([['licenses.id_oratorio', Session::get('session_oratorio')], ["modules", "like", "%".$moduleName."%"]])->orWhere([['licenses.data_fine', '>=', $now], ['licenses.data_fine', 'null']])->get();
+		// if($license != null){
+		//   return $next($request);
+		// }else{
+		//   return redirect('licenza');
+		// }
 
 		//
 	}

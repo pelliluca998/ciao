@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'role:admin|owner', 'license:report'], 'prefix' => 'admin', 'namespace' => 'Modules\Report\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'role:admin|owner', 'license:report', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Report\Http\Controllers'], function()
 {
 	Route::post('report/gen_eventspec',['as' => 'report.gen_eventspec', 'uses' => 'ReportController@gen_eventspec']);
 	Route::post('report/gen_weekspec',['as' => 'report.gen_weekspec', 'uses' => 'ReportController@gen_weekspec']);

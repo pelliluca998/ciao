@@ -6,129 +6,88 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Modules\User\Entities\Group;
-use Modules\User\Entities\GroupUser;
+use Modules\Group\Entities\Group;
+use Modules\Group\Entities\GroupUser;
 use Session;
 use Entrust;
 use Input;
+use Yajra\DataTables\DataTables;
+use Modules\Group\Http\Controllers\DataTables\GroupDataTableEditor;
+use Modules\Group\Http\Controllers\DataTables\GroupDataTable;
 
 class GroupController extends Controller
 {
-    
-	/**
-	* Display a listing of the resource.
-	*
-	* @return Response
-	*/
-	public function index(){
-		if(isset($_GET['email']) && $_GET['email']=='email'){
-			$checks = Input::get('check_groups');
-			$id_users=array();
-			foreach($checks as $group){
-				$us = GroupUser::select('id_user')->where('id_group', $group)->get();
-				foreach($us as $u){
-					array_push($id_users, $u->id_user);
-				}
-			}
-			return redirect()->route('emails.new', json_encode($id_users));
-		}else if(isset($_GET['new']) && $_GET['new']=='new'){
-            return redirect()->route('group.create');
-        }else{
-			return view('group::show');
-		}
-	}   
-    
 
-	/**
-	* Show the form for creating a new resource.
-	*
-	* @return Response
-	*/
-	public function create(){
-		return view('group::create');
-	}
+  public function __construct(){
+    $this->middleware('permission:view-gruppo')->only(['index', 'data', 'componenti']);
+    $this->middleware('permission:edit-gruppo')->only(['store']);
+  }
 
-	/**
-	* Store a newly created resource in storage.
-	*
-	* @return Response
-	*/
-	public function store(Request $request){   	
-		$input = $request->all();
-		Group::create($input);
-		Session::flash('flash_message', 'Gruppo creato!');
-		return redirect()->route('group.index');
-	}
+  /**
+  * Display a listing of the resource.
+  *
+  * @return Response
+  */
 
+  public function index(GroupDataTable $dataTable){
+    return $dataTable->render('group::index');
+  }
 
-	/**
-	* Show the form for editing the specified resource.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function edit(Request $request){
-        $input = $request->all();
-        $group = Group::where('id', $input['id_group'])->first();
-		if($group->id_oratorio==Session::get('session_oratorio')){
-            return view('group::edit')->withGroup($group);
-        }else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
+  public function store(GroupDataTableEditor $editor){
+    return $editor->process(request());
+  }
 
-	/**
-	* Update the specified resource in storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function update(Request $request){
-		$input = $request->all();
-		$sub = Group::findOrFail($input['id_group']);	
-		$sub->fill($input)->save();
-		Session::flash('flash_message', 'Gruppo salvato!');
-		return redirect()->route('group.index');
-	}
+  public function data(Request $request, Datatables $datatables){
+    $input = $request->all();
 
-	/**
-	* Remove the specified resource from storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	public function destroy(Request $request){
-        $input = $request->all();
-        $id = $input['id_group'];
-        $group = Group::where('id', $id)->first();
-		if($group->id_oratorio==Session::get('session_oratorio')){
-            $group->delete();
-            Session::flash("flash_message", "Gruppo '". $group->nome."' cancellato!");
-		    return redirect()->route('group.index');
-        }else{
-			abort(403, 'Unauthorized action.');
-		}
-	}
-	
-	public function report_composer(Request $request){
-        $input = $request->all();
-        $id = $input['id_group'];
-        $group = Group::where('id', $id)->first();
-		if($group->id_oratorio==Session::get('session_oratorio')){
-            return view('group::report_composer', ['id_group' => $id]);
-        }else{
-			abort(403, 'Unauthorized action.');
-		}
+    $builder = Group::query()
+    ->select('groups.*')
+    ->where('id_oratorio', Session::get('session_oratorio'))
+    ->orderBy('nome', 'ASC');
 
-	}
-	
-	public function report_generator(Request $request){
-		$input = $request->all();
-		$values = Input::get('spec');
-		$id_group = Input::get('id_group');
+    return $datatables->eloquent($builder)
+    ->addColumn('action', function ($entity){
+      $edit = "<button class='btn btn-sm btn-primary btn-block' id='editor_edit'><i class='fas fa-pencil-alt'></i> Modifica</button>";
+      $remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
+      $detail = "<button class='btn btn-sm btn-primary btn-block' onclick='load_componenti(".$entity->id.")'><i class='fas fa-info'></i> Componenti</button>";
 
+      if(!Auth::user()->can('edit-gruppo')){
+        $edit = "";
+        $remove = "";
+      }
 
-		return view('group::report_generator', ['input' => $input]);
-	}
+      return $edit.$remove.$detail;
+    })
+    ->addColumn('DT_RowId', function ($entity){
+      return $entity->id;
+    })
+    ->rawColumns(['action'])
+    ->toJson();
+  }
+
+  public function componenti($id_gruppo){
+    return view('group::componenti')->withGroup(Group::find($id_gruppo));
+  }
+
+  // public function report_composer(Request $request){
+  //   $input = $request->all();
+  //   $id = $input['id_group'];
+  //   $group = Group::where('id', $id)->first();
+  //   if($group->id_oratorio==Session::get('session_oratorio')){
+  //     return view('group::report_composer', ['id_group' => $id]);
+  //   }else{
+  //     abort(403, 'Unauthorized action.');
+  //   }
+  //
+  // }
+
+  // public function report_generator(Request $request){
+  //   $input = $request->all();
+  //   $values = Input::get('spec');
+  //   $id_group = Input::get('id_group');
+  //
+  //
+  //   return view('group::report_generator', ['input' => $input]);
+  // }
 
 }

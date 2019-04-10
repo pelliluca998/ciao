@@ -26,6 +26,7 @@ class ReportServiceProvider extends ServiceProvider
     $this->registerTranslations();
     $this->registerConfig();
     $this->registerViews();
+    $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     $this->app['router']->aliasMiddleware('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
     $this->app['router']->aliasMiddleware('license', \App\Http\Middleware\CheckLicense::class);
     //Popolo il menu con un link a questo modulo.
@@ -33,17 +34,17 @@ class ReportServiceProvider extends ServiceProvider
     $menuList = Menu::get('SegrestaNavBar');
     $menuList->add("Report", array("route" => "report.eventspec"))
     ->prepend("<i class='far fa-file-alt' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 40);
+    ->data('permissions', ['generate-report'])->data('order', 40);
 
     $menuList->get('report')
     ->add('Specifiche generali', array('route'  => 'report.eventspec'))
     ->prepend("<i class='far fa-file-alt' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 41);
+    ->data('permissions', ['generate-report'])->data('order', 41);
 
     $menuList->get('report')
     ->add('Specifiche settimanali', array('route'  => 'report.weekspec'))
     ->prepend("<i class='far fa-file-alt' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 42);
+    ->data('permissions', ['generate-report'])->data('order', 42);
   }
 
   /**

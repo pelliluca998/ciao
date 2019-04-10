@@ -9,32 +9,35 @@ class Type extends Model
 {
 	protected $fillable = ['label', 'description', 'id_oratorio'];
 
+	const TEXT_TYPE = -1;
+  const BOOL_TYPE = -2;
+  const NUMBER_TYPE = -3;
+  const DATE_TYPE = -4;
+
 	public static function getTypesBase(){
 		$type_base = array();
 		//text type
 		$type = new Type();
-		$type->id = -1;
+		$type->id = self::TEXT_TYPE;
 		$type->label = "Testo";
-		$type->description = "Testo";
+		//$type->description = "Testo";
 		array_push($type_base, $type);
 		//checkbox type
 		$type = new Type();
-		$type->id = -2;
+		$type->id = self::BOOL_TYPE;
 		$type->label = "Checkbox";
-		$type->description = "Checkbox";
+		//$type->description = "Checkbox";
 		array_push($type_base, $type);
 		//number type
 		$type = new Type();
-		$type->id = -3;
+		$type->id = self::NUMBER_TYPE;
 		$type->label = "Numero";
-		$type->description = "Numero";
+		//$type->description = "Numero";
 		array_push($type_base, $type);
-		//Group type
-		// $type = new Type();
-		// $type->id = -4;
-		// $type->label = "Gruppo";
-		// $type->description = "Gruppo";
-		// array_push($type_base, $type);
+		$type = new Type();
+		$type->id = self::DATE_TYPE;
+		$type->label = "Data";
+		array_push($type_base, $type);
 		return $type_base;
 	}
 
@@ -47,5 +50,17 @@ class Type extends Model
 			$types->prepend($base);
 		}
 		return $types->pluck('label', 'id');
+	}
+
+	public static function getTypeLabel($key){
+		if($key < 0){
+			foreach(self::getTypesBase() as $type){
+				if($type->id == $key)
+				return $type->label;
+			}
+		}
+
+		$type = Type::find($key);
+		return $type != null? $type->label : "";
 	}
 }

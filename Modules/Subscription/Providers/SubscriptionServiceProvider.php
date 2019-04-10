@@ -26,6 +26,7 @@ class SubscriptionServiceProvider extends ServiceProvider
     $this->registerTranslations();
     $this->registerConfig();
     $this->registerViews();
+    $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     $this->app['router']->aliasMiddleware('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
     $this->app['router']->aliasMiddleware('license', \App\Http\Middleware\CheckLicense::class);
     //Popolo il menu con un link a questo modulo.
@@ -38,7 +39,7 @@ class SubscriptionServiceProvider extends ServiceProvider
     $menuList->get('eventi')
     ->add('Iscrizioni', array('route'  => 'subscription.index'))
     ->prepend("<i class='fas fa-flag' aria-hidden='true'></i> ")
-    ->data('permissions', ['adminmodule', 'all'])->data('order', 31);
+    ->data('permissions', ['view-iscrizioni'])->data('order', 31);
   }
 
   /**
