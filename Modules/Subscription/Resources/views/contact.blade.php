@@ -13,14 +13,19 @@ use Modules\Event\Entities\Week;
 
 <div class="container">
   <div class="row">
-    <h1><i class="fas fa-user" aria-hidden="true"></i> Contatta gli iscritti</h1>
-    <p class="lead">Scegli quali utenti contattare per avvisarli circa l'evento corrente</p>
-    <hr>
+    <div class="col">
+      <div class="card bg-transparent border-0">
+        <h1><i class='fas fa-flag'></i> Contatta gli iscritti</h1>
+        <p class="lead">Scegli quali utenti contattare per avvisarli circa l'evento corrente</p>
+        <hr>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <div class="panel panel-default">
-        <div class="panel-body">
+
+  <div class="row justify-content-center" style="margin-top: 20px;">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
           Attraverso questa pagina puoi filtrare gli utenti iscritti al tuo evento a cui inviare un'email o un sms. Metti la spunta ai campi che vuoi filtrare e il contenuto del filtro, scegli come contattarli e poi clicca su "Invia".<br><br>
 
           {!! Form::open(['route' => 'subscription.contact_send']) !!}
@@ -28,7 +33,7 @@ use Modules\Event\Entities\Week;
           $id_event=Session::get('work_event');
           ?>
           <div style="float: left; width: 100%; padding: 5px;">
-            <h4>Passo 1: Scegli le infomazioni <b>riguardanti le settimane</b> da inserire nel report:</h4>
+            <h4>Passo 1: Filtra gli utenti in base alle infomazioni <b>riguardanti le settimane</b>:</h4>
             <?php
             $weeks = Week::where('id_event', $id_event)->orderBy('from_date', 'ASC')->get();
             $w=0;
@@ -42,7 +47,7 @@ use Modules\Event\Entities\Week;
               ->where([['id_event', $id_event], ['event_specs.general', 0]])
               ->get();
               ?>
-              <table class='testgrid draggable'>
+              <table class='table table-bordered'>
                 <tr>
                   <th style="width: 60%;">Campo</th>
                   <th>Filtra?</th>
@@ -93,7 +98,7 @@ use Modules\Event\Entities\Week;
             }
             ?>
 
-            <h4>Passo 2: Scegli quali altre colonne, <b>prese dalle Specifiche generali</b>, inserire nel report</h4>
+            <h4>Passo 2: Filtra gli utenti in base alle infomazioni <b>prese dalle Specifiche generali</b>:</h4>
             <?php
             $specs = (new EventSpec)
             ->select('event_specs.label', 'event_specs.id', 'event_specs.id_type as id_type')
@@ -101,7 +106,7 @@ use Modules\Event\Entities\Week;
             ->orderBy('event_specs.label', 'asc')
             ->get();
             ?>
-            <table class='testgrid draggable'>
+            <table class='table table-bordered'>
               <tr>
                 <th style="width: 60%;">Specifica</th>
                 <th>Filtra?</th>
@@ -142,9 +147,9 @@ use Modules\Event\Entities\Week;
 
 
 
-              <h4>Passo 3: Scegli le infomazioni <b>anagrafiche degli utenti</b> da inserire nel report:</h4>
+              <h4>Passo 3: Filtra gli utenti in base alle infomazioni <b>anagrafiche</b>:</h4>
 
-              <table class='testgrid' id=''>
+              <table class='table table-bordered' id=''>
                 <thead><tr>
                   <th style='width: 60%;'>Specifica</th>
                   <th>Filtra?</th>
@@ -182,49 +187,12 @@ use Modules\Event\Entities\Week;
                 </table><br>
 
 
-                <h4>Passo 4: Scegli gli attributi degli utenti da inserire nel report:</h4>
-
-                <table class='testgrid' id=''>
-                  <thead><tr>
-                    <th style='width: 60%;'>Attributo</th>
-                    <th>Filtra?</th>
-                    <th>Valore del filtro:</th>
-                  </tr></thead>
-                  <?php
-                  $attributos = Attributo::select('attributos.*')->where('attributos.id_oratorio', Session::get('session_oratorio'))->orderBy('ordine', 'ASC')->get();
-                  ?>
-                  @foreach($attributos as $a)
-                  <tr>
-                    <td>{{$a->nome}}</td>
-                    <td>
-                      <input type="hidden" name="att_filter[{{$loop->index}}]" value="0"/>
-                      <input name="att_filter[{{$loop->index}}]" value="1" type="checkbox" class="form-control" onchange="disable_select(this, 'att_filter_value_{{$loop->index}}', true)"/>
-                    </td>
-                    <td>
-                      @if($a->id_type>0)
-                      {!! Form::select('att_filter_value['.$loop->index.']', TypeSelect::where('id_type', $a->id_type)->orderBy('ordine', 'ASC')->pluck('option', 'id'), '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index])!!}
-                      @else
-                      @if($a->id_type==-1)
-                      {!! Form::text('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
-                      @elseif($a->id_type==-2)
-                      {!! Form::hidden('att_filter_value['.$loop->index.']', 0) !!}
-                      {!! Form::checkbox('att_filter_value['.$loop->index.']', 1, '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
-                      @elseif($a->id_type==-3)
-                      {!! Form::number('att_filter_value['.$loop->index.']', '', ['class' => 'form-control', 'disabled' => 'true', 'id' => "att_filter_value_".$loop->index]) !!}
-                      @endif
-                      @endif
-                    </td>
-                  </tr>
-                  @endforeach
-                </table><br>
-
 
                 <div class="form-group">
                   <h4>Come vuoi contattare gli utenti?</h4>
                   {!! Form::radio('type', 'sms', true) !!} SMS<br>
                   {!! Form::radio('type', 'email', false) !!} Email<br>
                   {!! Form::radio('type', 'telegram', false) !!} Telegram<br>
-                  {!! Form::radio('type', 'whatsapp', false) !!} WhatsApp<br>
                 </div>
 
                 <div class="form-group">

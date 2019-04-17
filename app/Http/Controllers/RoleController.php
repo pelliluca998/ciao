@@ -30,6 +30,16 @@ class RoleController extends Controller
     return view('role.create');
   }
 
+  public function delete($id_role){
+    $role = Role::find($id_role);
+    if($role != null){
+      $role->delete();
+    }
+
+    Session::flash('flash_message', 'Ruolo eliminato correttamente!');
+    return redirect()->route('role.index');
+  }
+
   public function store(Request $request){
     $input = $request->all();
     $request->merge(['name' => camel_case($input['display_name'])]);

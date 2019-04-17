@@ -11,19 +11,6 @@ Route::group(['middleware' => ['web', 'license:oratorio', 'verified'], 'prefix' 
 	Route::get('oratorio/view', ['as' => 'oratorio.index', 'uses' => 'OratorioController@show']);
 });
 
-Route::group(['middleware' => ['web', 'role:owner', 'license:oratorio', 'verified'], 'prefix' => 'owner', 'namespace' => 'Modules\Oratorio\Http\Controllers'], function()
-{
-	Route::get('oratorio/showall', ['as' => 'oratorio.showall', 'uses' => 'OratorioController@showall']);
-	Route::get('oratorio/destroy', ['as' => 'oratorio.destroy', 'uses' => 'OratorioController@destroy']);
-	Route::get('oratorio/edit', ['as' => 'oratorioowner.edit', 'uses' => 'OratorioController@edit_owner']);
-	Route::get('oratorioowner/work', ['as' => 'oratorioowner.work', 'uses' => 'OratorioController@work']);
-	Route::post('oratorio/save_message', ['as' => 'oratorio.save_message', 'uses' => 'OratorioController@save_message']);
-	Route::get('oratorio/new_message', ['as' => 'oratorio.new_message', 'uses' => 'OratorioController@new_message']);
-	Route::patch('oratorio/update', ['as' => 'oratorioowner.update', 'uses' => 'OratorioController@update_owner']);
-	Route::get('oratorio/create', ['as' => 'oratorio.create', 'uses' => 'OratorioController@create']);
-
-});
-
 Route::group(['middleware' => ['web', 'verified'], 'namespace' => 'Modules\Oratorio\Http\Controllers'], function()
 {
 	//Route::post('/neworatorio', ['as' => 'oratorio.neworatorio', 'uses' => 'OratorioController@neworatorio']);

@@ -365,7 +365,7 @@ table = $('#usersTable').DataTable({
 { data: 'cognome', name: 'cognome' },
 { data: 'name', name: 'name' },
 { data: 'cell_number', name: 'cell_number' },
-{ data: 'email', name: 'email' },
+{ data: 'email_label', editField: 'email' },
 { data: 'nato_il', name: 'nato_il' },
 { data: 'nato_a', name: 'nato_a' },
 { data: 'comune_nascita_label', name: 'comune_nascita_label', editField: 'id_comune_nascita'},

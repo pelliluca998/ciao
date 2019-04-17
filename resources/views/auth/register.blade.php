@@ -3,8 +3,6 @@ use Modules\Oratorio\Entities\Oratorio;
 use App\Provincia;
 use App\Comune;
 use App\Nazione;
-
-$oratorio = Oratorio::orderBy('id', 'ASC')->first();
 ?>
 
 @extends('layouts.app')

@@ -40,11 +40,12 @@ Route::group(['middleware' => ['web', 'license:subscription'], 'namespace' => 'M
 
 
 	Route::post('subscribe/create', ['as' => 'subscribe.create', 'uses' => 'SubscriptionController@subscribe_create']); //chiamata dall'utente che vuole iscriversi all'evento
+	Route::get('subscribe/{id_subscription}/grazie',['as' => 'subscribe.grazie', 'uses' => 'SubscriptionController@grazie']);
 	Route::post('subscribe/savesubscribe',['as' => 'subscribe.savesubscribe', 'uses' => 'SubscriptionController@savesubscribe']);
 	Route::post('subscribe/savespec',['as' => 'subscribe.savespec', 'uses' => 'SubscriptionController@savespecsubscribe']);
 	Route::get('subscribe/spec/{id_subscription}', ['as' => 'subscribe.spec', 'uses' => 'SubscriptionController@create']);
 	//Route::post('subscribe/print', ['as' => 'subscribe.print', 'uses' => 'SubscriptionController@print']);
-	Route::get('subscription/destroy', ['as' => 'subscription.destroy', 'uses' => 'SubscriptionController@destroy']);
+	// Route::get('subscription/destroy', ['as' => 'subscription.destroy', 'uses' => 'SubscriptionController@destroy']);
 	//Route::post('specsubscription/save', ['as' => 'specsubscription.save', 'uses' => 'SpecSubscriptionController@save']);
 });
 

@@ -260,110 +260,8 @@ class SubscriptionController extends Controller
 		return view('subscription::contact');
 	}
 
-	// public function selectevent(Request $request){
-	// 	$input = $request->all();
-	// 	$user_oratorio = UserOratorio::where([['id_user', $input['id_user']], ['id_oratorio', Session::get('session_oratorio')]])->get();
-	// 	if(count($user_oratorio)>0){
-	// 		return view('subscription::selectevent')->with('id_user', $input['id_user']);
-	// 	}else{
-	// 		abort(403, 'Unauthorized action.');
-	// 	}
-	// }
 
 
-
-	/**
-	* Store a newly created resource in storage.
-	*
-	* @return Response
-	*/
-	// public function store(Request $request){
-	// 	$input = $request->all();
-	// 	$input['id_event'] = Session::get('work_event');
-	// 	$input['confirmed'] = (Input::has('confirmed')) ? true : false;
-	// 	Subscription::create($input);
-	// 	Session::flash('flash_message', 'Iscrizione avvenuta con successo!');
-	// 	return redirect()->route('subscription.index');
-	// }
-
-
-
-
-	/**
-	* Update the specified resource in storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	// public function update(Request $request){
-	// 	$input = $request->all();
-	// 	$sub = Subscription::findOrFail($input['id_sub']);
-	// 	$event = Event::findOrfail($sub->id_event);
-	// 	if($event->id_oratorio == Session::get('session_oratorio')){
-	// 		if($sub->confirmed==0 && $input['confirmed']==1){
-	// 			//mando la mail all'utente
-	// 			$user = User::findOrFail($sub->id_user);
-	// 			$event = Event::findOrFail($sub->id_event);
-	// 			Mail::send('subscription::confirmed_email',
-	// 			['html' => 'subscription::confirmed_email', 'event_name' => $event->nome, 'user' => $user->full_name],
-	// 			function ($message) use ($user){
-	// 				$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
-	// 				$message->from($oratorio->email, $oratorio->nome);
-	// 				$message->subject("La tua iscrizione è stata approvata");
-	// 				$message->to($user->email, $user->full_name);
-	// 			});
-	// 		}
-	// 		$sub->fill($input)->save();
-	// 		$query = Session::get('query_param');
-	// 		Session::forget('query_param');
-	// 		Session::flash('flash_message', 'Iscrizione salvata! ');
-	// 		return redirect()->route('subscription.index', $query);
-	// 	}else{
-	// 		abort(403, 'Unauthorized action.');
-	// 	}
-  //
-	// }
-
-	/**
-	* Remove the specified resource from storage.
-	*
-	* @param  int  $id
-	* @return Response
-	*/
-	// public function destroy(Request $request){
-	// 	$input = $request->all();
-	// 	$id = $input['id_subscription'];
-  //
-	// 	$this->delete_subscription($id);
-  //
-	// 	Session::flash("flash_message", "Iscrizione $id cancellata!");
-	// 	$query = Session::get('query_param');
-	// 	Session::forget('query_param');
-	// 	if(Auth::user()->hasRole('user')){
-	// 		return redirect()->route('usersubscriptions.show');
-	// 	}else{
-	// 		return redirect()->route('subscription.index', $query);
-	// 	}
-	// }
-
-	// function delete_subscription($id_sub){
-	// 	$sub = Subscription::findOrFail($id_sub);
-	// 	$event = Event::findOrfail($sub->id_event);
-	// 	//controllo che l'utente o l'amministratore abbia i permessi
-	// 	if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('owner')){
-	// 		if($event->id_oratorio == Session::get('session_oratorio')){
-	// 			$sub->delete();
-	// 		}else{
-	// 			abort(403, 'Unauthorized action.');
-	// 		}
-	// 	}elseif(Auth::user()->hasRole('user')){
-	// 		if($sub->id_user == Auth::user()->id){
-	// 			$sub->delete();
-	// 		}else{
-	// 			abort(403, 'Unauthorized action.');
-	// 		}
-	// 	}
-	// }
 
 	public function subscribe_create(Request $request){
 		$input = $request->all();
@@ -474,7 +372,21 @@ class SubscriptionController extends Controller
 			}
 		}
 
-		return redirect()->route('home');
+		return redirect()->route('subscribe.grazie', ['id_subscription' => $sub->id]);
+	}
+
+	/*
+	* Mostro la view con il messaggio finale e il button per il download del modulo
+	*/
+
+	public function grazie(Request $request, $id_subscription){
+		$subscription = Subscription::find($id_subscription);
+		if($subscription != null){
+			return view('subscription::subscribe.grazie')->withSubscription($subscription)->withEvent(Event::find($subscription->id_event));
+		}else{
+			return redirect()->route('home');
+		}
+
 	}
 
 	// public function savespecsubscribe(Request $request){
@@ -600,6 +512,7 @@ class SubscriptionController extends Controller
 		foreach($subs as $sub){
 			$r=0;
 			$filter_ok=true;
+			if($filter == null) $filter = array();
 			foreach($filter as $f){
 				if($f==1 && $filter_ok){
 					$e = EventSpecValue::where([['id_eventspec', $filter_id[$r]], ['valore', $filter_value[$r]], ['id_subscription', $sub->id_subs] ])->get();
@@ -964,6 +877,7 @@ class SubscriptionController extends Controller
 		$path = sys_get_temp_dir().$filename.".docx";
 		$output = sys_get_temp_dir();
 		$template->saveAs($path);
+
 		//converto il file in pdf
 		$exec = "unoconv -f pdf ".$path;
 		shell_exec($exec);

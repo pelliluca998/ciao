@@ -1,0 +1,16 @@
+{
+    "name": "Diocesi",
+    "alias": "diocesi",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Diocesi\\Providers\\DiocesiServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

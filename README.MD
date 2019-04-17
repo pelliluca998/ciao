@@ -83,6 +83,7 @@ Riavvia Apache:
 
 ```
 sudo service apache2 restart
+sudo apt install unoconv texlive-extra-utils
 ```
 
 Ora puoi utilizzare Segresta, collegandoti a http://localhost/segresta.

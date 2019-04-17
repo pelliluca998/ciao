@@ -34,6 +34,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin', 'verified']], 
 	Route::post('role/updatePermission', ['as' =>'role.updatePermission', 'uses' => 'RoleController@updatePermission']);
 	Route::get('role/create', ['as' =>'role.create', 'uses' => 'RoleController@create']);
 	Route::post('role/store', ['as' =>'role.store', 'uses' => 'RoleController@store']);
+	Route::get('role/{id_role}/delete', ['as' =>'role.delete', 'uses' => 'RoleController@delete']);
 });
 
 

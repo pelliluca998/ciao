@@ -7,10 +7,12 @@ use App\Role;
 use App\RoleUser;
 use Modules\Attributo\Entities\AttributoUser;
 use Modules\Oratorio\Entities\UserOratorio;
+use Modules\Oratorio\Entities\Oratorio;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Session;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -42,6 +44,27 @@ class RegisterController extends Controller
   public function __construct()
   {
     $this->middleware('guest');
+  }
+
+  public function showRegistrationForm(Request $request){
+    $input = $request->all();
+    if(!$request->has('id_oratorio')){
+      //se ho un solo oratorio, torno la view di register senza selezione dell'oratorio
+      $oratori = Oratorio::get();
+      if($oratori->count() == 1){
+        $oratorio = Oratorio::first();
+        return view('auth.register')->withOratorio($oratorio);
+      }
+
+      return view('diocesi::select_oratorio');
+    }
+
+    $oratorio = Oratorio::find($input['id_oratorio']);
+    if($oratorio == null){
+      return view('diocesi::select_oratorio');
+    }
+
+    return view('auth.register')->withOratorio($oratorio);
   }
 
   /**

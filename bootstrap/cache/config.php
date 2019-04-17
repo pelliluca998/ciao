@@ -200,7 +200,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => '/var/www/segresta/storage/framework/cache',
+        'path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/framework/cache',
       ),
       'memcached' => 
       array (
@@ -274,8 +274,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'segresta',
-        'username' => 'root',
-        'password' => '19002JJeT89',
+        'username' => 'segresta',
+        'password' => 'UW8Z3UjNVZRizAvI',
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix' => '',
@@ -288,8 +288,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'segresta',
-        'username' => 'root',
-        'password' => '19002JJeT89',
+        'username' => 'segresta',
+        'password' => 'UW8Z3UjNVZRizAvI',
         'charset' => 'utf8',
         'prefix' => '',
         'schema' => 'public',
@@ -421,10 +421,10 @@
     'orientation' => 'portrait',
     'defines' => 
     array (
-      'font_dir' => '/var/www/segresta/storage/fonts/',
-      'font_cache' => '/var/www/segresta/storage/fonts/',
+      'font_dir' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/fonts/',
+      'font_cache' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/fonts/',
       'temp_dir' => '/tmp',
-      'chroot' => '/var/www/segresta',
+      'chroot' => '/home/roberto/Documenti/Clienti/Segresta/segresta',
       'enable_font_subsetting' => false,
       'pdf_backend' => 'CPDF',
       'default_media_type' => 'screen',
@@ -558,12 +558,12 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/segresta/storage/app',
+        'root' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => '/var/www/segresta/storage/app/public',
+        'root' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/app/public',
         'visibility' => 'public',
         'url' => 'http://localhost/segresta/storage',
       ),
@@ -581,18 +581,18 @@
   array (
     'config' => 
     array (
-      'model_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/model.txt',
-      'scaffold_model_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/scaffolding/model.txt',
-      'controller_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/controller.txt',
-      'scaffold_controller_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/scaffolding/controller.txt',
-      'migration_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/migration.txt',
-      'seed_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/seed.txt',
-      'view_template_path' => '/var/www/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/view.txt',
-      'model_target_path' => '/var/www/segresta/app',
-      'controller_target_path' => '/var/www/segresta/app/Http/Controllers',
-      'migration_target_path' => '/var/www/segresta/database/migrations',
-      'seed_target_path' => '/var/www/segresta/database/seeds',
-      'view_target_path' => '/var/www/segresta/resources/views',
+      'model_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/model.txt',
+      'scaffold_model_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/scaffolding/model.txt',
+      'controller_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/controller.txt',
+      'scaffold_controller_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/scaffolding/controller.txt',
+      'migration_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/migration.txt',
+      'seed_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/seed.txt',
+      'view_template_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/xethron/laravel-4-generators/src/Way/Generators/templates/view.txt',
+      'model_target_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/app',
+      'controller_target_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/app/Http/Controllers',
+      'migration_target_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/database/migrations',
+      'seed_target_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/database/seeds',
+      'view_target_path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/resources/views',
     ),
   ),
   'group' => 
@@ -651,7 +651,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => '/var/www/segresta/resources/views/vendor/mail',
+        0 => '/home/roberto/Documenti/Clienti/Segresta/segresta/resources/views/vendor/mail',
       ),
     ),
     'sendmail' => '/usr/sbin/sendmail -bs',
@@ -663,7 +663,7 @@
     'stubs' => 
     array (
       'enabled' => false,
-      'path' => '/var/www/segresta/vendor/nwidart/laravel-modules/src/Commands/stubs',
+      'path' => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/nwidart/laravel-modules/src/Commands/stubs',
       'files' => 
       array (
         'start' => 'start.php',
@@ -718,9 +718,9 @@
     ),
     'paths' => 
     array (
-      'modules' => '/var/www/segresta/Modules',
-      'assets' => '/var/www/segresta/public/modules',
-      'migration' => '/var/www/segresta/database/migrations',
+      'modules' => '/home/roberto/Documenti/Clienti/Segresta/segresta/Modules',
+      'assets' => '/home/roberto/Documenti/Clienti/Segresta/segresta/public/modules',
+      'migration' => '/home/roberto/Documenti/Clienti/Segresta/segresta/database/migrations',
       'generator' => 
       array (
         'config' => 
@@ -845,7 +845,7 @@
       'enabled' => false,
       'paths' => 
       array (
-        0 => '/var/www/segresta/vendor/*/*',
+        0 => '/home/roberto/Documenti/Clienti/Segresta/segresta/vendor/*/*',
       ),
     ),
     'composer' => 
@@ -964,7 +964,7 @@
     'lifetime' => 120,
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/var/www/segresta/storage/framework/sessions',
+    'files' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -1016,12 +1016,16 @@
   array (
     'paths' => 
     array (
-      0 => '/var/www/segresta/resources/views',
+      0 => '/home/roberto/Documenti/Clienti/Segresta/segresta/resources/views',
     ),
-    'compiled' => '/var/www/segresta/storage/framework/views',
+    'compiled' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/framework/views',
   ),
   'whatsapp' => 
   array (
     'name' => 'Whatsapp',
+  ),
+  'diocesi' => 
+  array (
+    'name' => 'Diocesi',
   ),
 );

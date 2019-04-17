@@ -143,6 +143,13 @@ class UserController extends Controller
     ->addColumn('DT_RowId', function ($entity){
       return $entity->id;
     })
+    ->addColumn('email_label', function ($entity){
+      if($entity->email_verified_at != null){
+        return $entity->email;
+      }
+
+      return "<i class='fas fa-exclamation-circle faa-flash animated' style='color: Tomato;'></i> ".$entity->email;
+    })
     ->addColumn('role_id', function ($entity){
       return $entity->roles[0]->id;
     })
@@ -154,7 +161,7 @@ class UserController extends Controller
         return Comune::find($entity->id_comune_nascita)->nome;
       }
     })
-    ->rawColumns(['action', 'check', 'path_photo'])
+    ->rawColumns(['action', 'check', 'path_photo', 'email_label'])
     ->toJson();
   }
 

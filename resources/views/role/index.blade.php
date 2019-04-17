@@ -22,7 +22,7 @@ $permissions = Permission::all();
   <div class="row justify-content-center">
     <div class="col">
       <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="overflow-x: auto; margin-right: 10px;">
           @if(Session::has('flash_message'))
           <div class="alert alert-success">
             {{ Session::get('flash_message') }}
@@ -32,7 +32,7 @@ $permissions = Permission::all();
           <a href="{{ route('role.create') }}" class="btn btn-m btn-primary editor_create"><i class="fa fa-plus"></i> Aggiungi ruolo</a>
 
           {!! Form::open(['method' => 'POST', 'route' => ['role.updatePermission']]) !!}
-          <table class="table table-bordered" style="width: 100%">
+          <table class="table table-bordered" style="width: 100%;">
             <thead>
               <tr>
                 <th rowspan="2" style="vertical-align: middle; text-align: center">Ruolo</th>
@@ -48,7 +48,7 @@ $permissions = Permission::all();
             <tbody>
               @foreach(Role::where('id_oratorio', Session::get('session_oratorio'))->get() as $role)
               <tr>
-                <td><b>{{ $role->display_name }}</b><br>{{ $role->description }}</td>
+                <td><b>{{ $role->display_name }}</b><br>{{ $role->description }} - <a href="{{ route('role.delete', ['id_role' => $role->id]) }}">Elimina</a></td>
                 @foreach($permissions as $permission)
                   <td>{!! Form::checkbox('permesso['.$role->id.'][]', $permission->id, $role->hasPermission($permission->name), ['class' => 'form-control']) !!}</td>
                 @endforeach
