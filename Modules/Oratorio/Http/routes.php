@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'license:oratorio', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Oratorio\Http\Controllers'], function()
+Route::group(['middleware' => ['web',  'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Oratorio\Http\Controllers'], function()
 {
 	Route::resource('oratorio', 'OratorioController', ['only' => ['update', 'store']]);
 	Route::resource('type', 'TypeController', ['only' => ['index', 'store']]);

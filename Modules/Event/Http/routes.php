@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'license:event', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
 {
 	Route::resource('events', 'EventController', ['only' => ['index', 'update', 'create', 'store']]);
 	Route::get('events/{id_event}/edit', ['as' => 'events.edit', 'uses' => 'EventController@edit']);
@@ -24,7 +24,7 @@ Route::group(['middleware' => ['web', 'license:event', 'verified'], 'prefix' => 
 	Route::post('eventspecs/aggiungi_specifica', ['as' => 'eventspecs.aggiungi_specifica', 'uses' => 'EventSpecValueController@aggiungi_specifica']);
 });
 
-Route::group(['middleware' => ['web', 'license:event', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Event\Http\Controllers'], function()
 {
 	Route::get('events/{id_event}/show', ['as' => 'events.show', 'uses' => 'EventController@show']);
 });

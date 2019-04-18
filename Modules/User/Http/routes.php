@@ -1,6 +1,6 @@
 <?php
 use Modules\User\Entities\User;
-Route::group(['middleware' => ['web', 'license:user', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\User\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\User\Http\Controllers'], function()
 {
   Route::resource('user', 'UserController', ['only' => ['store', 'index']]);
   //Route::get('user/destroy', ['as' => 'user.destroy', 'uses' => 'UserController@destroy']);
@@ -11,7 +11,7 @@ Route::group(['middleware' => ['web', 'license:user', 'verified'], 'prefix' => '
   Route::post('user/action', ['as' =>'user.action', 'uses' => 'UserController@action']);
 });
 
-Route::group(['middleware' => ['web', 'license:user', 'verified'], 'namespace' => 'Modules\User\Http\Controllers'], function() {
+Route::group(['middleware' => ['web',  'verified'], 'namespace' => 'Modules\User\Http\Controllers'], function() {
 
   Route::patch('user/updateprofile',['as' => 'user.updateprofile', 'uses' => 'UserController@updateprofile']);
   Route::get('profile/show', ['as' => 'profile.show', 'uses' => 'UserController@profile']);

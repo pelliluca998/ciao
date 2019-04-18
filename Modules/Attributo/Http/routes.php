@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'license:attributo', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Attributo\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Attributo\Http\Controllers'], function()
 {
 	Route::resource('attributouser', 'AttributoUserController', ['only' => ['index','update', 'store']]);
 	Route::resource('attributo', 'AttributoController', ['only' => ['index', 'update', 'store']]);

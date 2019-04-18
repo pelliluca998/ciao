@@ -311,7 +311,7 @@ if("{{ Auth::user()->can('edit-gruppo') }}"){
 }
 
 //permesso di inviare email
-if("{{ Auth::user()->can('send-email') }}"){
+if("{{ Auth::user()->can('send-email') && Module::has('email') }}"){
   buttons.push(
     {
       text: '<i class="fas fa-envelope"></i> Invia Email',

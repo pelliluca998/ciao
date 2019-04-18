@@ -4,6 +4,7 @@ Modules/Telegram
 Modules/Contabilita
 Modules/Whatsapp
 Modules/Famiglia
+Modules/Diocesi
 resources/views/piwik.blade.php
 
 /node_modules

@@ -44,7 +44,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin', 'verified']], 
 Route::group(['middleware' => ['verified']], function() {
 	Route::post('home/select_oratorio', ['as' => 'home.selectoratorio', 'uses' => 'HomeController@select_oratorio']);
 	Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
-	Route::get('/licenza', ['as' => 'licenza', 'uses' => 'HomeController@licenza']);
 	Route::get('/admin', ['as' => 'admin', 'uses' => 'HomeController@admin']);
 
 });

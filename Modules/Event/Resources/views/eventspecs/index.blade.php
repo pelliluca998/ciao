@@ -10,6 +10,9 @@ use Modules\Contabilita\Entities\Cassa;
 use Modules\Contabilita\Entities\ModoPagamento;
 use Modules\Contabilita\Entities\TipoPagamento;
 use App\License;
+
+$contabilita = Module::has('contabilita')?true:false;
+
 ?>
 
 @extends('layouts.app')
@@ -45,7 +48,6 @@ use App\License;
             <?php
             $specs = (new EventSpec)->where('id_event', $id_event)->orderBy('ordine', 'ASC')->get();
             $weeks = Week::where('id_event', $id_event)->orderBy('from_date', 'asc')->get();
-            $contabilita = License::isValid('contabilita');
             $index=0;
             ?>
             <thead>

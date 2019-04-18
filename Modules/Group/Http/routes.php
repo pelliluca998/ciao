@@ -1,7 +1,7 @@
 <?php
 use Modules\User\Entities\Group;
 
-Route::group(['middleware' => ['web', 'license:group', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Group\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Group\Http\Controllers'], function()
 {
 	Route::resource('group', 'GroupController', ['except' => ['edit', 'show']]);
 	Route::get('group/getData', ['as' => 'group.data', 'uses' => 'GroupController@data']);

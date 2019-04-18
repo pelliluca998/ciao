@@ -2,6 +2,8 @@
   'app' => 
   array (
     'owner_email' => 'admin@email.it',
+    'ip_address' => '127.0.0.1',
+    'password' => 'non_valida',
     'name' => 'Segresta 2.0',
     'env' => 'local',
     'debug' => true,

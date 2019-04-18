@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['middleware' => ['web', 'license:subscription', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Subscription\Http\Controllers'], function(){
+Route::group(['middleware' => ['web', 'verified'], 'prefix' => 'admin', 'namespace' => 'Modules\Subscription\Http\Controllers'], function(){
 
 	Route::resource('subscription', 'SubscriptionController', ['only' => ['index', 'store']]);
 
@@ -29,7 +29,7 @@ Route::group(['middleware' => ['web', 'license:subscription', 'verified'], 'pref
 
 });
 
-Route::group(['middleware' => ['web', 'license:subscription'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
 {
 	//Pagina delle iscrizioni utente
 	Route::get('iscrizioni', ['as' => 'iscrizioni.index', 'uses' => 'SubscriptionController@index_iscrizioni']);
@@ -50,7 +50,7 @@ Route::group(['middleware' => ['web', 'license:subscription'], 'namespace' => 'M
 });
 
 
-Route::group(['middleware' => ['web', 'license:subscription'], 'namespace' => 'Modules\Event\Http\Controllers'], function(){
+Route::group(['middleware' => ['web', 'verified'], 'namespace' => 'Modules\Event\Http\Controllers'], function(){
 	Route::resource('eventspecvalues', 'EventSpecValueController', ['only' => ['index', 'update', 'store']]);
 	//Route::post('eventspecvalues/save', ['as' => 'eventspecvalues.save', 'uses' => 'EventSpecValueController@save']);
 	Route::get('eventspecvalues/data', ['as' => 'eventspecvalues.data', 'uses' => 'EventSpecValueController@data']);
@@ -59,7 +59,7 @@ Route::group(['middleware' => ['web', 'license:subscription'], 'namespace' => 'M
 
 });
 
-Route::group(['middleware' => ['web', 'license:subscription'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
+Route::group(['middleware' => ['web', 'verified'], 'namespace' => 'Modules\Subscription\Http\Controllers'], function()
 {
 	//Route::get('subscriptions', ['as' => 'usersubscriptions.show', 'uses' => 'SubscriptionController@usersubscription']);
 	Route::get('subscription/user', ['as' => 'subscription.user', 'uses' => 'SubscriptionController@usersubscription']);

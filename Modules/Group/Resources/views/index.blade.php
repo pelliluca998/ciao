@@ -128,13 +128,6 @@ $(document).ready(function(){
 
   var buttons = [
     {
-      text: '<i class="fas fa-envelope"></i> Invia Email',
-      className: 'btn btn-sm btn-primary',
-      action: function ( e, dt, button, config ){
-        invia_utenti_selezionati('email');
-      }
-    },
-    {
       text: '<i class="fas fa-sms"></i> Invia Sms',
       className: 'btn btn-sm btn-primary',
       action: function ( e, dt, button, config ){
@@ -167,6 +160,19 @@ $(document).ready(function(){
         formTitle: "Nuovo gruppo",
         formMessage: 'Inserisci i dati richiesti per il nuovo gruppo e clicca su "Salva"'
       },
+    );
+  }
+
+  //permesso di inviare email
+  if("{{ Auth::user()->can('send-email') && Module::has('email') }}"){
+    buttons.push(
+      {
+        text: '<i class="fas fa-envelope"></i> Invia Email',
+        className: 'btn btn-sm btn-primary',
+        action: function ( e, dt, button, config ){
+          invia_utenti_selezionati('email');
+        }
+      }
     );
   }
 

@@ -1,12 +1,12 @@
 <?php
 use Modules\Event\Entities\Week;
-use App\License;
 use Modules\Event\Entities\Event;
 use Modules\Subscription\Entities\Subscription;
 use Modules\User\Entities\User;
 use App\OwnerMessage;
 use Modules\Sms\Http\Controllers\SmsController;
 use Modules\Whatsapp\Http\Controllers\WhatsappController;
+
 
 ?>
 
@@ -37,6 +37,7 @@ use Modules\Whatsapp\Http\Controllers\WhatsappController;
       <div class="card">
         <div class="card-header">Eventi attivi</div>
         <div class="card-body">
+
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -61,7 +62,7 @@ use Modules\Whatsapp\Http\Controllers\WhatsappController;
       <div class="card">
         <div class="card-header">SMS</div>
         <div class="card-body">
-          @if(License::isValid('sms'))
+          @if(Module::has('sms'))
           <!-- SmsController::printcredit() -->
           @else
           Il modulo SMS non è attivo.
@@ -75,32 +76,6 @@ use Modules\Whatsapp\Http\Controllers\WhatsappController;
   </div>
 
   <div class="row justify-content-center" style="margin-top: 20px;">
-
-    <div class="col-6">
-      <div class="card">
-        <div class="card-header">Licenza e moduli acquistati</div>
-        <div class="card-body">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th>Modulo</th>
-                <th>Data attivazione</th>
-                <th>Data scadenza</th>
-              </tr>
-            </thead>
-            @foreach(License::where('id_oratorio', Session::get('session_oratorio'))->get() as $licenza)
-            <tr>
-              <td>{!! Module::find($licenza->module_name)->getDescription() !!}</td>
-              <td>{{$licenza->data_inizio}}</td>
-              <td>{{$licenza->data_fine}}</td>
-            </tr>
-            @endforeach
-          </table><br>
-          <br><a href="http://www.segresta.it/negozio" class="btn btn-primary">Acquista altri moduli</a>
-
-        </div>
-      </div>
-    </div>
 
     <div class="col-6">
       <div class="card">

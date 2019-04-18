@@ -14,6 +14,7 @@ use App\RoleUser;
 use App\Role;
 use App\Comune;
 use App\Nazione;
+use Module;
 use Input;
 use File;
 use Form;
@@ -110,10 +111,15 @@ class UserController extends Controller
       "</div><div class='col-7'><button class='btn btn-sm btn-primary btn-block' type='submit'><i class='fas fa-dolly'></i> Iscrivi all'evento</button></div></div></div>".
       Form::close();
 
-      $famiglia = Form::open(['method' => 'GET', 'route' => ['famiglia.user', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-child'></i> Famiglia</button>".Form::close();
 
       if(count($events) == 0){
         $iscrivi = "";
+      }
+
+      if(Module::has('famiglia')){
+        $famiglia = Form::open(['method' => 'GET', 'route' => ['famiglia.user', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-child'></i> Famiglia</button>".Form::close();
+      }else{
+        $famiglia = "";
       }
 
       if(!Auth::user()->can('edit-users')){

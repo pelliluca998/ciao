@@ -128,15 +128,7 @@ $(document).ready(function(){
     } );
   } );
 
-  var buttons = [
-    {
-      text: '<i class="fas fa-comment"></i> Contatta gli iscritti',
-      className: 'btn btn-sm btn-primary',
-      action: function ( e, dt, button, config ){
-        window.location = "{{ route('subscription.contact') }}";
-      }
-    }
-  ];
+  var buttons = [];
   if("{{ Auth::user()->can('edit-iscrizioni') }}"){
     buttons.unshift({
       text: '<i class="far fa-check-circle"></i> Approva selezionati',
@@ -151,111 +143,123 @@ $(document).ready(function(){
       action: function ( e, dt, button, config ){
         invia_utenti_selezionati('cancella');
       }
-    },);
-  }
+    }
+  );
+}
+if("{{ Module::has('email') }}"){
+  button.push(
+    {
+      text: '<i class="fas fa-comment"></i> Contatta gli iscritti',
+      className: 'btn btn-sm btn-primary',
+      action: function ( e, dt, button, config ){
+        window.location = "{{ route('subscription.contact') }}";
+      }
+    }
+  );
+}
 
-  table = $('#subscriptionTable').DataTable({
-    responsive: true,
-    processing: true,
-    serverSide: false,
-    lengthChange: true,
-    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-    dom: 'Blfrtip',
-    language: { "url": "{{ asset('Italian.json') }}" },
-    ajax: {
-      url: "{!! route('subscription.data') !!}",
-      data: {
-        id_event: "{{ $event->id }}"
+table = $('#subscriptionTable').DataTable({
+  responsive: true,
+  processing: true,
+  serverSide: false,
+  lengthChange: true,
+  lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+  dom: 'Blfrtip',
+  language: { "url": "{{ asset('Italian.json') }}" },
+  ajax: {
+    url: "{!! route('subscription.data') !!}",
+    data: {
+      id_event: "{{ $event->id }}"
+    }
+  },
+  columns: [
+    { data: 'id', name: 'id'},
+    { data: 'user_label'},
+    {
+      data: 'confirmed', name: 'subscriptions.confirmed', editField: 'confirmed',
+      render: function ( data, type, row ) {
+        if (type === 'display') {
+          if(data == 1){
+            return "<i class='far fa-check-circle fa-2x'></i>";
+          }else{
+            return "<i class='far fa-circle fa-2x'></i>";
+          }
+        }
+        return data;
+      },
+      className: "dt-body-center"
+    },
+    { data: 'type', name: 'subscriptions.type' },
+    {
+      data: 'consenso_dati_sanitari',
+      render: function ( data, type, row ) {
+        if (type === 'display') {
+          if(data == 1){
+            return "<i class='far fa-check-circle fa-2x'></i>";
+          }else{
+            return "<i class='far fa-circle fa-2x'></i>";
+          }
+        }
+        return data;
+      },
+      className: "dt-body-center"
+    },
+    {
+      data: 'consenso_affiliazione',
+      render: function ( data, type, row ) {
+        if (type === 'display') {
+          if(data == 1){
+            return "<i class='far fa-check-circle fa-2x'></i>";
+          }else{
+            return "<i class='far fa-circle fa-2x'></i>";
+          }
+        }
+        return data;
+      },
+      className: "dt-body-center"
+    },
+    {
+      data: 'consenso_foto',
+      render: function ( data, type, row ) {
+        if (type === 'display') {
+          if(data == 1){
+            return "<i class='far fa-check-circle fa-2x'></i>";
+          }else{
+            return "<i class='far fa-circle fa-2x'></i>";
+          }
+        }
+        return data;
+      },
+      className: "dt-body-center"
+    },
+    { data: 'action', orderable: false, searchable: false},
+  ],
+  select: {
+    style:    'os',
+    selector: 'td:first-child'
+  },
+  buttons: {
+    dom: {
+      button: {
+        tag: 'button',
+        className: ''
       }
     },
-    columns: [
-      { data: 'id', name: 'id'},
-      { data: 'user_label'},
-      {
-        data: 'confirmed', name: 'subscriptions.confirmed', editField: 'confirmed',
-        render: function ( data, type, row ) {
-          if (type === 'display') {
-            if(data == 1){
-              return "<i class='far fa-check-circle fa-2x'></i>";
-            }else{
-              return "<i class='far fa-circle fa-2x'></i>";
-            }
-          }
-          return data;
-        },
-        className: "dt-body-center"
-      },
-      { data: 'type', name: 'subscriptions.type' },
-      {
-        data: 'consenso_dati_sanitari',
-        render: function ( data, type, row ) {
-          if (type === 'display') {
-            if(data == 1){
-              return "<i class='far fa-check-circle fa-2x'></i>";
-            }else{
-              return "<i class='far fa-circle fa-2x'></i>";
-            }
-          }
-          return data;
-        },
-        className: "dt-body-center"
-      },
-      {
-        data: 'consenso_affiliazione',
-        render: function ( data, type, row ) {
-          if (type === 'display') {
-            if(data == 1){
-              return "<i class='far fa-check-circle fa-2x'></i>";
-            }else{
-              return "<i class='far fa-circle fa-2x'></i>";
-            }
-          }
-          return data;
-        },
-        className: "dt-body-center"
-      },
-      {
-        data: 'consenso_foto',
-        render: function ( data, type, row ) {
-          if (type === 'display') {
-            if(data == 1){
-              return "<i class='far fa-check-circle fa-2x'></i>";
-            }else{
-              return "<i class='far fa-circle fa-2x'></i>";
-            }
-          }
-          return data;
-        },
-        className: "dt-body-center"
-      },
-      { data: 'action', orderable: false, searchable: false},
-    ],
-    select: {
-      style:    'os',
-      selector: 'td:first-child'
-    },
-    buttons: {
-      dom: {
-        button: {
-          tag: 'button',
-          className: ''
-        }
-      },
-      buttons: buttons
-    },
+    buttons: buttons
+  },
 
 
-  });
+});
 
-  $('#subscriptionTable').on( 'mouseenter', 'tbody td:not(:last-child)', function () {
-    var id = this.parentNode.id;
-    $('#sub_'+id).popover('show');
-  });
+$('#subscriptionTable').on( 'mouseenter', 'tbody td:not(:last-child)', function () {
+  var id = this.parentNode.id;
+  $('#sub_'+id).popover('show');
+});
 
-  $('#subscriptionTable').on( 'mouseout', 'tbody td:not(:last-child)', function () {
-    var id = this.parentNode.id;
-    $('#sub_'+id).popover('hide');
-  } );
+$('#subscriptionTable').on( 'mouseout', 'tbody td:not(:last-child)', function () {
+  var id = this.parentNode.id;
+  $('#sub_'+id).popover('hide');
+} );
 
 
 });

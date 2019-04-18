@@ -15,7 +15,7 @@ class AttributoServiceProvider extends ServiceProvider
   * @var bool
   */
   protected $defer = false;
-  
+
   /**
   * Boot the application events.
   *
@@ -28,7 +28,6 @@ class AttributoServiceProvider extends ServiceProvider
     $this->registerViews();
     $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
     $this->app['router']->aliasMiddleware('role', \Zizaco\Entrust\Middleware\EntrustRole::class);
-    $this->app['router']->aliasMiddleware('license', \App\Http\Middleware\CheckLicense::class);
     //Popolo il menu con un link a questo modulo.
     //Il menu è stato definito in app/Provider/AppServiceProvider.php
     $menuList = Menu::get('SegrestaNavBar');
