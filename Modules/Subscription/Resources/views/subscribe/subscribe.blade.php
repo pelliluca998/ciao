@@ -20,8 +20,13 @@ $weeks = Week::select('id', 'from_date', 'to_date')->where('id_event', $event->i
 $index = 0;
 $oratorio = Oratorio::find(Session::get('session_oratorio'));
 
-$padre = ComponenteFamiglia::getPadre($id_user);
-$madre = ComponenteFamiglia::getMadre($id_user);
+if(Module::has('famiglia')){
+	$padre = ComponenteFamiglia::getPadre($id_user);
+	$madre = ComponenteFamiglia::getMadre($id_user);
+}else{
+	$padre = "";
+	$madre = "";
+}
 ?>
 
 @extends('layouts.app')

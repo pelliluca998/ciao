@@ -44,9 +44,9 @@ class SubscriptionController extends Controller
 {
 
 	public function __construct(){
-    $this->middleware('permission:view-iscrizioni')->only(['index', 'data']);
-    $this->middleware('permission:edit-iscrizioni')->only(['action', 'store']);
-  }
+		$this->middleware('permission:view-iscrizioni')->only(['index', 'data']);
+		$this->middleware('permission:edit-iscrizioni')->only(['action', 'store']);
+	}
 
 	/**
 	* Display a listing of the resource.
@@ -712,13 +712,19 @@ class SubscriptionController extends Controller
 			$user = User::findOrFail($sub->id_user);
 
 			//cerco il padre
-			$padre = ComponenteFamiglia::getPadre($user->id);
-			$madre = ComponenteFamiglia::getMadre($user->id);
-
-			if($event->template_file == null){
-				$template = new \PhpOffice\PhpWord\TemplateProcessor(url(Storage::url('public/template/subscription_template.docx')));
+			if(Module::has('famiglia')){
+				$padre = ComponenteFamiglia::getPadre($user->id);
+				$madre = ComponenteFamiglia::getMadre($user->id);
 			}else{
-				$template = new \PhpOffice\PhpWord\TemplateProcessor(url(Storage::url('public/'.$event->template_file)));
+				$padre = "";
+				$madre = "";
+			}
+
+			$storagePath  = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix();
+			if($event->template_file == null){
+				$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath."/template/subscription_template.docx");
+			}else{
+				$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath.$event->template_file);
 			}
 
 			//controllo se nel modulo devono essere stampati i dati anagrafici o, al loro posto, il valore di una specifica
@@ -873,9 +879,15 @@ class SubscriptionController extends Controller
 
 
 		//salvo il file docx/pdf nella temp
-		$filename = "/subscription_".$id_subscription;
-		$path = sys_get_temp_dir().$filename.".docx";
-		$output = sys_get_temp_dir();
+		$filename = "/temp/subscription_".$id_subscription;
+		$storagePath  = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix();
+		if(!Storage::exists("public/temp")){
+			Storage::makeDirectory("public/temp", 0755, true);
+		}
+		
+		//$path = sys_get_temp_dir().$filename.".docx";
+		$path = $storagePath.$filename.".docx";
+		$output = $storagePath;
 		$template->saveAs($path);
 
 		//converto il file in pdf
