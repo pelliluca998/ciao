@@ -2,8 +2,8 @@
   'app' => 
   array (
     'owner_email' => 'admin@email.it',
-    'ip_address' => '127.0.0.1',
-    'password' => 'non_valida',
+    'ip_address' => false,
+    'password' => '12345',
     'name' => 'Segresta 2.0',
     'env' => 'local',
     'debug' => true,
@@ -416,6 +416,15 @@
     ),
     'script' => 'datatables::script',
     'editor' => 'datatables::editor',
+  ),
+  'diocesi' => 
+  array (
+    'name' => 'Diocesi',
+    'permissions' => 
+    array (
+      'edit-oratori' => 'Modifica e aggiungi oratori',
+      'view-users-diocesi' => 'Vedi gli utenti di tutti gli oratori',
+    ),
   ),
   'dompdf' => 
   array (
@@ -1003,7 +1012,6 @@
     'commands' => 
     array (
     ),
-    'name' => 'Telegram',
   ),
   'user' => 
   array (
@@ -1025,9 +1033,5 @@
   'whatsapp' => 
   array (
     'name' => 'Whatsapp',
-  ),
-  'diocesi' => 
-  array (
-    'name' => 'Diocesi',
   ),
 );

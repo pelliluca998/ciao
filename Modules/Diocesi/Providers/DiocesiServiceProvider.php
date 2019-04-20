@@ -27,13 +27,13 @@ class DiocesiServiceProvider extends ServiceProvider
   public function boot()
   {
     //disabilita il modulo se non ha la licenza
-    $response = Curl::to('https://www.segresta.it/licenza.php')
-    ->withData(array( 'ip_address' => config('app.ip_address'), 'app_key' => config('app.key') ))
-    ->post();
-    $module = Module::find('diocesi');
-    if($response != config('app.password')){
-      $module->disable();
-    }
+    // $response = Curl::to('https://www.segresta.it/licenza.php')
+    // ->withData(array( 'ip_address' => config('app.ip_address'), 'app_key' => config('app.key') ))
+    // ->post();
+    // $module = Module::find('diocesi');
+    // if($response != config('app.password')){
+    //   $module->disable();
+    // }
 
     $this->registerTranslations();
     $this->registerConfig();

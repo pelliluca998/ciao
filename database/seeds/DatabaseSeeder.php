@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
       AddItalia::class,
     ]);
 
+    if(Oratorio::count() == 0){
+
     //Creo un nuovo oratorio
     $oratorio = new Oratorio;
     $oratorio->nome = "Il tuo nuovo Oratorio";
@@ -31,6 +33,10 @@ class DatabaseSeeder extends Seeder
     $oratorio->reg_token = md5($oratorio->nome);
     $oratorio->save();
     $this->command->info("Nuovo oratorio creato. Email: info@oratorio.it");
+  }
+
+  $role_admin = Role::where('name', 'admin')->first();
+  if($role_admin == null){
 
     //creo i due ruoli base, admin e user
     $role_admin = new Role();
@@ -48,23 +54,6 @@ class DatabaseSeeder extends Seeder
     $role_user->save();
 
     $this->command->info('Ruolo admin e user creati');
-
-    //Creo i permessi
-    foreach(Module::all() as $module){
-      $permissions = config($module->getLowerName().'.permissions');
-      if($permissions != null && count($permissions) > 0){
-        foreach($permissions as $key => $value){
-          $perm = new Permission;
-          $perm->name = "$key";
-          $perm->display_name = $value;
-          $perm->description = $value;
-          $perm->save();
-          $role_admin->attachPermission($perm);
-        }
-      }
-    }
-
-    $this->command->info("Permessi creati");
 
     //aggiungo utente Amministratore
     $admin = [
@@ -96,6 +85,27 @@ class DatabaseSeeder extends Seeder
     $role->user_id = $user->id;
     $role->role_id = $role_admin->id;
     $role->save();
+  }
+
+    //Creo i permessi
+    foreach(Module::all() as $module){
+      $permissions = config($module->getLowerName().'.permissions');
+      if($permissions != null && count($permissions) > 0){
+        foreach($permissions as $key => $value){
+          if(Permission::where('name', $key)->count() == 0){
+          $perm = new Permission;
+          $perm->name = "$key";
+          $perm->display_name = $value;
+          $perm->description = $value;
+          $perm->save();
+          $role_admin->attachPermission($perm);
+          }
+        }
+      }
+    }
+
+    $this->command->info("Permessi creati");
+
 
     //creo i tipi di licenze
     // $licenza_tipo = new LicenseType;
