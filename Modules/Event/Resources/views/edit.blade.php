@@ -1,7 +1,6 @@
 <?php
 use Modules\Event\Entities\Event;
 use Modules\Event\Entities\EventSpec;
-use App\License;
 ?>
 
 @extends('layouts.app')
@@ -60,7 +59,7 @@ use App\License;
 						</div>
 
 						{!! Form::hidden('select_famiglia', 0) !!}
-						@if(License::isValid('famiglia'))
+						@if(Module::find('famiglia') != null && Module::find('famiglia')->enabled())
 						<div class="form-group col">
 							{!! Form::label('select_famiglia', 'Richiedi l\'iscrizione per un membro della famiglia') !!}
 							{!! Form::hidden('select_famiglia', 0) !!}

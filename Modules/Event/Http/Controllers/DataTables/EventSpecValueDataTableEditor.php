@@ -12,7 +12,6 @@ use Modules\Contabilita\Entities\Bilancio;
 use Modules\User\Entities\User;
 use Modules\Subscription\Entities\Subscription;
 use Module;
-use App\License;
 use Auth;
 
 class EventSpecValueDataTableEditor extends DataTablesEditor
@@ -70,7 +69,7 @@ class EventSpecValueDataTableEditor extends DataTablesEditor
     //verifico se mentre l'iscrizione è aperta è stata confermata da amministratore
     $subscription = Subscription::find($model->id_subscription);
     if($subscription->confirmed && !Auth::user()->can('edit-admin-iscrizioni')) return array();
-    if(Module::find('contabilita')!=null && License::isValid('contabilita') && !Auth::user()->hasRole('user')){
+    if(Module::find('contabilita')!=null && Module::find('contabilita') != null  && Module::find('contabilita')->enabled() && !Auth::user()->hasRole('user')){
       if($model->pagato == 0 & $data['pagato'] == 1){
         //specifica pagata ora, da mettere a bilancio
         $id_cassa=0;

@@ -87,19 +87,11 @@ $(document).ready(function(){
   var buttons = [];
     buttons.unshift(
 			{
-	      extend: 'create',
-	      editor: editor,
-	      text: '<i class="fas fa-plus"></i> Aggiungi oratorio',
+	      text: '<i class="fas fa-plus"></i> Aggiungi nuovo oratorio',
 	      className: 'btn btn-sm btn-primary',
-	      formButtons: [
-	        {
-	          label: 'Annulla',
-	          fn: function () { this.close(); }
-	        },
-	        '<i class="fas fa-save"></i> Salva'
-	      ],
-	      formTitle: "Aggiungi oratorio",
-	      formMessage: 'Inserisci i dati richiesti per il nuovo oratorio e clicca su "Salva"'
+	      action: function ( e, dt, button, config ){
+	        window.location = "{{ route('oratori.create') }}";
+	      }
 	    }
     );
 

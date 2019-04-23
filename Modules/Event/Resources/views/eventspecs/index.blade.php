@@ -9,9 +9,8 @@ use Modules\Event\Entities\Week;
 use Modules\Contabilita\Entities\Cassa;
 use Modules\Contabilita\Entities\ModoPagamento;
 use Modules\Contabilita\Entities\TipoPagamento;
-use App\License;
 
-$contabilita = Module::has('contabilita')?true:false;
+$contabilita = (Module::find('contabilita') != null && Module::find('contabilita')->enabled())?true:false;
 
 ?>
 

@@ -8,16 +8,15 @@
   <title>Segresta 2.0</title>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Pompiere" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
   <!-- Styles -->
   <style>
   html, body {
     background-color: #fff;
     color: #636b6f;
-    font-family: 'Raleway';
+    font-family: 'Pompiere';
     font-weight: 100;
     height: 100vh;
     margin: 0;
@@ -31,7 +30,8 @@
     align-items: center;
     display: flex;
     justify-content: center;
-    background-image: url("{{ url('background.jpg') }}")
+    background-image: url("{{ url('assets/bg_dark.jpg') }}");
+    background-size: cover
   }
 
   .position-ref {
@@ -47,7 +47,7 @@
 
   .content {
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.80);
+    /* background-color: rgba(255, 255, 255, 0.80); */
     padding: 5px;
 
   }
@@ -84,12 +84,11 @@
     </div>
     @endif
 
-    <div class="content">
-      <div class="title m-b-md">
-        Benvenuto in Segresta 2.0
-      </div>
 
-      <p style="color: black;">Un nuovo modo di gestire il tuo oratorio</p>
+
+    <div class="content">
+      <img src="{{ asset('/assets/logo_new_bianco.png') }}" height="500px"/>
+      <p style="color: white; font-size: 25px;">Un nuovo modo di gestire il tuo oratorio</p>
 
     </div>
   </div>

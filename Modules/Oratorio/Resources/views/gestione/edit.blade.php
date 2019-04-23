@@ -1,7 +1,5 @@
 <?php
 use Modules\Oratorio\Entities\Oratorio;
-use App\License;
-use App\LicenseType;
 ?>
 
 @extends('layouts.app')
@@ -62,34 +60,7 @@ use App\LicenseType;
 							?>
 						</div>
 
-					</div>
-
-					<h2>Gestione Licenza e moduli</h2>
-					<table class="testgrid">
-						<tr><thead><th>Modulo</th><th>Data aquisto</th><th>Data scadenza</th></thead></tr>
-						@foreach(Module::all() as $module)
-						<?php
-						$license = License::where([['module_name', $module->getLowerName()], ['id_oratorio', $oratorio->id]])->first();
-						?>
-						<tr>
-							@if($license!=null)
-							{!! Form::hidden('id_licenza['.$loop->index.']', $license->id) !!}
-							{!! Form::hidden('module_name['.$loop->index.']', $module->getLowerName()) !!}
-							{!! Form::hidden('abilita['.$loop->index.']', 0) !!}
-							<td>{!! Form::checkbox('abilita['.$loop->index.']', 1, License::isValid($module->getLowerName()), ['onchange' => 'insert_date(this, '.$loop->index.')']) !!} {{$module->getName()}}</td>
-							<td>{!! Form::text('data_inizio['.$loop->index.']', $license->data_inizio, ['class' => 'form-control data', 'id' => 'data_inizio_'.$loop->index]) !!}</td>
-							<td>{!! Form::text('data_fine['.$loop->index.']', $license->data_fine, ['class' => 'form-control data', 'id' => 'data_fine_'.$loop->index]) !!}</td>
-							@else
-							{!! Form::hidden('id_licenza['.$loop->index.']', null) !!}
-							{!! Form::hidden('module_name['.$loop->index.']', $module->getLowerName()) !!}
-							{!! Form::hidden('abilita['.$loop->index.']', 0) !!}
-							<td>{!! Form::checkbox('abilita['.$loop->index.']', 1, false, ['onchange' => 'insert_date(this, '.$loop->index.')']) !!} {{$module->getName()}}</td>
-							<td>{!! Form::text('data_inizio['.$loop->index.']', null, ['class' => 'form-control data', 'id' => 'data_inizio_'.$loop->index]) !!}</td>
-							<td>{!! Form::text('data_fine['.$loop->index.']', null, ['class' => 'form-control data', 'id' => 'data_fine_'.$loop->index]) !!}</td>
-							@endif
-						</tr>
-						@endforeach
-					</table>
+					</div>					
 
 
 

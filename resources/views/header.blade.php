@@ -26,10 +26,10 @@ if(!Auth::guest()){
 				if($oratorio->logo != ''){
 					echo "<img src='".url(Storage::url('public/'.$oratorio->logo))."' height='60px' ><br>";
 				}else{
-					echo "<img src='".asset('/assets/logo.png')."' height='60px'><br>";
+					echo "<img src='".asset('/assets/logo_new_orizzontale_b.png')."' height='60px'><br>";
 				}
 			}else{
-				echo "<img src='".asset('/assets/logo.png')."' height='60px'><br>";
+				echo "<img src='".asset('/assets/logo_new_orizzontale_b.png')."' height='60px'><br>";
 			}
 			?>
 

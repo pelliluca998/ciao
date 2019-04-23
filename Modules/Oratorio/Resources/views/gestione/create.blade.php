@@ -1,5 +1,4 @@
 <?php
-use App\LicenseType;
 use Modules\User\Entities\User;
 ?>
 
@@ -38,22 +37,7 @@ use Modules\User\Entities\User;
 				<div class="form-group">
 				{!! Form::label('id_user', "Utente amministratore") !!}
 				{!! Form::select('id_user', User::orderBy('email', 'ASC')->pluck('email', 'id'), null , ['class' => 'form-control'])!!}
-				</div>
-
-        <h2>Gestione Licenza e moduli</h2>
-        <table class="testgrid">
-          <tr><thead><th>Modulo</th><th>Data aquisto</th><th>Data scadenza</th></thead></tr>
-          @foreach(Module::all() as $module)
-          <tr>
-            {!! Form::hidden('id_licenza['.$loop->index.']', null) !!}
-            {!! Form::hidden('module_name['.$loop->index.']', $module->getLowerName()) !!}
-            {!! Form::hidden('abilita['.$loop->index.']', 0) !!}
-            <td>{!! Form::checkbox('abilita['.$loop->index.']', 1, false, ['onchange' => 'insert_date(this, '.$loop->index.')']) !!} {{$module->getName()}}</td>
-            <td>{!! Form::text('data_inizio['.$loop->index.']', null, ['class' => 'form-control data', 'id' => 'data_inizio_'.$loop->index]) !!}</td>
-            <td>{!! Form::text('data_fine['.$loop->index.']', null, ['class' => 'form-control data', 'id' => 'data_fine_'.$loop->index]) !!}</td>
-          </tr>
-          @endforeach
-        </table>
+				</div>        
 
 			</div>
 

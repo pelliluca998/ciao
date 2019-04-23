@@ -58,7 +58,6 @@ class Kernel extends HttpKernel
     'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
     'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-    'license' => \App\Http\Middleware\CheckLicense::class,
     'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
   ];
 }

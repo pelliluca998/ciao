@@ -17,7 +17,6 @@ use Modules\User\Entities\User;
 use Modules\Contabilita\Entities\Cassa;
 use Modules\Contabilita\Entities\ModoPagamento;
 use Modules\Contabilita\Entities\TipoPagamento;
-use App\License;
 use Module;
 use Input;
 use Session;
