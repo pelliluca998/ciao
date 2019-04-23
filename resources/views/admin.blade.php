@@ -62,7 +62,7 @@ use Modules\Whatsapp\Http\Controllers\WhatsappController;
       <div class="card">
         <div class="card-header">SMS</div>
         <div class="card-body">
-          @if(Module::has('sms'))
+          @if(Module::find('sms') != null && Module::find('sms')->enabled())
           <!-- SmsController::printcredit() -->
           @else
           Il modulo SMS non è attivo.

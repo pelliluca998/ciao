@@ -88,7 +88,7 @@ if(!Auth::guest()){
 					@if(Auth::user()->can('view-iscrizioni'))
 					<a class="dropdown-item" href="{{ route('iscrizioni.index') }}"><i class="fa fa-flag"></i> Le tue iscrizioni</a>
 					@endif
-					@if(Module::has('telegram'))
+					@if(Module::find('telegram') != null && Module::find('telegram')->enabled())
 					<a class="dropdown-item" href="{{ route('telegram.index') }}"><i class="fab fa-telegram-plane"></i> Telegram</a>
 					@endif
 					@if(Auth::user()->hasRole('owner'))

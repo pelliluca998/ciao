@@ -712,7 +712,7 @@ class SubscriptionController extends Controller
 			$user = User::findOrFail($sub->id_user);
 
 			//cerco il padre
-			if(Module::has('famiglia')){
+			if(Module::find('famiglia') != null && Module::find('famiglia')->enabled()){
 				$padre = ComponenteFamiglia::getPadre($user->id);
 				$madre = ComponenteFamiglia::getMadre($user->id);
 			}else{
@@ -884,7 +884,7 @@ class SubscriptionController extends Controller
 		if(!Storage::exists("public/temp")){
 			Storage::makeDirectory("public/temp", 0755, true);
 		}
-		
+
 		//$path = sys_get_temp_dir().$filename.".docx";
 		$path = $storagePath.$filename.".docx";
 		$output = $storagePath;

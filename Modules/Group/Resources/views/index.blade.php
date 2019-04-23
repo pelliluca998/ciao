@@ -164,7 +164,7 @@ $(document).ready(function(){
   }
 
   //permesso di inviare email
-  if("{{ Auth::user()->can('send-email') && Module::has('email') }}"){
+  if("{{ Auth::user()->can('send-email') && Module::find('email') != null && Module::find('email')->enabled() }}"){
     buttons.push(
       {
         text: '<i class="fas fa-envelope"></i> Invia Email',

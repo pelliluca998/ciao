@@ -20,7 +20,7 @@ $weeks = Week::select('id', 'from_date', 'to_date')->where('id_event', $event->i
 $index = 0;
 $oratorio = Oratorio::find(Session::get('session_oratorio'));
 
-if(Module::has('famiglia')){
+if(Module::find('famiglia') != null && Module::find('famiglia')->enabled() ){
 	$padre = ComponenteFamiglia::getPadre($id_user);
 	$madre = ComponenteFamiglia::getMadre($id_user);
 }else{

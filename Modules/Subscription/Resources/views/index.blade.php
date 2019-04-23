@@ -146,7 +146,7 @@ $(document).ready(function(){
     }
   );
 }
-if("{{ Module::has('email') }}"){
+if("{{ Module::find('email') != null && Module::find('email')->enabled() }}"){
   button.push(
     {
       text: '<i class="fas fa-comment"></i> Contatta gli iscritti',

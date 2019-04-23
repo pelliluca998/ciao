@@ -116,7 +116,7 @@ class UserController extends Controller
         $iscrivi = "";
       }
 
-      if(Module::has('famiglia')){
+      if(Module::find('famiglia') != null && Module::find('famiglia')->enabled()){
         $famiglia = Form::open(['method' => 'GET', 'route' => ['famiglia.user', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-child'></i> Famiglia</button>".Form::close();
       }else{
         $famiglia = "";
