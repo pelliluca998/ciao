@@ -26,38 +26,48 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\Filesystem\Filesystem;
 
 /*
-   Configure source and backup folders for your blade templates
+Configure source and backup folders for your blade templates
 */
-$viewspath = __DIR__.'/Modules/Email/Resources/views';
-$viewsbackup = __DIR__.'/Modules/Email/Resources.bak/views';
 
 require __DIR__.'/vendor/autoload.php';
 $app = require_once __DIR__.'/bootstrap/app.php';
 
-$bladeCompiler = new BladeCompiler(new Filesystem(), $viewspath);
+$modules = ['Contabilita', 'Diocesi', 'Email', 'Famiglia'];
 
-$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($viewspath), RecursiveIteratorIterator::SELF_FIRST);
-$total = $ok = 0;
-foreach($objects as $bladename => $object){
-   if (strstr($bladename, '.blade.php')) {
-       $total++;
-       echo "$bladename - ";
-       try {
-           $bladecontents = file_get_contents($bladename);
-           $phpcontents = $bladeCompiler->compileString($bladecontents);
-           $phpname = str_replace('.blade.php', '.php', $bladename);
-           file_put_contents($phpname, $phpcontents);
-           $bladebackup = str_replace($viewspath, $viewsbackup, $bladename);
-           if (!is_dir(dirname($bladebackup))) mkdir(dirname($bladebackup), 0755, true);
-           rename($bladename, $bladebackup);
-           echo "OK";
-           $ok++;
-       }
-       catch (Exception $e){
-           echo $e->getMessage();
-       }
-       echo "\n";
-   }
+
+foreach($modules as $module){
+  $viewspath = __DIR__.'/Modules/'.$module.'/Resources/views';
+  $viewsbackup = __DIR__.'/Modules/'.$module.'/Resources.bak/views';
+
+  $bladeCompiler = new BladeCompiler(new Filesystem(), $viewspath);
+
+  $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($viewspath), RecursiveIteratorIterator::SELF_FIRST);
+  $total = $ok = 0;
+  foreach($objects as $bladename => $object){
+    if (strstr($bladename, '.blade.php')) {
+      $total++;
+      echo "$bladename - ";
+      try {
+        $bladecontents = file_get_contents($bladename);
+        $phpcontents = $bladeCompiler->compileString($bladecontents);
+        $phpname = str_replace('.blade.php', '.php', $bladename);
+        file_put_contents($phpname, $phpcontents);
+        $bladebackup = str_replace($viewspath, $viewsbackup, $bladename);
+        if (!is_dir(dirname($bladebackup))) mkdir(dirname($bladebackup), 0755, true);
+        rename($bladename, $bladebackup);
+        echo "OK";
+        $ok++;
+      }
+      catch (Exception $e){
+        echo $e->getMessage();
+      }
+      echo "\n";
+    }
+  }
+
+  //restore views to original folder
+  rename(__DIR__.'/Modules/'.$module.'/Resources/', __DIR__.'/Modules/'.$module.'/Resources.compiled');
+  rename(__DIR__.'/Modules/'.$module.'/Resources.bak/', __DIR__.'/Modules/'.$module.'/Resources');
+
+  echo "Total:$total, compiled:$ok, errors:".($total - $ok)."\n";
 }
-
-echo "Total:$total, compiled:$ok, errors:".($total - $ok)."\n";
