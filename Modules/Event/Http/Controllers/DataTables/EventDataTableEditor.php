@@ -6,6 +6,8 @@ use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTablesEditor;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Event\Entities\Event;
+use Modules\Oratorio\Entities\Oratorio;
+use Session;
 
 class EventDataTableEditor extends DataTablesEditor
 {
@@ -60,6 +62,14 @@ class EventDataTableEditor extends DataTablesEditor
   public function updating(Model $model, array $data)
   {
     return $data;
+  }
+
+  public function deleted(Model $model, array $data){
+    $oratorio = Oratorio::find(Session::get('session_oratorio'));
+    if($model->id == $oratorio->last_id_event){
+      $oratorio->last_id_event = null;
+      $oratorio->save();
+    }
   }
 
 }
