@@ -98,11 +98,15 @@ class SubscriptionController extends Controller
 			$open = "<button class='btn btn-sm btn-primary btn-block' onclick='load_iscrizione(".$entity->id.")' type='button'><i class='fas fa-flag'></i> Apri</button>";
 			//$print = Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='far fa-file-pdf'></i> Stampa</button>".Form::close();
 
-			$print = "<div>".Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]]).
-			"<div class='row'><div class='col-5'>".
-			Form::select('id_modulo', $moduli, null, ['class' => 'form-control', 'style' => 'padding: 2px; height: auto;']).
-			"</div><div class='col-7'><button class='btn btn-sm btn-primary btn-block' type='submit'><i class='fas fa-dolly'></i> Stampa</button></div></div></div>".
-			Form::close();
+			if(count($moduli) > 0){
+				$print = "<div>".Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]]).
+				"<div class='row'><div class='col-5'>".
+				Form::select('id_modulo', $moduli, null, ['class' => 'form-control', 'style' => 'padding: 2px; height: auto;']).
+				"</div><div class='col-7'><button class='btn btn-sm btn-primary btn-block' type='submit'><i class='fas fa-dolly'></i> Stampa</button></div></div></div>".
+				Form::close();
+			}else{
+				$print = "";
+			}
 
 			if(!Auth::user()->can('edit-iscrizioni')){
 				$remove = "";
@@ -767,6 +771,7 @@ class SubscriptionController extends Controller
 			$template->setValue('nome_parrocchia', $oratorio->nome_parrocchia);
 			$template->setValue('indirizzo_parrocchia', $oratorio->indirizzo_parrocchia);
 			$template->setValue('nome_diocesi', $oratorio->nome_diocesi);
+			$template->setValue('luogo_data_modulo', $oratorio->luogo_firma_moduli.", ".$sub->created_at);
 			$template->setValue('nome_evento', $event->nome);
 			$template->setValue('id_subscription', $sub->id);
 			$template->setValue('padre', $padre!=null?$padre->full_name:'');

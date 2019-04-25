@@ -50,23 +50,26 @@ use Modules\Oratorio\Entities\Oratorio;
 							{!! Form::label('indirizzo_parrocchia', 'Indirizzo parrocchia') !!}
 							{!! Form::text('indirizzo_parrocchia', null, ['class' => 'form-control']) !!}
 						</div>
+					</div>
 
+					<div class="form-row">
 						<div class="form-group col">
 							{!! Form::label('nome_diocesi', 'Nome della Diocesi') !!}
 							{!! Form::text('nome_diocesi', null, ['class' => 'form-control']) !!}
 						</div>
+
+						<div class="form-group col">
+							{!! Form::label('luogo_firma_moduli', 'Luogo di firma dei moduli') !!}
+							{!! Form::text('luogo_firma_moduli', null, ['class' => 'form-control']) !!}
+						</div>
 					</div>
+
+
 
 					<div class="form-row">
 						<div class="form-group col">
 							{!! Form::label('sms_sender', 'Mittente SMS. Puoi inserire un numero di cellulare (con prefisso internazionale senza + iniziale) oppure un nome (max. 11 caratteri).') !!}
 							{!! Form::text('sms_sender', null, ['class' => 'form-control', 'maxlength' => '12']) !!}
-						</div>
-
-						<div class="form-group col">
-							{!! Form::label('reg_visible', 'Nome oratorio visibile nella pagina di registrazione utente') !!}
-							{!! Form::hidden('reg_visible', 0) !!}
-							{!! Form::checkbox('reg_visible', 1, $oratorio->reg_visible, ['class' => 'form-control']) !!}
 						</div>
 					</div>
 
@@ -85,14 +88,6 @@ use Modules\Oratorio\Entities\Oratorio;
 								echo "Nessun logo ancora caricato!<br><br>";
 							}
 							?>
-						</div>
-					</div>
-
-					<h3>Registrazione utente</h3>
-					<div class="form-row">
-						Il link qui sotto serve per portare direttamente i nuovi utenti alla pagina di registrazione del tuo oratorio, senza doverlo scegliere dal menu a tendina. È lungo, ma puoi abbreviarlo con uno dei tanti servizi che trovi in rete come <a href='https://bitly.com/'>Bitly</a>.
-						<div class="form-group col">
-							<b>Link:</b> <a href="{{url('register')}}?id_oratorio={{$oratorio->reg_token}}">{{url('register')}}?id_oratorio={{$oratorio->reg_token}}</a>
 						</div>
 					</div>
 

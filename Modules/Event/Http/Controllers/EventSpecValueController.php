@@ -127,7 +127,7 @@ class EventSpecValueController extends Controller
 
     if($event_spec->id_type > 0){
       $types = TypeSelect::where('id_type', $event_spec->id_type)->orderBy('ordine', 'ASC')->pluck('id', 'option');
-      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'select', 'options' => $types));
+      return json_encode(array('label' => 'Valore', 'name' => 'valore', 'type' => 'select', 'options' => $types, 'placeholderDisabled' => false, 'placeholder' => 'Nessuna opzione'));
     }
 
     switch ($event_spec->id_type) {

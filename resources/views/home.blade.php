@@ -25,6 +25,12 @@ if(Auth::user()->tessera_sanitaria == null || Auth::user()->tessera_sanitaria ==
 
 $profilo .= "</ul>";
 
+$profilazione_error = false;
+if(Auth::user()->consenso_affiliazione == null || Auth::user()->consenso_affiliazione == 0){
+  $profilazione_error = true;
+  $profilazione = "Non hai espresso il consenso per la ricezione di messaggi!";
+}
+
 //controllo la Famiglia, se il modulo è abilitato
 $modulo_famiglia = (Module::find('famiglia') != null && Module::find('famiglia')->enabled());
 $padre = null;
@@ -150,7 +156,7 @@ if($modulo_famiglia){
           @endif
 
           <?php
-          $events = (new Event)->where([['id_oratorio', $uo->id_oratorio],['active', true]])->get();
+          $events = (new Event)->where([['id_oratorio', $uo->id_oratorio],['active', true], ['is_diocesi', 0]])->get();
           if(count($events)==0){
             echo "<i>Nessun evento creato!</i>";
           }
@@ -188,27 +194,6 @@ if($modulo_famiglia){
             @endforeach
 
           </div>
-
-          @else
-          @if($oratorio==-1)
-          <p>Ciao, sembra che tu non sia associato a nessun oratorio. Se in fase di registrazione hai scelto "Nuovo oratorio", allora comunicami i dati per la nuova attivazione, altrimenti segui la procedura per affiliarti ad un oratorio</p>
-          <div style="width: 49%; margin-right: 2%; float: left;">
-            {!! Form::open(['route' => 'oratorio.neworatorio']) !!}
-            {!! Form::submit('Nuovo oratorio!', ['class' => 'btn btn-primary form-control']) !!}
-            {!! Form::close() !!}
-          </div>
-          <div style="width: 49%; float: left;">
-            {!! Form::open(['route' => 'oratorio.affiliazione', 'method' => 'GET']) !!}
-            {!! Form::submit('Nuova afffiliazione!', ['class' => 'btn btn-primary form-control']) !!}
-            {!! Form::close() !!}
-          </div>
-          @else
-          {!! Form::open(['route' => 'home.selectoratorio']) !!}
-          Prima di proseguire, devi scegliere uno degli oratori a cui sei iscritto:<br>
-          {!! Form::select("id_oratorio", Oratorio::whereIn('id',$oratorio)->pluck('nome', 'id'), null, ['class' => 'form-control']) !!}<br>
-          {!! Form::submit('Prosegui!', ['class' => 'btn btn-primary form-control']) !!}
-          {!! Form::close() !!}
-          @endif
           @endif
         </div>
 
@@ -217,5 +202,60 @@ if($modulo_famiglia){
     </div>
   </div>
   @endforeach
+
+  <!--  DIOCESI-->
+  @if(Module::find('diocesi') != null && Module::find('diocesi')->enabled())
+  <div class="row justify-content-center" style="margin-top: 20px;">
+    <div class="col-10">
+      <div class="card">
+        <div class="card-body">
+          <h1 style="text-align: center; font-size: 50px;">Eventi diocesani</h1>
+          <?php
+          $events = (new Event)->where([['active', true], ['is_diocesi', 1]])->get();
+          if(count($events)==0){
+            echo "<i>Nessun evento creato!</i>";
+          }
+          $color = "#ADD8E6";
+          ?>
+
+          <div class="card-deck">
+
+            @foreach($events as $event)
+
+            <div class="card">
+              <div class="card-img-top" style="height: 300px; background-color: {{ ($event->color == '' || $event->color == null)?$color:$event->color }}">
+                @if($event->image == '' || $event->image == null)
+                <h2 class="card-title" style="text-align: center; padding-top: 15%">{{ $event->nome }}</h2>
+                @else
+                <img src="{!! url(Storage::url('public/'.$event->image)) !!}" style="height: 100%; width: 100%; object-fit: cover; " alt="">
+                @endif
+              </div>
+
+
+
+
+              <div class="card-body">
+                <h5 class="card-title" style="text-align: center">{{ $event->nome }}</h5>
+                <p class="card-text">{!! (strlen(strip_tags($event->descrizione)) > 500) ? substr(strip_tags($event->descrizione), 0, 500) . '...' : strip_tags($event->descrizione) !!}</p>
+              </div>
+              <div class="card-footer">
+                {!! Form::open(['method' => 'GET', 'route' => ['events.show', $event->id]]) !!}
+                {!! Form::submit('Apri evento', ['class' => 'btn btn-primary form-control']) !!}
+                {!! Form::close() !!}
+              </div>
+
+            </div>
+
+            @endforeach
+
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  @endif
+
 </div>
 @endsection

@@ -1,13 +1,12 @@
 <?php return array (
   'app' => 
   array (
-    'owner_email' => 'admin@email.it',
     'ip_address' => false,
     'password' => '12345',
     'name' => 'Segresta 2.0',
     'env' => 'local',
     'debug' => true,
-    'url' => 'http://localhost/segresta',
+    'url' => 'http://localhost:8000',
     'nome_parrocchia' => 'NOME PARROCCHIA',
     'indirizzo_parrocchia' => 'INDIRIZZO PARROCCHIA',
     'email_parrocchia' => 'EMAIL PARROCCHIA',
@@ -420,10 +419,12 @@
   'diocesi' => 
   array (
     'name' => 'Diocesi',
+    'email' => 'admin@email.it',
     'permissions' => 
     array (
       'edit-oratori' => 'Modifica e aggiungi oratori',
       'view-users-diocesi' => 'Vedi gli utenti di tutti gli oratori',
+      'add-events-diocesi' => 'Aggiungi eventi diocesani',
     ),
   ),
   'dompdf' => 
@@ -576,7 +577,7 @@
         'driver' => 'local',
         'root' => '/home/roberto/Documenti/Clienti/Segresta/segresta/storage/app/public',
         'visibility' => 'public',
-        'url' => 'http://localhost/segresta/storage',
+        'url' => 'http://localhost:8000/storage',
       ),
       's3' => 
       array (

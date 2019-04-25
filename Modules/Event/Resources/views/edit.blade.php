@@ -63,7 +63,7 @@ if($array_moduli == null) $array_moduli = array();
 							{!! Form::checkbox('more_subscriptions', 1, $event->more_subscriptions, ['class' => 'form-control']) !!}
 						</div>
 
-						{!! Form::hidden('select_famiglia', 0) !!}
+
 						@if(Module::find('famiglia') != null && Module::find('famiglia')->enabled())
 						<div class="form-group col">
 							{!! Form::label('select_famiglia', 'Richiedi l\'iscrizione per un membro della famiglia') !!}
@@ -71,6 +71,18 @@ if($array_moduli == null) $array_moduli = array();
 							<p>Se selezionato, in fase d'iscrizione verrà richiesto di selezionare un membro della famiglia dell'utente</p>
 							{!! Form::checkbox('select_famiglia', 1, $event->select_famiglia, ['class' => 'form-control']) !!}
 						</div>
+						@else
+						{!! Form::hidden('select_famiglia', 0) !!}
+						@endif
+
+						@if(Module::find('diocesi') != null && Module::find('diocesi')->enabled() && Auth::user()->can('add-events-diocesi'))
+						<div class="form-group col">
+							{!! Form::label('is_diocesi', 'Crea l\'evento come Diocesi e non come parrocchia') !!}
+							{!! Form::hidden('is_diocesi', 0) !!}
+							{!! Form::checkbox('is_diocesi', 1, $event->is_diocesi, ['class' => 'form-control']) !!}
+						</div>
+						@else
+						{!! Form::hidden('is_diocesi', 0) !!}
 						@endif
 
 

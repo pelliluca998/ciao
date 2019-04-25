@@ -95,6 +95,7 @@ class DatabaseSeeder extends Seeder
           $perm->display_name = $value;
           $perm->description = $value;
           $perm->save();
+          $this->command->info("Creato permesso ".$key);
           $role_admin->attachPermission($perm);
           }
         }
