@@ -58,8 +58,8 @@
 
   .links > a {
     color: #636b6f;
-    padding: 0 25px;
-    font-size: 12px;
+    padding: 25px 25px;
+    font-size: 20px;
     font-weight: 600;
     letter-spacing: .1rem;
     text-decoration: none;
@@ -74,7 +74,7 @@
 <body>
   <div class="flex-center position-ref full-height">
     @if (Route::has('login'))
-    <div class="top-right links">
+    <div class="top-right links" style="padding: 10px;">
       @if (Auth::check())
       <a href="{{ url('/home') }}">Entra!</a>
       @else
@@ -87,8 +87,17 @@
 
 
     <div class="content">
-      <img src="{{ asset('/assets/logo_new_bianco.png') }}" height="500px"/>
-      <p style="color: white; font-size: 25px;">Un nuovo modo di gestire il tuo oratorio</p>
+      <img src="{{ asset('/assets/logo_new_bianco.png') }}" height="400px"/>
+      <p style="color: white; font-size: 25px; margin-top: 3px;">Un nuovo modo di gestire il tuo oratorio</p>
+
+      <div class="links" style="background-color: rgba(255, 255, 255, 0.80); padding: 10px;">
+        @if (Auth::check())
+        <a href="{{ url('/home') }}">Entra!</a>
+        @else
+        <a href="{{ url('/login') }}">Login</a>
+        <a href="{{ url('/register') }}">Registrati</a>
+        @endif
+      </div>
 
     </div>
   </div>

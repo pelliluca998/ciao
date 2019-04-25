@@ -1,6 +1,11 @@
 <?php
 use Modules\Event\Entities\Event;
 use Modules\Event\Entities\EventSpec;
+use Modules\Modulo\Entities\Modulo;
+
+$array_moduli = json_decode($event->id_moduli);
+if($array_moduli == null) $array_moduli = array();
+
 ?>
 
 @extends('layouts.app')
@@ -122,37 +127,34 @@ use Modules\Event\Entities\EventSpec;
 							}
 							?>
 						</div>
-					</div>
 
-					<div class="form-row" style="min-height: 200px">
 						<div class="form-group col">
 							{!! Form::label('color', 'Colore') !!}
 							{!! Form::text('color', null, ['class' => 'form-control jscolor {hash:true, required:false}']) !!}
 						</div>
-
-						<div class="form-group col" style="min-height: 100px">
-						</div>
 					</div>
 
-
-
-					<h3>Modulo di iscrizione</h3>
-
-					<div class="form-row" style="min-height: 100px;">
+					<h3>Modulo d'iscrizione</h3>
+					<div class="form-row" >
 						<div class="form-group col">
-							{!! Form::label('template_file', 'Carica un template personalizzato per il modulo di iscrizione. Altrimenti verrà utilizzato quello di default.') !!}
-							{!! Form::file('template_file', null, ['class' => 'form-control']) !!}
-						</div>
+							{!! Form::label('id_modulo', 'Seleziona uno o più moduli da generare al termine dell\'iscrizione') !!}
 
-						<div class="form-group col">
-							<a href="{{ url(Storage::url('public/template/subscription_template.docx')) }}">Scarica il modulo di default.</a><br>
-							{!! Form::hidden('elimina_template', 0) !!}
-							@if($event->template_file == null)
-							<p>Nessun modulo personalizzato caricato!</p><br>
-							@else
-							<a href="{{ url(Storage::url('public/'.$event->template_file.'')) }}">Scarica il modulo che hai caricato.</a><br>
-							{!! Form::checkbox('elimina_template', 1, 0, []) !!} Elimina modulo caricato e usa quello di default
-							@endif
+							<table class="table table-bordered" id="moduloTable" style="width: 100%">
+		            <thead>
+		              <tr>
+		                <th style="width: 10%">Seleziona</th>
+		                <th>Nome modulo</th>
+		              </tr>
+		            </thead>
+								<tbody>
+									@foreach(Modulo::where('id_oratorio', Session::get('session_oratorio'))->orderBy('label', 'ASC')->get() as $modulo)
+									<tr>
+										<td>{!! Form::checkbox('id_modulo[]', $modulo->id, in_array($modulo->id, $array_moduli), ['class' => 'form-control']) !!}</td>
+										<td>{{ $modulo->label }}</td>
+									</tr>
+									@endforeach
+								</tbody>
+		          </table>
 						</div>
 
 						<div class="form-group col">
@@ -160,7 +162,8 @@ use Modules\Event\Entities\EventSpec;
 							{!! Form::select('pagine_foglio', Event::getPaginePerFoglio(), null, ['class' => 'form-control']) !!}
 						</div>
 
-
+						<div class="form-group col">
+						</div>
 					</div>
 
 					<div class="form-row">

@@ -71,7 +71,7 @@ class RoleController extends Controller
 
     //tolgo tutti i permessi ai ruoli che non compaiono nella lista precedente.
     //Bug dovuto al form: se non metto alcuna spunta ai permessi, non mi arriva nemmeno il ruolo.
-    foreach(Role::whereNotIn('id', $roles_id)->get() as $role_without_perms){
+    foreach(Role::whereNotIn('id', $roles_id)->where('id_oratorio', Session::get('session_oratorio'))->get() as $role_without_perms){
       $role_without_perms->perms()->sync([]);
     }
 

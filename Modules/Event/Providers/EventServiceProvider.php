@@ -45,6 +45,11 @@ class EventServiceProvider extends ServiceProvider
     ->prepend("<i class='fas fa-sun' aria-hidden='true'></i> ")
     ->data('permissions', ['manage-week'])->data('order', 22);
 
+    $menuList->get('eventi')
+    ->add('Moduli d\'iscrizione', array('route'  => 'modulo.index'))
+    ->prepend("<i class='far fa-file-word'></i> ")
+    ->data('permissions', ['view-modulo', 'edit-modulo'])->data('order', 23);
+
     // $menuList->get('eventi')
     // ->add('Strumenti', array('route'  => 'events.strumenti'))
     // ->prepend("<i class='fas fa-gavel' aria-hidden='true'></i> ")

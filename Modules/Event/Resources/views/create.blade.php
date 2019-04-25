@@ -1,5 +1,6 @@
 <?php
 use Modules\Event\Entities\Event;
+use Modules\Modulo\Entities\Modulo;
 ?>
 
 @extends('layouts.app')
@@ -90,17 +91,38 @@ use Modules\Event\Entities\Event;
 
 
 
-					<h4>Modulo di iscrizione</h4>
-					<div class="form-row" style="min-height: 100px;">
+					<h3>Modulo d'iscrizione</h3>
+					<div class="form-row" >
 						<div class="form-group col">
-							{!! Form::label('template_file', 'Carica un template personalizzato per il modulo di iscrizione. Altrimenti verrà utilizzato quello di default.') !!}
-							{!! Form::file('template_file', null, ['class' => 'form-control']) !!}
+							{!! Form::label('id_modulo', 'Seleziona uno o più moduli da generare al termine dell\'iscrizione') !!}
+
+							<table class="table table-bordered" id="moduloTable" style="width: 100%">
+		            <thead>
+		              <tr>
+		                <th style="width: 10%">Seleziona</th>
+		                <th>Nome modulo</th>
+		              </tr>
+		            </thead>
+								<tbody>
+									@foreach(Modulo::where('id_oratorio', Session::get('session_oratorio'))->orderBy('label', 'ASC')->get() as $modulo)
+									<tr>
+										<td>{!! Form::checkbox('id_modulo[]', $modulo->id, false, ['class' => 'form-control']) !!}</td>
+										<td>{{ $modulo->label }}</td>
+									</tr>
+									@endforeach
+								</tbody>
+		          </table>
 						</div>
 
 						<div class="form-group col">
-							<a href="{{ url(Storage::url('public/template/subscription_template.docx')) }}">Scarica il modulo di default.</a><br>
+							{!! Form::label('pagine_foglio', 'Opzioni di stampa. Scegli se il file PDF finale da stampare deve essere composto da una o più pagine per foglio.') !!}
+							{!! Form::select('pagine_foglio', Event::getPaginePerFoglio(), null, ['class' => 'form-control']) !!}
+						</div>
+
+						<div class="form-group col">
 						</div>
 					</div>
+
 
 					<div class="form-row">
 						<div class="form-group col">

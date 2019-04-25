@@ -1,7 +1,6 @@
 <?php
 
 return [
-  'owner_email' => env('OWNER_MAIL', ''),
   'ip_address' => getenv('SERVER_ADDR'),
   'password' => env('APP_PASSWORD', 'non_valida'),
 

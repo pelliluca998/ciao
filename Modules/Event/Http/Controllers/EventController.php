@@ -190,6 +190,12 @@ class EventController extends Controller
 			$image->save($path);
 			$input['image'] = $filename;
 		}
+
+		if($request->has('id_modulo')){
+      $input['id_moduli'] = json_encode($input['id_modulo']);
+    }
+
+
 		$event = Event::create($input);
 		Session::flash('flash_message', 'Evento aggiunto! Ora crea le informazioni che gli utenti devono dare durante l\'iscrizione');
 		Session::put('work_event', $event->id);
@@ -244,25 +250,9 @@ class EventController extends Controller
 			}
 		}
 
-		if(Input::hasFile('template_file')){
-			$file = $request->template_file;
-			$filename = $request->template_file->store('template', 'public');
-			$path = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix().$filename;
-			//$image = Image::make($path);
-			//$image->resize(500,null, function ($constraint) {$constraint->aspectRatio();});
-			//$image->save($path);
-			$input['template_file'] = $filename;
-			//cancello il vecchio template
-			if($event->template_file != null){
-				Storage::delete('public/'.$event->template_file);
-			}
-		}elseif($input['elimina_template'] == 1){
-			//se il checkbox "Elimina modulo caricato.." è selezionato, allora elimino il template caricato
-			$input['template_file'] = null;
-			if($event->template_file != null){
-				Storage::delete('public/'.$event->template_file);
-			}
-		}
+		if($request->has('id_modulo')){
+      $input['id_moduli'] = json_encode($input['id_modulo']);
+    }
 
 		if(Input::has('spec_iscrizione')){
 			$input['spec_iscrizione'] = json_encode($input['spec_iscrizione']);

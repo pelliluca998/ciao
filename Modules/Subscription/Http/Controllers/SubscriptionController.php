@@ -8,8 +8,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use Modules\Subscription\Entities\Subscription;
+use Modules\Subscription\Notifications\IscrizioneApprovata;
 use Modules\Event\Entities\EventSpec;
 use Modules\Oratorio\Entities\Oratorio;
+use Modules\Modulo\Entities\Modulo;
 use App\SpecSubscription;
 use Modules\Event\Entities\EventSpecValue;
 use Modules\Event\Entities\Event;
@@ -21,7 +23,6 @@ use Modules\Contabilita\Entities\ModoPagamento;
 use Modules\Contabilita\Entities\TipoPagamento;
 use Modules\Famiglia\Entities\Famiglia;
 use Modules\Famiglia\Entities\ComponenteFamiglia;
-use App\License;
 use App\Comune;
 use Modules\Event\Entities\Week;
 use Module;
@@ -88,12 +89,21 @@ class SubscriptionController extends Controller
 		->orderBy('created_at', 'DESC');
 
 		$event = Event::find($input['id_event']);
+		$array_moduli = json_decode($event->id_moduli);
+		$moduli = Modulo::whereIn('id', $array_moduli)->orderBy('label', 'ASC')->pluck('label', 'id');
 
 		return $datatables->eloquent($builder)
-		->addColumn('action', function ($entity){
+		->addColumn('action', function ($entity) use ($moduli){
 			$remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
 			$open = "<button class='btn btn-sm btn-primary btn-block' onclick='load_iscrizione(".$entity->id.")' type='button'><i class='fas fa-flag'></i> Apri</button>";
-			$print = Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='far fa-file-pdf'></i> Stampa</button>".Form::close();
+			//$print = Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='far fa-file-pdf'></i> Stampa</button>".Form::close();
+
+			$print = "<div>".Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]]).
+			"<div class='row'><div class='col-5'>".
+			Form::select('id_modulo', $moduli, null, ['class' => 'form-control', 'style' => 'padding: 2px; height: auto;']).
+			"</div><div class='col-7'><button class='btn btn-sm btn-primary btn-block' type='submit'><i class='fas fa-dolly'></i> Stampa</button></div></div></div>".
+			Form::close();
+
 			if(!Auth::user()->can('edit-iscrizioni')){
 				$remove = "";
 			}
@@ -151,6 +161,9 @@ class SubscriptionController extends Controller
 		$input = $request->all();
 
 		$componente = ComponenteFamiglia::where('id_user', $input['id_user'])->first();
+		$event = Event::find($sub->id_event);
+		$array_moduli = json_decode($event->id_moduli);
+		$moduli = Modulo::whereIn('id', $array_moduli)->orderBy('label', 'ASC')->get();
 
 		$builder = Subscription::query()
 		->select('subscriptions.*', 'users.name', 'users.cognome')
@@ -165,10 +178,17 @@ class SubscriptionController extends Controller
 		$builder->orderBy('created_at', 'DESC');
 
 		return $datatables->eloquent($builder)
-		->addColumn('action', function ($entity){
+		->addColumn('action', function ($entity) use ($moduli){
 			$remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
 			$open = "<button class='btn btn-sm btn-primary btn-block' onclick='load_iscrizione(".$entity->id.")' type='button'><i class='fas fa-flag'></i> Apri</button>";
-			$print = Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='far fa-file-pdf'></i> Stampa</button>".Form::close();
+			//$print = Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='far fa-file-pdf'></i> Stampa</button>".Form::close();
+
+			$print = "<div>".Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]]).
+			"<div class='row'><div class='col-5'>".
+			Form::select('id_modulo', $moduli, null, ['class' => 'form-control', 'style' => 'padding: 2px; height: auto;']).
+			"</div><div class='col-7'><button class='btn btn-sm btn-primary btn-block' type='submit'><i class='fas fa-dolly'></i> Stampa</button></div></div></div>".
+			Form::close();
+
 			if(!Auth::user()->can('edit-iscrizioni') || $entity->confirmed == 1){
 				$remove = "";
 			}
@@ -314,7 +334,7 @@ class SubscriptionController extends Controller
 				$e->save();
 
 				//contabilita
-				if(Module::find('contabilita')!=null && License::isValid('contabilita') && !Auth::user()->hasRole('user')){
+				if(Module::find('contabilita')!=null && Module::find('contabilita')->enabled() && !Auth::user()->hasRole('user')){
 					if($pagato[$i]==1){
 						//pagamento avvenuto ora, salvo una riga in bilancio
 						$id_cassa=0;
@@ -565,14 +585,7 @@ class SubscriptionController extends Controller
 				//mando la mail all'utente
 				$user = User::findOrFail($sub->id_user);
 				$event = Event::findOrFail($sub->id_event);
-				Mail::send('subscription::confirmed_email',
-				['html' => 'subscription::confirmed_email', 'event_name' => $event->nome, 'user' => $user->full_name],
-				function ($message) use ($user){
-					$oratorio = Oratorio::findOrFail(Session::get('session_oratorio'));
-					$message->from($oratorio->email, $oratorio->nome);
-					$message->subject("La tua iscrizione è stata approvata");
-					$message->to($user->email, $user->full_name);
-				});
+				$user->notify(new IscrizioneApprovata($sub->id, $event->nome));
 			}
 
 			Session::flash("flash_message", "Hai approvato ".count(json_decode($check_user))." iscrizioni!");
@@ -721,11 +734,14 @@ class SubscriptionController extends Controller
 			}
 
 			$storagePath  = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix();
-			if($event->template_file == null){
-				$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath."/template/subscription_template.docx");
-			}else{
-				$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath.$event->template_file);
-			}
+			// if($event->template_file == null){
+			// 	$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath."/template/subscription_template.docx");
+			// }else{
+			// 	$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath.$event->template_file);
+			// }
+
+			$modulo = Modulo::find($input['id_modulo']);
+			$template = new \PhpOffice\PhpWord\TemplateProcessor($storagePath.$modulo->path_file);
 
 			//controllo se nel modulo devono essere stampati i dati anagrafici o, al loro posto, il valore di una specifica
 			if($event->stampa_anagrafica == 1){

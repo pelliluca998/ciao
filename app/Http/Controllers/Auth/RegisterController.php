@@ -114,6 +114,8 @@ class RegisterController extends Controller
     //   $attrib = AttributoUser::create(['id_user' => $user->id, 'id_attributo' => $id, 'valore' => $attributo[$i]]);
     //   $i++;
     // }
+    $user->sendEmailVerificationNotification();
+    
     return $user;
 
   }

@@ -8,6 +8,7 @@ use Modules\Oratorio\Entities\Oratorio;
 <div class="container">
 	@if(Entrust::hasRole(['admin']) || Entrust::hasRole(['owner']))
 	<?php
+	$oratorio = null;
 	if(Session::get('session_oratorio') != null){
 		$oratorio = Oratorio::where('id', Session::get('session_oratorio'))->first();
 	}
@@ -53,7 +54,7 @@ use Modules\Oratorio\Entities\Oratorio;
 			 </div>
 			<?php $buttons=$buttons_1; ?>
 			@else
-				@if($oratorio->last_id_event>0 && Event::findOrFail($oratorio->last_id_event)->count()>0)
+				@if($oratorio != null && $oratorio->last_id_event>0 && Event::findOrFail($oratorio->last_id_event)->count()>0)
 				<?php
 				Session::put('work_event', $oratorio->last_id_event);
 				$event = Event::where('id', Session::get('work_event'))->first();

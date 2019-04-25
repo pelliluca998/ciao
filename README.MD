@@ -1,10 +1,27 @@
 ![Logo Segresta](https://github.com/cent89/segresta/raw/master/public/logo_segresta.png)
 # SEGRESTA 2.0
 Gestionale per il tuo oratorio! Con Segresta puoi gestire in maniera rapida ed efficace tutti gli eventi che organizzi nel tuo oratorio: CRE, Campi estivi, ...
-Puoi usare Segresta direttamente online, iscrivendoti su http://app.segresta.it e richiedendo l'attivazione di un nuovo oratorio. In alternativa, puoi seguire le istruzioni qui sotto e installare tutto sul tuo spazio web.
+Puoi installare Segresta su qualsiasi server seguendo le istruzioni qui sotto.
 
 ## Installazione
-Le istruzioni fanno riferimento ad un server web Debian con Apache e MySQL installato. Puoi trovare ulteriori informazioni sulla pagina di installazione di Laravel (https://laravel.com/docs/5.6).
+Le istruzioni fanno riferimento ad un server web Debian. Puoi trovare ulteriori informazioni sulla pagina di installazione di Laravel (https://laravel.com/docs/5.7).
+
+### Installazione di PHP 7.2 e NGINX
+Aggiungi il repository Sury per PHP 7.2:
+
+```
+sudo apt install apt-transport-https lsb-release ca-certificates
+wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+```
+
+Aggiungi al file ``` /etc/apt/sources.list ``` il repository ``` deb https://packages.sury.org/php/ stretch main ```
+
+Installa tutti i pacchetti per un buon funzionamento di Segresta:
+
+```
+sudo apt update
+sudo apt install nginx php7.2 composer mariadb-server mariadb-client php7.2-fpm php7.2-cli php7.2-common php7.2-json php7.2-opcache php7.2-mysql php7.2-zip php7.2-mbstring php7.2-gd php7.2-dom php7.2-curl unoconv texlive-extra-utils python-pip
+```
 
 ### Clone del repo e configurazione
 

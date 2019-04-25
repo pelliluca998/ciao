@@ -40,6 +40,9 @@ $permissions = Permission::all();
               </tr>
               <tr>
                 @foreach($permissions as $permission)
+                @if(Auth::user()->email != config('diocesi.email') && array_key_exists($permission->name,config('diocesi.permissions')))
+                @continue
+                @endif
                 <th>{{ $permission->display_name }}</th>
                 @endforeach
               </tr>
@@ -50,6 +53,9 @@ $permissions = Permission::all();
               <tr>
                 <td><b>{{ $role->display_name }}</b><br>{{ $role->description }} - <a href="{{ route('role.delete', ['id_role' => $role->id]) }}">Elimina</a></td>
                 @foreach($permissions as $permission)
+                @if(Auth::user()->email != config('diocesi.email') && array_key_exists($permission->name,config('diocesi.permissions')))
+                @continue
+                @endif
                   <td>{!! Form::checkbox('permesso['.$role->id.'][]', $permission->id, $role->hasPermission($permission->name), ['class' => 'form-control']) !!}</td>
                 @endforeach
               </tr>

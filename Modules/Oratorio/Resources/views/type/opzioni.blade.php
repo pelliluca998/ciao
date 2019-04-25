@@ -103,7 +103,7 @@ if("{{ Auth::user()->can('edit-select') }}"){
     responsive: true,
     processing: true,
     serverSide: true,
-    dom: 'B',
+    dom: 'Bfrtip',
     language: { "url": "{{ asset('Italian.json') }}" },
     ajax: "{!! route('typeselect.data', ['id_type' => $type->id]) !!}",
     columns: [

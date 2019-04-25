@@ -63,6 +63,7 @@ class VerificaEmail extends Notification
         'verification.verify', Carbon::now()->addMinutes(60), ['id' => $notifiable->getKey()]
       );
     }
+
     public static function toMailUsing($callback)
     {
       static::$toMailCallback = $callback;

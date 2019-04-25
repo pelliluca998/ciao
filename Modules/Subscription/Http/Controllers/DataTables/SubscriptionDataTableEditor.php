@@ -6,6 +6,9 @@ use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTablesEditor;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Subscription\Entities\Subscription;
+use Modules\Subscription\Notifications\IscrizioneApprovata;
+use Modules\User\Entities\User;
+use Modules\Event\Entities\Event;
 
 class SubscriptionDataTableEditor extends DataTablesEditor
 {
@@ -59,6 +62,11 @@ class SubscriptionDataTableEditor extends DataTablesEditor
 
   public function updating(Model $model, array $data)
   {
+    if($model->confirmed == 0 && $data['confirmed'] == 1){
+      $user = User::find($model->id_user);
+      $event = Event::find($model->id_event);
+      $user->notify(new IscrizioneApprovata($model->id, $event->nome));
+    }
     return $data;
   }
 
