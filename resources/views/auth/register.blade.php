@@ -362,6 +362,7 @@ $('#id_provincia_residenza').on('change', function(){
 $(document).ready(function(){
   update_comune('id_provincia_nascita', 'id_comune_nascita');
   update_comune('id_provincia_residenza', 'id_comune_residenza');
+  enable_confirm_button();
 
 });
 </script>

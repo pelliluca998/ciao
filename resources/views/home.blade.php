@@ -129,10 +129,11 @@ if($modulo_famiglia){
             @endif
 
             <div class="card">
-              <div class="card-header">Iscrizioni</div>
+              <div class="card-header">Aiuto</div>
               <div class="card-body">
-                <!--  Controlla se ci sono iscrizioni confermate -->
+                <p>Se hai bisogno d'aiuto durante l'iscrizione, puoi consultare una delle guide:</p>
               </div>
+              <div class="card-footer"><a href="https://www.segresta.it/documentazione" target="_blank" class="btn btn-sm btn-primary btn-block">Apri documentazione</a></div>
             </div>
           </div>
         </div>

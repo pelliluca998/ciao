@@ -165,9 +165,6 @@ class SubscriptionController extends Controller
 		$input = $request->all();
 
 		$componente = ComponenteFamiglia::where('id_user', $input['id_user'])->first();
-		$event = Event::find($sub->id_event);
-		$array_moduli = json_decode($event->id_moduli);
-		$moduli = Modulo::whereIn('id', $array_moduli)->orderBy('label', 'ASC')->get();
 
 		$builder = Subscription::query()
 		->select('subscriptions.*', 'users.name', 'users.cognome')
@@ -182,10 +179,14 @@ class SubscriptionController extends Controller
 		$builder->orderBy('created_at', 'DESC');
 
 		return $datatables->eloquent($builder)
-		->addColumn('action', function ($entity) use ($moduli){
+		->addColumn('action', function ($entity){
 			$remove = "<button class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button>";
 			$open = "<button class='btn btn-sm btn-primary btn-block' onclick='load_iscrizione(".$entity->id.")' type='button'><i class='fas fa-flag'></i> Apri</button>";
 			//$print = Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='far fa-file-pdf'></i> Stampa</button>".Form::close();
+
+			$event = Event::find($entity->id_event);
+			$array_moduli = json_decode($event->id_moduli);
+			$moduli = Modulo::whereIn('id', $array_moduli)->orderBy('label', 'ASC')->get();
 
 			$print = "<div>".Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]]).
 			"<div class='row'><div class='col-5'>".
@@ -302,6 +303,15 @@ class SubscriptionController extends Controller
 			}
 		}
 		$event = Event::findOrFail($input['id_event']);
+		if($event->select_famiglia == 1 && (Module::find('famiglia') != null && Module::find('famiglia')->enabled())){
+			//controllo se l'utente ha collegato una famiglia con padre e madre
+			$padre = ComponenteFamiglia::getPadre($input['id_user']);
+			$madre = ComponenteFamiglia::getMadre($input['id_user']);
+			if($padre == null || $madre == null){
+				Session::flash('flash_message', 'Per iscriverti a questo evento, devi aver indicato padre e madre nella tua famiglia!');
+				return redirect('home');
+			}
+		}
 		if($event->more_subscriptions==0){
 			$sub = (new Subscription)->where([['id_event', $event->id], ['id_user', $input['id_user']]])->get();
 			if(count($sub)>=1){
