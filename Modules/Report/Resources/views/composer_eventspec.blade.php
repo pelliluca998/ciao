@@ -107,7 +107,6 @@ use Modules\Attributo\Entities\Attributo;
 								$c = [];
 								$c[] = ['id'=>'email', 'label'=>'Email'];
 								$c[] = ['id'=>'cell_number', 'label'=>'Numero Cell.'];
-								$c[] = ['id'=>'username', 'label'=>'Username'];
 								$c[] = ['id'=>'nato_il', 'label'=>'Data di nascita'];
 								$c[] = ['id'=>'nato_a', 'label'=>'Luogo di nascita'];
 								$c[] = ['id'=>'sesso', 'label'=>'Sesso'];

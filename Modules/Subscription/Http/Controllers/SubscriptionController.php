@@ -186,7 +186,7 @@ class SubscriptionController extends Controller
 
 			$event = Event::find($entity->id_event);
 			$array_moduli = json_decode($event->id_moduli);
-			$moduli = Modulo::whereIn('id', $array_moduli)->orderBy('label', 'ASC')->get();
+			$moduli = Modulo::whereIn('id', $array_moduli)->orderBy('label', 'ASC')->pluck('label', 'id');
 
 			$print = "<div>".Form::open(['method' => 'GET', 'route' => ['subscription.print', $entity->id]]).
 			"<div class='row'><div class='col-5'>".
@@ -307,7 +307,7 @@ class SubscriptionController extends Controller
 			//controllo se l'utente ha collegato una famiglia con padre e madre
 			$padre = ComponenteFamiglia::getPadre($input['id_user']);
 			$madre = ComponenteFamiglia::getMadre($input['id_user']);
-			if($padre == null || $madre == null){
+			if($padre == null && $madre == null){
 				Session::flash('flash_message', 'Per iscriverti a questo evento, devi aver indicato padre e madre nella tua famiglia!');
 				return redirect('home');
 			}
