@@ -813,6 +813,14 @@ class SubscriptionController extends Controller
 				$template->setValue('consenso_affiliazione_no', "X");
 			}
 
+			if($sub->consenso_dati_sanitari == true){
+				$template->setValue('consenso_dati_sanitari_si', "X");
+				$template->setValue('consenso_dati_sanitari_no', "");
+			}else{
+				$template->setValue('consenso_dati_sanitari_si', "");
+				$template->setValue('consenso_dati_sanitari_no', "X");
+			}
+
 			//specifiche generali
 			$importo_totale = 0;
 			$acconto_totale = 0;
