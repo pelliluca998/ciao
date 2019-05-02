@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Modulo\Http\Controllers\DataTables\ModuloDataTableEditor;
 use Modules\Modulo\Http\Controllers\DataTables\ModuloDataTable;
 use Modules\Modulo\Entities\Modulo;
+use Modules\Event\Entities\Event;
 use Yajra\DataTables\DataTables;
 use Form;
 use Storage;
@@ -34,6 +35,15 @@ class ModuloController extends Controller
       $edit = "<div style=''><div style='display: flow-root'><button class='btn btn-sm btn-primary btn-block' id='editor_edit' style='float: left; width: 50%; margin-right: 2px;'><i class='fas fa-pencil-alt'></i> Modifica</button>";
       $remove = "<button style='float: left; width: 48%; margin: 0px;' class='btn btn-sm btn-danger btn-block' id='editor_remove'><i class='fas fa-trash-alt'></i> Rimuovi</button></div></div>";
       $download = Form::open(['method' => 'GET', 'route' => ['modulo.download', $entity->id]])."<button class='btn btn-sm btn-primary btn-block'><i class='fas fa-cloud-download-alt'></i> Download</button>".Form::close();
+
+      //se il modulo è usato in qualche evento, impedisco eliminazione
+      foreach(Event::where('id_oratorio', Session::get('session_oratorio'))->get() as $event){
+        $array_moduli = json_decode($event->id_moduli);
+        if($array_moduli != null && in_array($entity->id, $array_moduli)){
+          $remove = "";
+          break;
+        }
+      }
       return $edit.$remove.$download;
     })
 		->addColumn('DT_RowId', function ($entity){
