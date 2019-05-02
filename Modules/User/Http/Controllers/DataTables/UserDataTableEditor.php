@@ -9,6 +9,7 @@ use Modules\User\Entities\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Modules\Oratorio\Entities\UserOratorio;
+use Modules\Famiglia\Entities\ComponenteFamiglia;
 use Session;
 use App\RoleUser;
 use App\Role;
@@ -83,6 +84,10 @@ class UserDataTableEditor extends DataTablesEditor
 
   public function creating(Model $model, array $data)
   {
+    if(isset($data['cod_fiscale'])){
+      $data['cod_fiscale'] = strtoupper($data['cod_fiscale']);
+    }
+    
     return $data;
   }
 
@@ -104,16 +109,40 @@ class UserDataTableEditor extends DataTablesEditor
       $role->save();
     }
 
+    //ruolo familiare
+    if(isset($data['tipo_legame']) && isset($data['famiglia_id'])){
+      $componente = new ComponenteFamiglia;
+      $componente->id_famiglia = $data['famiglia_id'];
+      $componente->id_user = $model->id;
+      $componente->tipo_legame = $data['tipo_legame'];
+      $componente->save();
+    }
+
     return $data;
   }
 
   public function updating(Model $model, array $data)
   {
+    if(isset($data['cod_fiscale'])){
+      $data['cod_fiscale'] = strtoupper($data['cod_fiscale']);
+    }
+
     if(isset($data['role_id'])){
       $role = RoleUser::where([['user_id', $model->id],['role_id', $model->roles[0]->id]])->first();
       $role->role_id = $data['role_id'];
       $role->save();
     }
+
+    //ruolo familiare
+    if(isset($data['tipo_legame']) && isset($data['componente_id'])){
+      $componente = ComponenteFamiglia::find($data['componente_id']);
+      if($componente != null){
+        $componente->tipo_legame = $data['tipo_legame'];
+        $componente->save();
+      }
+    }
+
+
     return $data;
   }
 

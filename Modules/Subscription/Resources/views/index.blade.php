@@ -232,7 +232,7 @@ table = $('#subscriptionTable').DataTable({
       },
       className: "dt-body-center"
     },
-    { data: 'action', orderable: false, searchable: false},
+    { data: 'action', orderable: false, searchable: false, responsivePriority: 1},
   ],
   select: {
     style:    'os',

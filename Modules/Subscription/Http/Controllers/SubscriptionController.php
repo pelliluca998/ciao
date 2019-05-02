@@ -788,7 +788,7 @@ class SubscriptionController extends Controller
 			$template->setValue('madre', $madre!=null?$madre->full_name:'');
 			$template->setValue('figlio', $user->full_name);
 			$template->setValue('patologie', $user->patologie);
-			$template->setValue('allergie', $user->patologie);
+			$template->setValue('allergie', $user->allergie);
 			$template->setValue('note', $user->note);
 			$template->setValue('luogo_nascita', Comune::find($user->id_comune_nascita)->nome);
 			$template->setValue('data_nascita', $user->nato_il);
@@ -803,6 +803,15 @@ class SubscriptionController extends Controller
 			$email .= ($email == "" && $madre != null)?$madre->email:"";
 			$template->setValue('cellulare_genitore', $cell);
 			$template->setValue('email_genitore', $email);
+
+			//consensi
+			if($sub->consenso_affiliazione == true){
+				$template->setValue('consenso_affiliazione_si', "X");
+				$template->setValue('consenso_affiliazione_no', "");
+			}else{
+				$template->setValue('consenso_affiliazione_si', "");
+				$template->setValue('consenso_affiliazione_no', "X");
+			}
 
 			//specifiche generali
 			$importo_totale = 0;

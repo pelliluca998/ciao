@@ -44,7 +44,6 @@ use App\Nazione;
                 <th>Cellulare</th>
                 <th>Email</th>
                 <th>Data di nascita</th>
-                <th>Luogo di nascita (old)</th>
                 <th>Luogo di nascita</th>
                 <th>C.F.</th>
                 <th>Tessera sanitaria</th>
@@ -367,11 +366,10 @@ table = $('#usersTable').DataTable({
 { data: 'cell_number', name: 'cell_number' },
 { data: 'email_label', editField: 'email' },
 { data: 'nato_il', name: 'nato_il' },
-{ data: 'nato_a', name: 'nato_a' },
 { data: 'comune_nascita_label', name: 'comune_nascita_label', editField: 'id_comune_nascita'},
 { data: 'cod_fiscale' },
 { data: 'tessera_sanitaria' },
-{ data: 'action', orderable: false, searchable: false}
+{ data: 'action', orderable: false, searchable: false, responsivePriority: 1}
 ],
 select: {
   style:    'os',
