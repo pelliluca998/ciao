@@ -797,12 +797,27 @@ class SubscriptionController extends Controller
 			$template->setValue('tessera_sanitaria', $user->tessera_sanitaria);
 			$template->setValue('telefono', $user->telefono);
 			$template->setValue('cellulare', $user->cellulare);
-			$cell = ($padre != null)?$padre->cellulare:"";
-			$cell .= ($cell == "" && $madre != null)?$madre->cellulare:"";
-			$email = ($padre != null)?$padre->email:"";
-			$email .= ($email == "" && $madre != null)?$madre->email:"";
+			$template->setValue('email', $user->email);
+			$cell = ($madre != null)?"Madre: ".$madre->cellulare:"";
+			$cell .= ($padre != null)?" - Padre".$padre->cellulare:"";
+			$email = ($madre != null)?"Madre: ".$madre->email:"";
+			$email .= ($padre != null)?" - Padre: ".$padre->email:"";
 			$template->setValue('cellulare_genitore', $cell);
 			$template->setValue('email_genitore', $email);
+
+			//classe frequentata
+			$spec_classe = EventSpec::where([['id_event', $event->id], ['label', 'LIKE', '%classe%']])->first();
+			if($spec_classe != null){
+				$event_spec_value = EventSpecValue::where([['id_eventspec', $spec_classe->id], ['id_subscription', $sub->id]])->first();
+				if($event_spec_value == null){
+					$template->setValue('classe_frequentata', '');
+				}else{
+					$nome_classe = EventSpec::getPrintableValue($spec_classe->id_type, $event_spec_value->valore);
+					$template->setValue('classe_frequentata', $nome_classe);
+				}
+			}else{
+				$template->setValue('classe_frequentata', '');
+			}
 
 			//consensi
 			if($sub->consenso_affiliazione == true){

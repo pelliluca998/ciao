@@ -648,16 +648,16 @@
   'mail' => 
   array (
     'driver' => 'smtp',
-    'host' => 'ssl0.ovh.net',
+    'host' => 'out.postassl.it',
     'port' => '465',
     'from' => 
     array (
-      'address' => 'info@elephantech.it',
+      'address' => 'oratorio@segresta.it',
       'name' => 'ElephanTech',
     ),
     'encryption' => 'ssl',
-    'username' => 'info@elephantech.it',
-    'password' => '2gnxTohjMb8mN04JLPqI',
+    'username' => 'oratorio@segresta.it',
+    'password' => 'PPJF5aAzzFYrV63H',
     'markdown' => 
     array (
       'theme' => 'default',

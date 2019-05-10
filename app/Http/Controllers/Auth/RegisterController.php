@@ -80,7 +80,9 @@ class RegisterController extends Controller
       'email' => 'required|email|max:255|unique:users',
       'password' => 'required|min:8|confirmed',
       'nato_il' => 'required|date_format:d/m/Y',
-      'id_comune_nascita' => 'required',
+      'id_nazione_nascita' => 'required',
+      'id_provincia_nascita' => 'required_if:id_nazione_nascita,118',
+      'id_comune_nascita' => 'required_if:id_nazione_nascita,118',
       'cognome' => 'required',
       'sesso' => 'required',
       'id_comune_residenza' => 'required',
@@ -115,7 +117,7 @@ class RegisterController extends Controller
     //   $i++;
     // }
     $user->sendEmailVerificationNotification();
-    
+
     return $user;
 
   }

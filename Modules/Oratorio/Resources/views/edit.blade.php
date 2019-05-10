@@ -64,15 +64,6 @@ use Modules\Oratorio\Entities\Oratorio;
 						</div>
 					</div>
 
-
-
-					<div class="form-row">
-						<div class="form-group col">
-							{!! Form::label('sms_sender', 'Mittente SMS. Puoi inserire un numero di cellulare (con prefisso internazionale senza + iniziale) oppure un nome (max. 11 caratteri).') !!}
-							{!! Form::text('sms_sender', null, ['class' => 'form-control', 'maxlength' => '12']) !!}
-						</div>
-					</div>
-
 					<div class="form-row">
 						<div class="form-group col">
 							{!! Form::label('logo', 'Logo') !!}
@@ -102,7 +93,6 @@ use Modules\Oratorio\Entities\Oratorio;
 			</div>
 
 		</div>
-		{!! Form::close() !!}
 	</div>
 </div>
 @endsection

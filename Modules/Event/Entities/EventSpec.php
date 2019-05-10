@@ -45,7 +45,7 @@ class EventSpec extends Model
     foreach($specs as $spec){
       $price = json_decode($spec->price, true);
       $acconto = json_decode($spec->acconto, true);
-      $options .= "<option value='".$spec->id."' data-costo='".$price[0]."' data-acconto='".$acconto[0]."' data-week='0'>".$spec->label."</option>";
+      $options .= "<option value='".$spec->id."' data-costo='' data-acconto='' data-week='0'>".$spec->label."</option>";
     }
 
     //specifiche Settimanali

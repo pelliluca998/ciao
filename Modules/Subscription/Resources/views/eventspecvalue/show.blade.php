@@ -97,7 +97,7 @@ $(document).ready(function(){
       processing: true,
       serverSide: true,
       rowId: 'DT_RowId',
-      dom: '',
+      dom: 'rtip',
       language: { "url": "{{ asset('Italian.json') }}" },
       ajax: {
         url: "{!! route('eventspecvalues.data') !!}",

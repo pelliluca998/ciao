@@ -6,8 +6,10 @@ use Modules\User\Entities\User;
 use App\OwnerMessage;
 use Modules\Sms\Http\Controllers\SmsController;
 use Modules\Whatsapp\Http\Controllers\WhatsappController;
+use Carbon\Carbon;
 
-
+$aggiornamenti=file_get_contents("https://segresta.it/aggiornamenti.php");
+$aggiornamenti=json_decode($aggiornamenti, JSON_FORCE_OBJECT);
 ?>
 
 @extends('layouts.app')
@@ -63,7 +65,9 @@ use Modules\Whatsapp\Http\Controllers\WhatsappController;
         <div class="card-header">SMS</div>
         <div class="card-body">
           @if(Module::find('sms') != null && Module::find('sms')->enabled())
-          <!-- SmsController::printcredit() -->
+          Crediti residui per l'invio di SMS: {{ SmsController::credito_attuale() }}
+          <br><br>
+          <a href="http://sms.elephantech.it/index.php?mofr=456880144" class="btn btn-primary" target="_blank">Ricarica</a>
           @else
           Il modulo SMS non è attivo.
           @endif
@@ -81,11 +85,17 @@ use Modules\Whatsapp\Http\Controllers\WhatsappController;
       <div class="card">
         <div class="card-header">Aggiornamenti di Segresta 2.0</div>
         <div class="card-body">
-
-          @foreach(OwnerMessage::orderBy('created_at', 'DESC')->get() as $message)
-          <h3>{{$message->id}} - {{$message->title}}</h3>
-          {!! $message->message !!}
+          @if(count($aggiornamenti) > 0)
+          @foreach($aggiornamenti as $aggiornamento)
+          <h3>{{ $aggiornamento['titolo'] }} ({{ Carbon::parse($aggiornamento['data'])->format('d/m/Y')}})</h3>
+          {!! $aggiornamento['testo'] !!}
           @endforeach
+          @else
+          <p>Nessun aggiornamento disponibile</p>
+          @endif
+
+
+
 
         </div>
       </div>

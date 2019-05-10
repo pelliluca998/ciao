@@ -153,11 +153,11 @@ use App\Nazione;
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="form-group row" id="div_provincia_nascita">
             <label for="id_provincia_nascita" class="col-md-4 col-form-label text-md-right">Provincia di nascita</label>
 
             <div class="col-md-6">
-              {{ Form::select('id_provincia_nascita', Provincia::orderBy('nome')->pluck('nome', 'id'), old('id_provincia_nascita'), ['class' => $errors->has("id_provincia_nascita")?"form-control is-invalid":"form-control", 'id' => 'id_provincia_nascita', 'required', 'autofocus']) }}
+              {{ Form::select('id_provincia_nascita', Provincia::orderBy('nome')->pluck('nome', 'id'), old('id_provincia_nascita'), ['class' => $errors->has("id_provincia_nascita")?"form-control is-invalid":"form-control", 'id' => 'id_provincia_nascita', 'autofocus', 'placeholder' => 'Seleziona una provincia']) }}
 
 
               @if ($errors->has('id_provincia_nascita'))
@@ -168,11 +168,11 @@ use App\Nazione;
             </div>
           </div>
 
-          <div class="form-group row">
+          <div class="form-group row" id="div_comune_nascita">
             <label for="id_comune_nascita" class="col-md-4 col-form-label text-md-right">Comune di nascita</label>
 
             <div class="col-md-6">
-              {{ Form::select('id_comune_nascita', array(), old('id_comune_nascita'), ['class' => $errors->has("id_comune_nascita")?"form-control is-invalid":"form-control", 'id' => 'id_comune_nascita', 'required', 'autofocus']) }}
+              {{ Form::select('id_comune_nascita', array(), old('id_comune_nascita'), ['class' => $errors->has("id_comune_nascita")?"form-control is-invalid":"form-control", 'id' => 'id_comune_nascita', 'autofocus']) }}
 
               @if ($errors->has('id_comune_nascita'))
               <span class="invalid-feedback" role="alert">
@@ -331,6 +331,7 @@ function enable_confirm_button(){
 }
 
 function update_comune(select_provincia, select_comune){
+  $('#'+select_comune).empty();
   $.ajax({
     type: 'GET',
     dataType: 'json',
@@ -339,7 +340,6 @@ function update_comune(select_provincia, select_comune){
       id_provincia: $('#'+select_provincia).val()
     },
     success: function(response) {
-      $('#'+select_comune).empty();
       $.each(response, function(key, value){
         $('#'+select_comune).append($('<option>', { value : value.id }).text(value.nome));
       });
@@ -352,10 +352,23 @@ function update_comune(select_provincia, select_comune){
 }
 
 $('#id_provincia_nascita').on('change', function(){
+  if($('#id_nazione_nascita').val() != 118) null;
   update_comune('id_provincia_nascita', 'id_comune_nascita');
 });
 $('#id_provincia_residenza').on('change', function(){
   update_comune('id_provincia_residenza', 'id_comune_residenza');
+});
+$('#id_nazione_nascita').on('change', function(){
+  var nazione = $('#id_nazione_nascita').val();
+  if(nazione == 118){
+    $('#div_provincia_nascita').show();
+    $('#div_comune_nascita').show();
+  }else{
+    $('#div_provincia_nascita').hide();
+    $('#div_comune_nascita').hide();
+    $('#id_provincia_nascita').empty();
+    $('#id_comune_nascita').empty();
+  }
 });
 
 

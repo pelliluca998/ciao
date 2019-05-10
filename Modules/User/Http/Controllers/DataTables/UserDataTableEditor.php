@@ -42,7 +42,6 @@ class UserDataTableEditor extends DataTablesEditor
       'name'  => 'required',
       'email' => 'email|unique:users,email',
       'nato_il' => 'required|date_format:d/m/Y',
-      'id_comune_nascita' => 'required',
       'id_comune_residenza' => 'required',
       'via' => 'required'
     ];
@@ -65,7 +64,6 @@ class UserDataTableEditor extends DataTablesEditor
       'name'  => 'required',
       'email' => 'email|unique:users,email,'.$model->id,
       'nato_il' => 'required|date_format:d/m/Y',
-      'id_comune_nascita' => 'required',
       'id_comune_residenza' => 'required',
       'via' => 'required'
     ];
@@ -87,7 +85,7 @@ class UserDataTableEditor extends DataTablesEditor
     if(isset($data['cod_fiscale'])){
       $data['cod_fiscale'] = strtoupper($data['cod_fiscale']);
     }
-    
+
     return $data;
   }
 

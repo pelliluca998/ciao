@@ -211,6 +211,19 @@ $(editor.field('id_provincia_nascita').input() ).on('change', function (e, d) {
     getListaComuni(editor.field('id_provincia_nascita').val(), 'id_comune_nascita');
   }
 });
+
+$(editor.field('id_nazione_nascita').input() ).on('change', function (e, d) {
+  if ( !d || !d.editor ) {
+    if(editor.field('id_nazione_nascita').val() == 118){
+      editor.field('id_provincia_nascita').show();
+      editor.field('id_comune_nascita').show();
+    }else{
+      editor.field('id_provincia_nascita').hide();
+      editor.field('id_comune_nascita').hide();
+    }
+  }
+});
+
 $(editor.field('id_provincia_residenza').input() ).on('change', function (e, d) {
   if ( !d || !d.editor ) {
     getListaComuni(editor.field('id_provincia_residenza').val(), 'id_comune_residenza');
@@ -256,16 +269,16 @@ $('#usersTable').on('click', 'button#editor_remove', function (e) {
 editor.on( 'initEdit', function ( e, node, data, items, type ) {
   getListaComuni(data['id_provincia_nascita'], 'id_comune_nascita');
   getListaComuni(data['id_provincia_residenza'], 'id_comune_residenza');
+  if(data['id_nazione_nascita'] == 118){
+    editor.field('id_provincia_nascita').show();
+    editor.field('id_comune_nascita').show();
+  }else{
+    editor.field('id_provincia_nascita').hide();
+    editor.field('id_comune_nascita').hide();
+  }
 } );
 
 var buttons = [
-  {
-    text: '<i class="fas fa-sms"></i> Invia Sms',
-    className: 'btn btn-sm btn-primary',
-    action: function ( e, dt, button, config ){
-      invia_utenti_selezionati('sms');
-    }
-  },
   {
     text: '<i class="fab fa-telegram-plane"></i> Invia Telegram',
     className: 'btn btn-sm btn-primary',
@@ -317,6 +330,19 @@ if("{{ Auth::user()->can('send-email') && Module::find('email') != null && Modul
       className: 'btn btn-sm btn-primary',
       action: function ( e, dt, button, config ){
         invia_utenti_selezionati('email');
+      }
+    }
+  );
+}
+
+//Permesso di inviare SMS
+if("{{ Auth::user()->can('send-sms') }}"){
+  buttons.push(
+    {
+      text: '<i class="fas fa-sms"></i> Invia Sms',
+      className: 'btn btn-sm btn-primary',
+      action: function ( e, dt, button, config ){
+        invia_utenti_selezionati('sms');
       }
     }
   );
