@@ -348,19 +348,7 @@ use Modules\Oratorio\Entities\Oratorio;
     $('#eventspecsOp').modal('hide');
   }
 
-  function change_eventspec(sel, id_event){
-    $.get("{{ url('eventspec/dropdown')}}",
-    {id_week: sel.value,
-      id_event: id_event },
-      function(data){
-        var model = $("#event_spec");
-        model.empty();
-        $.each(data, function(index, element) {
-          var prices = JSON.parse(element.price);
-          model.append("<option value='"+ element.id +"' data-price='"+prices[sel.value]+"' data-type='"+element.id_type+"'>" + element.label + "</option>");
-        });
-      });
-    }
+  
 
     /**
     Funzione che viene richiamata quando un select cambia valore; viene popolato lo span (#span_type)

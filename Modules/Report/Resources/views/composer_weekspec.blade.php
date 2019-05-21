@@ -176,6 +176,9 @@ use Modules\Attributo\Entities\Attributo;
 								$c[] = ['id'=>'sesso', 'label'=>'Sesso'];
 								$c[] = ['id'=>'residente', 'label'=>'Residenza'];
 								$c[] = ['id'=>'via', 'label'=>'Indirizzo'];
+								$c[] = ['id'=>'patologie', 'label'=>'Patologie'];
+								$c[] = ['id'=>'allergie', 'label'=>'Allergie'];
+								$c[] = ['id'=>'note', 'label'=>'Note'];
 
 								?>
 

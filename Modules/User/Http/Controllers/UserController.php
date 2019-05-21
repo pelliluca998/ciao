@@ -157,6 +157,7 @@ class UserController extends Controller
       return "<i class='fas fa-exclamation-circle faa-flash animated' style='color: Tomato;'></i> ".$entity->email;
     })
     ->addColumn('role_id', function ($entity){
+      if($entity->roles == null || count($entity->roles) == 0) return;
       return $entity->roles[0]->id;
     })
     ->addColumn('comune_nascita_label', function ($entity){

@@ -556,15 +556,15 @@ class SubscriptionController extends Controller
 			}
 
 			$r=0;
-			if(count($att_filter)>0){
-				foreach($att_filter as $fa){
-					if($fa==1 && $filter_ok){
-						$at = AttributoUser::where([['id_user', $sub->id_user], ['id_attributo', $att_filter_id[$r]], ['valore', $att_filter_value[$r]]])->get();
-						if(count($at)==0) $filter_ok=false;
-					}
-					$r++;
-				}
-			}
+			// if(count($att_filter)>0){
+			// 	foreach($att_filter as $fa){
+			// 		if($fa==1 && $filter_ok){
+			// 			$at = AttributoUser::where([['id_user', $sub->id_user], ['id_attributo', $att_filter_id[$r]], ['valore', $att_filter_value[$r]]])->get();
+			// 			if(count($at)==0) $filter_ok=false;
+			// 		}
+			// 		$r++;
+			// 	}
+			// }
 
 			if($filter_ok){
 				array_push($user_array, $sub->id_user);
@@ -796,10 +796,10 @@ class SubscriptionController extends Controller
 			$template->setValue('indirizzo', $user->via);
 			$template->setValue('tessera_sanitaria', $user->tessera_sanitaria);
 			$template->setValue('telefono', $user->telefono);
-			$template->setValue('cellulare', $user->cellulare);
+			$template->setValue('cellulare', $user->cell_number);
 			$template->setValue('email', $user->email);
-			$cell = ($madre != null)?"Madre: ".$madre->cellulare:"";
-			$cell .= ($padre != null)?" - Padre".$padre->cellulare:"";
+			$cell = ($madre != null)?"Madre: ".$madre->cell_number:"";
+			$cell .= ($padre != null)?" - Padre".$padre->cell_number:"";
 			$email = ($madre != null)?"Madre: ".$madre->email:"";
 			$email .= ($padre != null)?" - Padre: ".$padre->email:"";
 			$template->setValue('cellulare_genitore', $cell);

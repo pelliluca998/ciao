@@ -168,7 +168,7 @@ function stampa_tabella($input, $whereRaw, $format){
 						->where([['event_spec_values.id_subscription', $sub->id_sub],['event_spec_values.id_week', $week->id], ['event_specs.id', $id_spec_week]])
 						->first();
 
-						if(count($specs)!=0){
+						if($specs != null){
 							echo "<td>";
 							if($specs->id_type>0){
 								$val = TypeSelect::where('id', $specs->valore)->get();
