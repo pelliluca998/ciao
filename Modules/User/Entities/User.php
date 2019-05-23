@@ -47,6 +47,10 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->cognome." ".$this->name;
   }
 
+  public function setIdComuneNascitaAttribute($value){
+    $this->attributes['id_comune_nascita'] = $value==''?null:$value;
+  }
+
 
   /**
   * Many-to-Many relations with Role.

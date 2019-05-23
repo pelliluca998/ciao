@@ -5,6 +5,8 @@ use App\Role;
 use App\Permission;
 use App\Provincia;
 use App\Nazione;
+
+$default_role = Role::where([['id_oratorio', Session::get('session_oratorio')], ['name', 'user']])->first()->id;
 ?>
 
 @extends('layouts.app')
@@ -202,7 +204,7 @@ $(document).ready(function(){
     {label: "Privacy e consensi", name: "privacy_info", type: "title"},
     {label: "Consenso ad invio comunicazioni", name: "consenso_affiliazione", type:"checkbox", options: [{label:'', value:1}], separator: "", unselectedValue: 0},
     {label: "Ruolo", name: "ruolo_info", type: "title"},
-    {label: "Ruolo e permessi", name: "role_id", type:"select", options:lista_ruoli},
+    {label: "Ruolo e permessi", name: "role_id", type:"select", options:lista_ruoli, default: "{{ $default_role }}"},
   ]
 });
 
